@@ -82,7 +82,7 @@ class Inputhelper {
 		// 3. Kiểm tra định dạng Số điện thoại (Chỉ chứa số, từ 11 đến 12 số)
 		static void kiemTraSdt(const std::string& sdt) {
 			// Kiểm tra độ dài: Nếu độ dài nhỏ hơn 11 HOẶC lớn hơn 12 thì báo lỗi
-			if (sdt.length() < 11 || sdt.length() > 12) {
+			if (sdt.length() < 10 || sdt.length() > 12) {
 				throw Loixacthuc("Loi: So dien thoai phai co tu 11 den 12 chu so!");
 			}
 
@@ -93,5 +93,27 @@ class Inputhelper {
 				}
 			}
 		}
+		// 4. Tự động ghép tiền tố cho Mã (VD: Nhập "1234" -> Trả về "NCC1234")
+		static std::string tuTaoMa(const std::string& maNhap, const std::string& tienTo) {
+			std::string clean = catkhoangtrang(maNhap);
+
+			// Trường hợp 1: Máy tính đang đọc dữ liệu từ file txt lên (Mã đã có sẵn chữ NCC/TB) -> Cho qua luôn
+			if (clean.length() >= tienTo.length() && clean.substr(0, tienTo.length()) == tienTo) {
+				return clean;
+			}
+
+			// Trường hợp 2: Người dùng gõ trên màn hình Console (Chỉ có số)
+			if (clean.length() != 4) { // Bắt buộc phải gõ đúng 4 số
+				throw Loixacthuc("Loi: Vui long chi nhap dung 4 con so (VD: 1234)!");
+			}
+			for (char c : clean) {
+				if (!isdigit(c)) throw Loixacthuc("Loi: Ma chi duoc phep nhap con so!");
+			}
+
+			// Tự động ghép chữ + số (VD: "NCC" + "1234" = "NCC1234")
+			return tienTo + clean;
+		}
 
 };
+
+
