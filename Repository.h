@@ -59,6 +59,7 @@ public:
 	void loadFromFile() {
 		std::ifstream file(filePath);
 		if (!file.is_open()) return;//neu file chua ton tai thi bo qua
+		dataList.clear(); // Dọn sạch mảng cũ trên RAM trước khi nạp cái mới
 		std::string line;
 		while (std::getline(file, line)) {
 			line = Inputhelper::catkhoangtrang(line);
