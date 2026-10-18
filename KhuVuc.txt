@@ -1,0 +1,10 @@
+#Danh sach doi tuong
+KV0001|Ninh Binh|Nguyen Cong Vinh
+KV0002|Ho Chi Minh|Tran Thi Binh
+KV0003|Nam Dinh|Le Manh Cuong
+KV0004|Hai Phong|Vu Quoc Toan
+KV0005|Can Tho|Pham Thi Mai
+KV0006|Dong Nai|Hoang Van Thanh
+KV0007|Binh Duong|Bui Tuan Anh
+KV0008|Quang Ninh|Ngo Tuan Kiet
+KV9898|Mtp|Som Tung
