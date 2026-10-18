@@ -1,119 +1,185 @@
 #pragma once
+#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
+#include <cctype>
+#include <cmath>
+#include <stdexcept>
+#include "Exceptions.h"
 class Inputhelper {
-	public:
-		//ham cat khoang trang thua o hai au chuoi
-		static std::string catkhoangtrang(const std::string& str) {
-			size_t frist = str.find_first_not_of(' ');
-			if (frist == std::string::npos) return "";
-			size_t last = str.find_last_not_of(' ');
-			return str.substr(frist, last - frist + 1);
+public:
+	//cat ca khoantrang o dau va cuoi
+	static std::string catkhoangtrang(const std::string& str) {
+		size_t first = str.find_first_not_of(' ');//cai vitri dau tien trong chuoi ko phai dau cach
+		if (first == std::string::npos) return"";//neu chuoi toan dau cach hoac ko co j tra ve chuoi rong
+		size_t last = str.find_last_not_of(' ');//tim ki tu cuoi cung ko phai dau cach
+		return str.substr(first, last - first + 1);//ham substr(vitri ,soluong) lay 1 phan cua chuoi
+	}
+	//tach chuoi theo ky hieu phan cach
+	static std::vector<std::string> chia(const std::string& str, char delimiter) {
+		std::vector<std::string> tokens;//khai bao 1 cai vec to ki hieu rong
+		std::string token;//1 cai token tam thoi de truyen ki hieu vao do
+		std::stringstream ss(str);//hamf cho thao tac voi chuoi str nap chuoi str vaof ss
+		while (std::getline(ss, token, delimiter)) {//doc du lieu tu luong ss gap dau| thi bo qua ko ghi vao token
+			tokens.push_back(catkhoangtrang(token));//day du lieu vao vec to tokens 
 		}
-		//ham tach chuoi dua tren ky tu phan tach
-		static std::vector<std::string> chia(const std::string& str, char delimiter) {
-			std::vector<std::string> tokens;
-			std::string token;
-			
-			std::stringstream tokenStream(str);
-			while(std::getline(tokenStream,token,delimiter)){
-				tokens.push_back(catkhoangtrang(token));
+		if (!str.empty() && str.back() == delimiter) tokens.push_back("");//getline mac dinh bo qua dau phan cac o vitri cuoi cung kiem tra phai rong ko neu ko mafnguoi dung co tyinh de trong thi cho khoang trong do vao
+
+		return tokens;//tra ve kq
+	}
+	//nhap chuoi
+	static std::string Docstring(const std::string& prompt, bool chophepdetrong = false) {
+		std::string input;
+		while (true) {//vong lkap von tan chi khi nguoi dung nhap dulieu dung
+			std::cout << prompt;//loi nhan huong dan
+			if (!std::getline(std::cin, input)) {//doc tosan bo du lieu nguoii duyng viet ra getline kiemtra  xem luong nhap co gap loi dan den bi dong ko neu co nem ra 1 ngoai le
+				throw std::runtime_error("khong the doc du lieu!");
 			}
-			return tokens;
+			input = catkhoangtrang(input);
+			if (!chophepdetrong && input.empty()) {//neu ko cho phep de trong ma de trong thi bao loi
+				std::cout << "Loi:ko duoc de trong! Vui long nhap lai!\n";
+			}
+			else return input;
+
 		}
-		//ham yeu cau nguoi dung nhap 1 chuoi an toan tu ban phim
-		static std::string Docstring(const std::string& prompt,bool chophepdetrong=false) {
-			std::string input;
-			while (true) {
-				std::cout << prompt;
-				std::getline(std::cin,input);
-				input = catkhoangtrang(input);
-				//neu ko cho phep rong ma ng dung de rong thi bat nhap lai
-				if (!chophepdetrong && input.empty()) {
-					std::cout << "Loi:ko de trong .Vuilong nhap lai!\n";
-				}
-				else return input;
-				}
+	}
+	//nhap so nguyen
+	static int Docint(const std::string& prompt) {
+		while (true) {//vong lap vo han nhap dung so nguyen moi duoc thoat ra
+			std::string input = Docstring(prompt, true);//goi ham docstring de lay du lieu tu ban phim cho phep de trong  de docint tu quan li va xu li chuoi rong = try=catch
+			try {
+				size_t pos = 0;
+				int so = std::stoi(input, &pos);//chuyen input thanh sonnguyen va pos de luu vi tri dau tien ko phai so trong day
+				if (pos == input.length()) return so;//neu vi tri do bang dung chieu dai chuoi thi se tra ve so
 			}
-		//ham yeu cau nhap 1 so nguyen an toan chong troi lenh
-		static int Docint(const std::string& prompt) {
-			std::string input;
-			while (true) {
-				std::cout << prompt;
-				std::getline(std::cin, input);
-				try {
-					//thu chuyen doi chuoi vua nhap thanh so nguyen
-					return std::stoi(catkhoangtrang(input));
-				}
-				catch (...) {
-					//neu nguoi dung nhap chu(ko the ep sang kieu so) bao loi va vong lai
-					std::cout << "Loi:Vui long nhap so nguyen hop le";
-				}
+			catch (const std::invalid_argument&) {//bat loi neu so ko phai so nguyen vi du ko chuyen doi duoc thanh so ngueyn
+			}
+			catch (const std::out_of_range&) {//bat loi neu so nhap vao vuot ngoai pham  vi int
+
+			}
+			std::cout << "Loi:Vui long nhap so nguyen hop le!\n";//neu o doan try ko return ddc thi cout ra cai nay
+		}
+	}
+	//keimtra co it nhat 1 chu cai
+	static bool coChuaChuCai(const std::string& str) {
+		for (unsigned char c : str) {
+			if (std::isalpha(c)) {
+				return true;
 			}
 		}
-		// 1. Kiểm tra chuỗi có chứa chữ cái không (Chống nhập tên toàn số "111")
-		static bool coChuaChuCai(const std::string& str) {
-			for (char c : str) {
-				if (isalpha(c)) return true; // Có ít nhất 1 chữ cái (a-z, A-Z)
+		return false;
+	}
+	//viet hoa chu cai dau moi tu
+	static std::string vietHoaChuDau(std::string str) {
+		bool dauTu = true;//su dung bien co ,khi dauTu=0 chuong trinh se hieu kytu do la bat dau 1 tu
+		for (char& c : str) {//duyet ki tung ki tu trong xau co tham chieu de thay doi truc tep
+			unsigned char ch = static_cast<signed char>(c);//ep kieu sang usnsinged char  jup tranh loi
+			if (std::isspace(ch)) {//kiem tra xem ky tu co phai khoang trang hay xuong dong k
+				dauTu = true;//neu dung thi ki tu tiep theo la dautu
+
 			}
+			else {
+				if (dauTu && std::isalpha(ch)) {
+					c = static_cast<char>(std::toupper(ch));//neu day la dau tu va la 1 chu cai thi doi no thanh chu hoa
+				}
+				else {
+					c = static_cast<char>(std::tolower(ch));//ko phai thi chuyen thanh chu thuong
+
+				}
+				dauTu = false;//dat co ve ve false
+			}
+		}
+		return str;// trar ve str
+	}
+	//kiemtra sdt tu 10 den 12 so
+	static void kiemTraSdt(const std::string& sdt) {
+		if (sdt.length() < 10 || sdt.length() > 12) {
+			throw Loixacthuc("Loi:So dien thoai phai co tu 10den 12 chu so!");
+		}
+		for (unsigned char c : sdt) {
+			if (!std::isdigit(c)) throw Loixacthuc("Loi:So dien thoai chi duoc la chu so!");
+		}
+	}
+	//ghep tien to vao ma
+	static std::string tuTaoMa(const std::string& maNhap, const std::string& tienTo) {
+		std::string clean = catkhoangtrang(maNhap);
+		std::string phanSo = clean;
+		if (clean.substr(0, tienTo.length()) == tienTo) {//kiemtra doan dau co trung vs ma ko
+			phanSo = clean.substr(tienTo.length());//neu nguoi dung da nhap tien to thi cat trine to di giu lai so thoi
+		}
+		if (phanSo.length() != 4) {
+			throw Loixacthuc("Loi: Ma phai co dunbg 4 chu so!");//chi duoc 4 chu so
+		}
+		for (unsigned char c : phanSo) {
+			if (!std::isdigit(c)) {
+				throw Loixacthuc("Loi:Ma chi duoc chua chu so!");//chi nhap so kitu khac se sai
+			}
+		}
+		return tienTo + phanSo;
+	}
+	// Nhap so thuc thong thuong de nhap gia tien
+	static double Docdouble(const std::string& prompt) {
+		while (true) {
+			std::string input = Docstring(prompt, true);
+
+			try {
+				size_t pos = 0;
+				double so = std::stod(input, &pos);
+
+				if (pos == input.length() && std::isfinite(so)) {
+					return so;
+				}
+			}
+			catch (const std::invalid_argument&) {
+			}
+			catch (const std::out_of_range&) {
+			}
+
+			std::cout << "Loi: Vui long nhap so thuc hop le!\n";
+		}
+	}
+	// Nhap so thuc khi cap nhat
+	// Enter de giu nguyen gia tri cu
+	static bool DocdoubleCapNhat(const std::string& prompt,
+		double& giaTri) {
+		while (true) {
+			std::string input = Docstring(prompt, true);
+
+			if (input.empty()) {
+				return false;
+			}
+
+			try {
+				size_t pos = 0;
+				double so = std::stod(input, &pos);
+
+				if (pos == input.length() && std::isfinite(so)) {
+					giaTri = so;
+					return true;
+				}
+			}
+			catch (const std::invalid_argument&) {
+			}
+			catch (const std::out_of_range&) {
+			}
+
+			std::cout << "Loi: Vui long nhap so thuc hop le!\n";
+		}
+	}
+	// Kiem tra chi co chu cai ASCII va khoang trang
+	static bool chiChuaChuCaiVaKhoangTrang(const std::string& str) {
+		if (catkhoangtrang(str).empty()) {
 			return false;
 		}
 
-		// 2. Viết hoa chữ cái đầu (VD: "ha noi" -> "Ha Noi", "vinh phuc" -> "Vinh Phuc")
-		static std::string vietHoaChuDau(std::string str) {
-			bool newWord = true;
-			for (char& c : str) {
-				if (isspace(c)) {
-					newWord = true; // Gặp khoảng trắng thì từ tiếp theo là từ mới
-				}
-				else if (newWord && isalpha(c)) {
-					c = toupper(c); // Viết hoa
-					newWord = false;
-				}
-				else {
-					c = tolower(c); // Các chữ còn lại viết thường
-				}
-			}
-			return str;
-		}
-
-		// 3. Kiểm tra định dạng Số điện thoại (Chỉ chứa số, từ 11 đến 12 số)
-		static void kiemTraSdt(const std::string& sdt) {
-			// Kiểm tra độ dài: Nếu độ dài nhỏ hơn 11 HOẶC lớn hơn 12 thì báo lỗi
-			if (sdt.length() < 10 || sdt.length() > 12) {
-				throw Loixacthuc("Loi: So dien thoai phai co tu 11 den 12 chu so!");
-			}
-
-			// Kiểm tra từng ký tự xem có bị lẫn chữ cái hay ký tự đặc biệt không
-			for (char c : sdt) {
-				if (!isdigit(c)) {
-					throw Loixacthuc("Loi: So dien thoai chi duoc chua con so!");
-				}
+		for (unsigned char c : str) {
+			if (!std::isalpha(c) && !std::isspace(c)) {
+				return false;
 			}
 		}
-		// 4. Tự động ghép tiền tố cho Mã (VD: Nhập "1234" -> Trả về "NCC1234")
-		static std::string tuTaoMa(const std::string& maNhap, const std::string& tienTo) {
-			std::string clean = catkhoangtrang(maNhap);
 
-			// Trường hợp 1: Máy tính đang đọc dữ liệu từ file txt lên (Mã đã có sẵn chữ NCC/TB) -> Cho qua luôn
-			if (clean.length() >= tienTo.length() && clean.substr(0, tienTo.length()) == tienTo) {
-				return clean;
-			}
-
-			// Trường hợp 2: Người dùng gõ trên màn hình Console (Chỉ có số)
-			if (clean.length() != 4) { // Bắt buộc phải gõ đúng 4 số
-				throw Loixacthuc("Loi: Vui long chi nhap dung 4 con so (VD: 1234)!");
-			}
-			for (char c : clean) {
-				if (!isdigit(c)) throw Loixacthuc("Loi: Ma chi duoc phep nhap con so!");
-			}
-
-			// Tự động ghép chữ + số (VD: "NCC" + "1234" = "NCC1234")
-			return tienTo + clean;
-		}
-
+		return true;
+	}
 };
-
-
