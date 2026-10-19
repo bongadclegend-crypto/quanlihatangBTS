@@ -1,3 +1,4 @@
+//Hoang Tuan Thanh
 #pragma once
 #include <string>
 #include <vector>
@@ -57,7 +58,7 @@ public:
         year = y;
     }
 
-    //1.ham doc chuoi tu file hoac ban phim nap vao doi tuong
+    //ham doc chuoi tu file hoac ban phim nap vao doi tuong
     void docchuoi(const std::string& dateStr) {
         //dung chia de cat du lieu tai dau '/'
         std::vector<std::string> parts = Inputhelper::chia(dateStr, '/');
@@ -101,7 +102,7 @@ public:
         }
     }
 
-    //2 ham xuat doi tuong date ra chuoi de in ra man hinh hoac file
+    // ham xuat doi tuong date ra chuoi de in ra man hinh hoac file
     std::string toString() const {
         //neu ngay thang be hon 10 thi tu dong chen them so 0 o phia trc
         std::string d = (day < 10 ? "0" : "") + std::to_string(day);
@@ -110,4 +111,3 @@ public:
         return d + "/" + m + "/" + std::to_string(year);
     }
 };
-
