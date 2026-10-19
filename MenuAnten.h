@@ -1,5 +1,5 @@
 // Tac gia: Nguyen Cong Vinh
-// Menu console cho use case Quan ly Anten & Cau hinh phat
+// code moi ngay 19 
 #pragma once
 #include <iostream>
 #include <memory>
@@ -8,7 +8,7 @@
 #include <cctype>
 #include "Exceptions.h"
 #include "Repository.h"
-#include "InputHelper.h"
+#include "Inputhelper.h" // Đã fix
 #include "Anten.h"
 #include "TramBTS.h"
 
@@ -32,7 +32,6 @@ private:
     static void inBang(const std::vector<std::shared_ptr<Anten>>& ds) {
         Anten::displayHeader();
         for (const auto& a : ds) a->display();
-        // Xóa dòng Anten::displayFooter(); đi
     }
 
     // Kiem tra Ma Tram sau khi da ep chuan 4 so ("1001" -> "BTS1001")
@@ -57,7 +56,7 @@ public:
             if (choice == 0) break;
 
             try {
-                if (choice == 1) {                        // THEM MOI
+                if (choice == 1) {
                     auto anten = std::make_shared<Anten>();
                     thuLai([&]() {
                         anten->setMa(Inputhelper::Docstring("Nhap Ma Anten (4 so, VD: 0001): "));
@@ -83,19 +82,17 @@ public:
                     repoAnten.add(anten);
                     std::cout << "[+] Them anten moi thanh cong (Ma: " << anten->getId() << ")!\n";
                 }
-                else if (choice == 2) {                   // XEM DANH SACH
+                else if (choice == 2) {
                     const auto& ds = repoAnten.getAll();
                     if (ds.empty()) std::cout << "[-] Danh sach anten dang trong.\n";
-                    else {
-                        inBang(ds);
-                        
-                    }
+                    else inBang(ds);
                 }
-                else if (choice == 3) {                   // TIM KIEM
+                else if (choice == 3) {
                     std::string tuKhoa = Inputhelper::Docstring("Nhap ma anten (VD: 0001), ma tram (VD: 1001) hoac loai anten: ");
                     std::string ma = Anten::chuanHoaMa(tuKhoa);
                     std::string loai = thuongHoa(tuKhoa);
                     std::vector<std::shared_ptr<Anten>> ketQua;
+
                     for (const auto& a : repoAnten.getAll()) {
                         if (a->getId() == ma || a->getId() == "AT" + ma ||
                             a->getMaTram() == ma || a->getMaTram() == "BTS" + ma ||
@@ -106,7 +103,7 @@ public:
                     if (ketQua.empty()) std::cout << "[-] Khong tim thay anten phu hop.\n";
                     else inBang(ketQua);
                 }
-                else if (choice == 4) {                   // CAP NHAT
+                else if (choice == 4) {
                     std::string id = Anten::taoMaAnten(Inputhelper::Docstring("Nhap Ma Anten can sua (4 so, VD: 0001): "));
                     auto at = repoAnten.findById(id);
                     if (!at) throw Ngoailekotimthay("Loi: Khong tim thay anten [" + id + "]!");
@@ -115,37 +112,31 @@ public:
                     std::cout << "(*) Nhap gia tri moi (Enter de giu nguyen):\n";
                     Anten banSao = *at;
 
-                    // 1. Cap nhat Ma Tram (Khoa ngoai) - Da sua loi State Leak
                     thuLai([&]() {
                         std::string s = Inputhelper::Docstring("Ma Tram moi (4 so, hien tai " + banSao.getMaTram() + "): ", true);
                         if (!s.empty()) {
                             std::string maTramChuan = Anten::taoMaTram(s);
-                            kiemTraTramTonTai(repoTramBTS, maTramChuan); // Kiem tra truoc
-                            banSao.setMaTram(maTramChuan);               // An toan roi moi gan
+                            kiemTraTramTonTai(repoTramBTS, maTramChuan);
+                            banSao.setMaTram(maTramChuan);
                         }
                         });
 
-                    // 2. Cap nhat Loai Anten
                     thuLai([&]() {
                         std::string s = Inputhelper::Docstring("Loai moi (" + banSao.getLoaiAnten() + "): ", true);
                         if (!s.empty()) banSao.setLoaiAnten(s);
                         });
 
-                    // 3. Cap nhat Do Cao
                     thuLai([&]() {
                         std::string s = Inputhelper::Docstring("Do cao moi (" + banSao.chieuCaoToString() + " m): ", true);
                         if (!s.empty()) {
-                            // Ep kieu truoc, dung thi moi gan
                             double cao = Anten::phanTichSoThuc(s);
                             banSao.setChieuCao(cao);
                         }
                         });
 
-                    // 4. Cap nhat Goc Azimuth
                     thuLai([&]() {
                         std::string s = Inputhelper::Docstring("Azimuth moi (" + std::to_string(banSao.getGocAzimuth()) + " do): ", true);
                         if (!s.empty()) {
-                            // Ep kieu truoc, dung thi moi gan
                             int goc = Anten::phanTichSoNguyen(s);
                             banSao.setGocAzimuth(goc);
                         }
@@ -155,7 +146,7 @@ public:
                     repoAnten.update();
                     std::cout << "[+] Cap nhat thanh cong!\n";
                 }
-                else if (choice == 5) {                   // XOA
+                else if (choice == 5) {
                     std::string id = Anten::taoMaAnten(Inputhelper::Docstring("Nhap Ma Anten can xoa (4 so, VD: 0001): "));
                     auto at = repoAnten.findById(id);
                     if (!at) throw Ngoailekotimthay("Loi: Khong tim thay anten [" + id + "]!");
