@@ -1,5 +1,5 @@
 // Tac gia: Nguyen Cong Vinh
-// Lop Anten: doi tuong nghiep vu Anten & cau hinh phat, ke thua Entity
+// code moi ngay 19
 #pragma once
 #include <iostream>
 #include <string>
@@ -9,7 +9,7 @@
 #include <vector>
 #include "Exceptions.h"
 #include "Entity.h"
-#include "InputHelper.h"
+#include "Inputhelper.h" // Đã fix
 
 class Anten : public Entity {
 private:
@@ -41,10 +41,10 @@ public:
         return r;
     }
 
-    // Tu dong ep ma Anten: "0001" -> "AT0001", bat buoc dung 4 chu so
     static std::string taoMaAnten(const std::string& maNhap) {
         std::string clean = chuanHoaMa(maNhap);
         std::string ma = Inputhelper::tuTaoMa(clean, "AT");
+
         if (ma.size() != 6 || ma.compare(0, 2, "AT") != 0) {
             throw Loixacthuc("Loi: Ma Anten phai gom dung 4 chu so (VD: nhap 0001)!");
         }
@@ -56,10 +56,10 @@ public:
         return ma;
     }
 
-    // Tu dong ep ma Tram BTS: "1001" -> "BTS1001", bat buoc dung 4 chu so
     static std::string taoMaTram(const std::string& maNhap) {
         std::string clean = chuanHoaMa(maNhap);
         std::string ma = Inputhelper::tuTaoMa(clean, "BTS");
+
         if (ma.size() != 7 || ma.compare(0, 3, "BTS") != 0) {
             throw Loixacthuc("Loi: Ma Tram BTS phai gom dung 4 chu so (VD: nhap 1001)!");
         }
@@ -146,28 +146,23 @@ public:
         *this = parsed;
     }
 
-    // In 1 dong du lieu dang bang (phong cach toi gian)
+    // Đã fix bảng hiển thị khít dấu | theo phong cách TramBTS
     void display() const override {
         std::cout << std::left
-            << std::setw(10) << id << " | "
-            << std::setw(10) << maTram << " | "
-            << std::setw(16) << loaiAnten << " | "
-            << std::setw(8) << chieuCaoToString() << " | "
+            << std::setw(10) << id << "| "
+            << std::setw(10) << maTram << "| "
+            << std::setw(16) << loaiAnten << "| "
+            << std::setw(10) << chieuCaoToString() << "| "
             << std::setw(8) << gocAzimuth << "\n";
     }
 
-    // Tieu de cot toi gian, 1 duong ke ngang o duoi, khong co dau '+'
     static void displayHeader() {
         std::cout << std::left
-            << std::setw(10) << "Ma Anten" << " | "
-            << std::setw(10) << "Ma Tram" << " | "
-            << std::setw(16) << "Loai Anten" << " | "
-            << std::setw(8) << "Cao(m)" << " | "
+            << std::setw(10) << "Ma Anten" << "| "
+            << std::setw(10) << "Ma Tram" << "| "
+            << std::setw(16) << "Loai Anten" << "| "
+            << std::setw(10) << "Cao(m)" << "| "
             << std::setw(8) << "Azimuth" << "\n";
-        std::cout << std::string(62, '-') << "\n";
-    }
-
-    // Xoa sach logic footer
-    static void displayFooter() {
+        std::cout << std::string(59, '-') << "\n";
     }
 };
