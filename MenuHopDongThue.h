@@ -1,4 +1,4 @@
-//menuhopdongthue.h
+//Hoang Tuan Thanh
 #pragma once
 #include <iostream>
 #include <string>
