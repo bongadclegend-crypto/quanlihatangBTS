@@ -19,8 +19,8 @@ private:
 public:
     PhieuBaoTri() { chiPhi = 0; }
 
-    PhieuBaoTri(std::string maPBT, std::string maBTS, Date ngay, std::string nd, std::string tt, double cp) {
-        setId(maPBT);
+    PhieuBaoTri(std::string maPBT, std::string maBTS, std::string ngay, std::string nd, std::string tt, double cp) {
+        setId(Inputhelper::TuTaoMa(maPBT, "PBT"));
         setMaTram(maBTS);
         setNgayBaoTri(ngay);
         setNoiDung(nd);
@@ -28,13 +28,19 @@ public:
         setChiPhi(cp);
     }
 
+    // --- CÃC HÃ€M GETTER & SETTER ---
+
     std::string getMaTram() const { return maTram; }
     void setMaTram(const std::string& maTram) {
-        this->maTram = Inputhelper::tuTaoMa(maTram, "BTS");
+        this->maTram = Inputhelper::TuTaoMa(maTram, "BTS");
     }
 
-    Date getNgayBaoTri() const { return ngayBaoTri; }
-    void setNgayBaoTri(const Date& ngay) { ngayBaoTri = ngay; }
+    std::string getNgayBaoTri() const { return ngayBaoTri.toString(); }
+    void setNgayBaoTri(const std::string& ngay) {
+        std::string clean = Inputhelper::catkhoangtrang(ngay);
+        if (clean.empty()) throw Loixacthuc("Loi: Ngay bao tri khong duoc de trong!");
+        ngayBaoTri.docchuoi(clean);
+    }
 
     std::string getNoiDung() const { return noiDung; }
     void setNoiDung(const std::string& nd) {
@@ -56,11 +62,13 @@ public:
         chiPhi = cp;
     }
 
-    std::string toFilerecord() const override {
+    // GHI DE (OVERRIDE)
+
+    std::string tofilerecord() const override {
         return id + "|" + maTram + "|" + ngayBaoTri.toString() + "|" + noiDung + "|" + trangThai + "|" + std::to_string(chiPhi);
     }
 
-    void fromFilerecord(const std::string& record) override {
+    void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() >= 7) {
             setId(data[0]);
@@ -71,6 +79,8 @@ public:
             chiPhi = std::stod(data[5]);
         }
     }
+
+    // HIEN THI TREN CONSOLE
 
     void display() const override {
         std::cout << std::left
