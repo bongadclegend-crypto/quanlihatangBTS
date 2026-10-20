@@ -20,17 +20,17 @@ public:
 		std::string cleanId = Inputhelper::catkhoangtrang(newId);
 
 		if (cleanId.empty()) {
-			throw Loixacthuc("Loi: Ma dinh danh ko dc de trong!");
+			throw Loixacthuc("Loi: Ma dinh danh ko dc de trong");
 		}
 		if (cleanId[0] == '-') {
-			throw Loixacthuc("Loi: Ma dinh danh ko the la so am!");
+			throw Loixacthuc("Loi: Ma dinh danh ko the la so am");
 		}
 		id = cleanId;
 	}
 	// chuyen doi tuong thanh chuoid e luu vao file
-	virtual std::string toFilerecord() const = 0;//chi tao chuoi bieu dien de luu vao ban ghi
+	virtual std::string tofilerecord() const = 0;//chi tao chuoi bieu dien de luu vao ban ghi
 	//doc chuoi banghi va nap du lieu vao doi tuong
-	virtual void fromFilerecord(const std::string& record) = 0;//chuyen doi doi tuong thanh chuoi, nhan chuoi tu file,nv chinh la cap nhat du lieu nen tra ve kieu void
+	virtual void fromfilerecord(const std::string& record) = 0;//chuyen doi doi tuong thanh chuoi, nhan chuoi tu file,nv chinh la cap nhat du lieu nen tra ve kieu void
 	//hien thi doi tuong
 	virtual void display() const = 0;//quy dinh moi lop con phai cung cap thong tin cua chinh no
 
