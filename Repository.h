@@ -21,7 +21,7 @@ public:
     }
 
     
-    void loadFromFile() {//doc du lieu tu txt
+    void loadfromfile() {//doc du lieu tu txt
         data.clear(); // xoa data cu tren RAM truoc khi doc moi
         std::ifstream file(filename);//mo file ra doc
 
@@ -36,7 +36,7 @@ public:
 
             auto item = std::make_shared<T>(); // Tao doi tuong moi,auto thay cho std::shared_ptr<T> item cho tung dong
             try {
-                item->fromFilerecord(line);    // nap du lieu tu chuoi vao doi tuong
+                item->fromfilerecord(line);    // nap du lieu tu chuoi vao doi tuong
                 data.push_back(item);          // day vao mang
             }
             catch (...) {//bat moi loai loi nhu ai nghich lam mat mat 1 cot 1o nao do
@@ -57,7 +57,7 @@ public:
         }
 
         for (const auto& item : data) {
-            file << item->toFilerecord() << std::endl;//ghep cac doi tuong thanh chuoi phan cach = dau|
+            file << item->tofilerecord() << std::endl;//ghep cac doi tuong thanh chuoi phan cach = dau|
         }
 
         file.close();
