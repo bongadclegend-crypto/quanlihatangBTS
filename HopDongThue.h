@@ -1,3 +1,4 @@
+//Hoang Tuan Thanh
 #pragma once
 #include <iostream>
 #include <iomanip>
@@ -10,22 +11,21 @@
 
 class HopDongThue : public Entity {
 private:
-    std::string maTram;       // KHÓA NGOẠI: Tham chiếu sang TramBTS
+    std::string maTram;       //khoa ngoai tham chieu sang tram Bts
     std::string tenChuNha;
     std::string soDienThoai;
-    long long giaThueThang;   // Đơn vị: VNĐ
-    Date ngayBatDau;          // Định dạng: dd/mm/yyyy
-    int thoiHanThang;         // Số tháng thuê (phải > 0)
+    long long giaThueThang;   // gia thue hang thang
+    Date ngayBatDau;          //  dd/mm/yyyy
+    int thoiHanThang;         // so thoi han thang thue
 
 public:
     // Constructor mac dinh (danh cho Repository khi doc file)
     HopDongThue() : giaThueThang(0), thoiHanThang(0) {}
 
     // Constructor day du du lieu
-    HopDongThue(std::string maHD, std::string maBTS, std::string ten,
-        std::string sdt, long long gia, std::string ngay, int thoiHan) {
+    HopDongThue(std::string maHD, std::string maBTS, std::string ten,std::string sdt, long long gia, std::string ngay, int thoiHan) {
 
-        setId(Inputhelper::tuTaoMa(maHD, "HD"));
+        setId(Inputhelper::TuTaoMa(maHD, "HD"));
         setMaTram(maBTS);
         setTenChuNha(ten);
         setSoDienThoai(sdt);
@@ -37,34 +37,34 @@ public:
     // getter setter
     std::string getMaTram() const { return maTram; }
     void setMaTram(const std::string& maBTS) {
-        maTram = Inputhelper::tuTaoMa(maBTS, "BTS");
+        maTram = Inputhelper::TuTaoMa(maBTS, "BTS");
     }
 
     std::string getTenChuNha() const { return tenChuNha; }
     void setTenChuNha(const std::string& ten) {
         std::string clean = Inputhelper::catkhoangtrang(ten);
 
-        if (clean.empty()) throw Loixacthuc("Loi: Ten chu nha khong duoc de trong!");
-        if (clean.find('|') != std::string::npos) throw Loixacthuc("Loi: Ten chu nha khong duoc chua ky tu | !");
+        if (clean.empty()) throw Loixacthuc("Loi: Ten chu nha khong duoc de trong");
+        if (clean.find('|') != std::string::npos) throw Loixacthuc("Loi: Ten chu nha khong duoc chua ky tu | ");
         if (!Inputhelper::chiChuaChuCaiVaKhoangTrang(clean)) {
-            throw Loixacthuc("Loi: Ten chu nha chi duoc phep chua chu cai va khoang trang!");
+            throw Loixacthuc("Loi: Ten chu nha chi duoc phep chua chu cai va khoang trang");
         }
 
-        // Tự động viết hoa chữ cái đầu
-        tenChuNha = Inputhelper::vietHoaChuDau(clean);
+        //tu dong viet hoa chu cai dau
+        tenChuNha = Inputhelper::VietHoaChuDau(clean);
     }
 
     std::string getSoDienThoai() const { return soDienThoai; }
     void setSoDienThoai(const std::string& sdt) {
         std::string clean = Inputhelper::catkhoangtrang(sdt);
-        // Tái sử dụng hàm check SĐT cực mạnh từ InputHelper
-        Inputhelper::kiemTraSdt(clean);
+        //kiemtra sdt cua chu nha
+        Inputhelper::KiemTraSdt(clean);
         soDienThoai = clean;
     }
 
-    long long getGiaThueThang() const { return giaThueThang; }
+    long long getGiaThueThang() const { return giaThueThang; }//lay ra gia thue thang
     void setGiaThueThang(long long gia) {
-        if (gia <= 0) throw Loixacthuc("Loi: Gia thue moi thang phai lon hon 0 VND!");
+        if (gia <= 0) throw Loixacthuc("Loi: Gia thue moi thang phai lon hon 0 VND");
         giaThueThang = gia;
     }
 
@@ -73,43 +73,56 @@ public:
     }
     void setNgayBatDau(const std::string& ngay) {
         std::string clean = Inputhelper::catkhoangtrang(ngay);
-        if (clean.empty()) throw Loixacthuc("Loi: Ngay bat dau khong duoc de trong!");
-        ngayBatDau.docchuoi(clean); // Date.h đã lo khâu bẫy lỗi ngày tháng
+        if (clean.empty()) throw Loixacthuc("Loi: Ngay bat dau khong duoc de trong");
+        ngayBatDau.docchuoi(clean); // phat hien lo ngay thang
     }
 
     int getThoiHanThang() const { return thoiHanThang; }
     void setThoiHanThang(int thoiHan) {
-        if (thoiHan <= 0) throw Loixacthuc("Loi: Thoi han thue phai lon hon 0 thang!");
+        if (thoiHan <= 0) throw Loixacthuc("Loi: Thoi han thue phai lon hon 0 thang");
         thoiHanThang = thoiHan;
     }
 
     // doc ghi file txt
-    std::string toFilerecord() const override {
+    std::string tofilerecord() const override {
         return id + "|" + maTram + "|" + tenChuNha + "|" +
             soDienThoai + "|" + std::to_string(giaThueThang) + "|" +
             ngayBatDau.toString() + "|" + std::to_string(thoiHanThang);
     }
 
-    void fromFilerecord(const std::string& record) override {
+    void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() != 7) {
-            throw Loixacthuc("Loi: Ban ghi Hop dong phai co dung 7 truong!");
+            throw Loixacthuc("Loi: Ban ghi Hop dong phai co dung 7 truong");
         }
+
+        long long gia;
+        int thoiHan;
+        std::size_t vitricuoiGia = 0;
+        std::size_t vitricuoiThang = 0;
 
         try {
-            long long gia = std::stoll(data[4]);
-            int thoiHan = std::stoi(data[6]);
-
-            // Kỹ thuật an toàn: Tạo đối tượng tạm, đúng hết 100% mới gán vào bộ nhớ
-            HopDongThue hdTam(data[0], data[1], data[2], data[3], gia, data[5], thoiHan);
-            *this = hdTam;
+            gia = std::stoll(data[4], &vitricuoiGia);
+            thoiHan = std::stoi(data[6], &vitricuoiThang);
         }
         catch (const std::invalid_argument&) {
-            throw Loixacthuc("Loi: Gia thue hoac thoi han trong file khong phai la so!");
+            throw Loixacthuc("Loi: Gia thue hoac thoi han trong file khong phai la so");
         }
         catch (const std::out_of_range&) {
-            throw Loixacthuc("Loi: Gia thue hoac thoi han trong file vuot qua gioi han!");
+            throw Loixacthuc("Loi: Gia thue hoac thoi han trong file vuot qua gioi han");
         }
+
+        // kiem tra cac ki tu la khac so trongchuoi
+        if (vitricuoiGia != data[4].size()) {
+            throw Loixacthuc("Loi: Gia thue trong file chua ky tu khong hop le (chu cai hoac ky tu dac biet)!");
+        }
+        if (vitricuoiThang != data[6].size()) {
+            throw Loixacthuc("Loi: Thoi han thue trong file chua ky tu khong hop le!");
+        }
+
+        // ghi file vao bo nho
+        HopDongThue hdTam(data[0], data[1], data[2], data[3], gia, data[5], thoiHan);
+        *this = hdTam;
     }
 
     // hien du lieu tren con sole
@@ -117,7 +130,7 @@ public:
         std::cout << std::left
             << std::setw(8) << id << "| "
             << std::setw(10) << maTram << "| "
-            << std::setw(22) << (tenChuNha.length() > 19 ? tenChuNha.substr(0, 16) + "..." : tenChuNha) << "| "
+            << std::setw(30) << (tenChuNha.length() > 27 ? tenChuNha.substr(0, 24) + "..." : tenChuNha) << "| "
             << std::setw(13) << soDienThoai << "| "
             << std::setw(15) << giaThueThang << "| "
             << std::setw(12) << ngayBatDau.toString() << "| "
@@ -128,11 +141,11 @@ public:
         std::cout << std::left
             << std::setw(8) << "Ma HD" << "| "
             << std::setw(10) << "Ma Tram" << "| "
-            << std::setw(22) << "Ten Chu Nha" << "| "
+            << std::setw(30) << "Ten Chu Nha" << "| "
             << std::setw(13) << "SDT" << "| "
             << std::setw(15) << "Gia(VND)/Th" << "| "
             << std::setw(12) << "Ngay Thue" << "| "
             << std::setw(6) << "Thang" << "\n";
-        std::cout << std::string(95, '-') << "\n";
+        std::cout << std::string(102, '-') << "\n";
     }
 };
