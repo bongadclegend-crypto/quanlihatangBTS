@@ -1,35 +1,38 @@
+//Hoang Tuan Thanh
 #pragma once
 #include<string>
 #include"Exceptions.h"
-#include"InputHelper.h"
-class Entity{
+#include"Inputhelper.h"
+//lop co so truu tuong cac doi tuong quan ly
+class Entity {
 protected:
-	std::string id;//ma dinh danh chung tren moi doi tuong
+	//ma dinh danh chung cua doi tuong
+	std::string id;
 public:
 	//ham huy ao
-	virtual ~Entity() = default;
-	std::string getId()const {
+	virtual ~Entity() = default;//ham huy ao dfault de tu sinh ra huy vi du nhu Entity *p=new nhanvien() delete p;
+	//lay ma dinh danh
+	std::string getId()const {//tra ve ma dinh danh doi tuong ma ko thay doi no
 		return id;
 	}
-	//ham thiet lap ma co kiem tra
-	void setId(const std::string& newId) {
-		//cat khoang trang cua cai id ms
+	//vgan ma dinh danh sa khi kiem tra
+	void setId(const std::string& newId) {//gan du lieu cho phep sua du lieu nhung phai kiem duyet
 		std::string cleanId = Inputhelper::catkhoangtrang(newId);
-		//neu trong thi nem ra loi xac thuc
+
 		if (cleanId.empty()) {
-			throw Loixacthuc("Loi:Ma dinh danh khong duoc de trong");
+			throw Loixacthuc("Loi: Ma dinh danh ko dc de trong!");
 		}
-		//chan so am
 		if (cleanId[0] == '-') {
-			throw Loixacthuc("Loi: Ma dinh danh khong duoc la so am!");
+			throw Loixacthuc("Loi: Ma dinh danh ko the la so am!");
 		}
 		id = cleanId;
 	}
-	// ham ao thiet lap ma dinh danh
-	//1 ham dong goi doi tuong thanh 1 dong chuoi
-	virtual std::string toFilerecord() const = 0;
-	//2 ham doc 1 chuoi tu file txt va cat chung ra de nap thanh 1 doi tuong
-	virtual void fromFilerecord(const std::string& record) = 0;
-	//3 ham in doi tuong ra man hinh console(dang bang)
-	virtual void display() const = 0;
+	// chuyen doi tuong thanh chuoid e luu vao file
+	virtual std::string toFilerecord() const = 0;//chi tao chuoi bieu dien de luu vao ban ghi
+	//doc chuoi banghi va nap du lieu vao doi tuong
+	virtual void fromFilerecord(const std::string& record) = 0;//chuyen doi doi tuong thanh chuoi, nhan chuoi tu file,nv chinh la cap nhat du lieu nen tra ve kieu void
+	//hien thi doi tuong
+	virtual void display() const = 0;//quy dinh moi lop con phai cung cap thong tin cua chinh no
+
+
 };
