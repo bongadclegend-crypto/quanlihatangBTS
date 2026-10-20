@@ -1,3 +1,4 @@
+//menuhopdongthue.h
 #pragma once
 #include <iostream>
 #include <string>
@@ -10,25 +11,25 @@
 
 class MenuHopDongThue {
 private:
-    // HÀM HỖ TRỢ BẮT LỖI: Nhập sai ở đâu lặp lại đúng chỗ đó
+    //ho tro bat loi
     template <class F>
-    static void thuLai(F buoc) {
+    static void thulai(F buoc) {
         while (true) {
             try {
                 buoc();
-                return; // Nếu không có lỗi thì thoát vòng lặp, đi tiếp
+                return; // neu ko co loi thoat vong lap va tiep tuc
             }
             catch (const Baseexception& e) {
-                std::cout << "[!] " << e.getMessage() << " -> Moi nhap lai.\n";
+                std::cout << "[!] " << e.getMessage() << " -> Moi nhap lai"<<std::endl;
             }
             catch (const std::exception&) {
-                std::cout << "[!] Gia tri khong hop le -> Moi nhap lai.\n";
+                std::cout << "[!] Gia tri khong hop le -> Moi nhap lai"<<std::endl;
             }
         }
     }
 
 public:
-    // HÀM RUN TRUYỀN VÀO CẢ 2 KHO DỮ LIỆU ĐỂ KIỂM TRA KHÓA NGOẠI
+  //giao dien
     static void run(Repository<HopDongThue>& repoHopDong, Repository<TramBTS>& repoTramBTS) {
         while (true) {
             std::cout << "\n--- QUAN LY HOP DONG THUE ---\n";
@@ -40,52 +41,52 @@ public:
             try {
                 if (chon == 1) {
                     std::cout << "\n";
-                    repoHopDong.loadFromFile();
+                    repoHopDong.loadfromfile();
                     const auto& ds = repoHopDong.getAll();
 
                     if (ds.empty()) {
-                        std::cout << "[-] Danh sach Hop dong dang trong.\n";
+                        std::cout << "[-] Danh sach Hop dong dang trong" << std::endl;
                     }
                     else {
                         HopDongThue::displayHeader();
                         for (const auto& hd : ds) hd->display();
-                        std::cout << "Tong so ban ghi: " << ds.size() << "\n";
+                        std::cout << "Tong so ban ghi: " << ds.size() << std::endl;
                     }
                 }
                 else if (chon == 2) {
                     std::cout << "\n-- Them Hop Dong --\n";
                     auto hd = std::make_shared<HopDongThue>();
 
-                    thuLai([&]() {
+                    thulai([&]() {
                         std::string ma = Inputhelper::Docstring("Ma HD (4 so): ");
-                        hd->setId(Inputhelper::tuTaoMa(ma, "HD"));
+                        hd->setId(Inputhelper::TuTaoMa(ma, "HD"));
                         if (repoHopDong.findById(hd->getId())) {
-                            throw Ngoailerangbuoc("Loi: Ma Hop dong nay da ton tai!");
+                            throw Ngoailerangbuoc("Loi: Ma Hop dong nay da ton tai");
                         }
                         });
 
-                    // KIỂM TRA KHÓA NGOẠI TỪ BẢNG TRAMBTS
-                    thuLai([&]() {
+                    // kiem tra khoa ngoai ma tram
+                    thulai([&]() {
                         std::string maBTS = Inputhelper::Docstring("Ma Tram BTS (4 so): ");
-                        std::string maChuan = Inputhelper::tuTaoMa(maBTS, "BTS");
+                        std::string maChuan = Inputhelper::TuTaoMa(maBTS, "BTS");
                         if (!repoTramBTS.findById(maChuan)) {
-                            throw Ngoailerangbuoc("Loi: Ma Tram nay khong ton tai trong he thong! Vui long nhap dung Ma Tram.");
+                            throw Ngoailerangbuoc("Loi: Ma Tram nay khong ton tai trong he thong! Vui long nhap dung Ma Tram");
                         }
                         hd->setMaTram(maBTS);
                         });
 
-                    thuLai([&]() { hd->setTenChuNha(Inputhelper::Docstring("Ten chu nha: ")); });
+                    thulai([&]() { hd->setTenChuNha(Inputhelper::Docstring("Ten chu nha: ")); });
 
-                    thuLai([&]() { hd->setSoDienThoai(Inputhelper::Docstring("So dien thoai: ")); });
+                    thulai([&]() { hd->setSoDienThoai(Inputhelper::Docstring("So dien thoai: ")); });
 
-                    thuLai([&]() {
+                    thulai([&]() {
                         std::string giaStr = Inputhelper::Docstring("Gia thue (VND): ");
                         hd->setGiaThueThang(std::stoll(giaStr));
                         });
 
-                    thuLai([&]() { hd->setNgayBatDau(Inputhelper::Docstring("Ngay bat dau (dd/mm/yyyy): ")); });
+                    thulai([&]() { hd->setNgayBatDau(Inputhelper::Docstring("Ngay bat dau (dd/mm/yyyy): ")); });
 
-                    thuLai([&]() { hd->setThoiHanThang(Inputhelper::Docint("Thoi han (thang): ")); });
+                    thulai([&]() { hd->setThoiHanThang(Inputhelper::Docint("Thoi han (thang): ")); });
 
                     repoHopDong.add(hd);
                     std::cout << "[+] Them thanh cong!\n";
@@ -93,16 +94,16 @@ public:
                 else if (chon == 3) {
                     std::cout << "\n-- Cap Nhat (Nhan Enter de bo qua truong khong sua) --\n";
                     std::string rawId = Inputhelper::Docstring("Ma HD can sua (4 so): ");
-                    auto hd = repoHopDong.findById(Inputhelper::tuTaoMa(rawId, "HD"));
+                    auto hd = repoHopDong.findById(Inputhelper::TuTaoMa(rawId, "HD"));
                     if (!hd) throw Ngoailekotimthay("Khong tim thay Ma HD nay!");
 
                     // Tao ban sao de sua (An toan du lieu)
                     HopDongThue banSao = *hd;
 
-                    thuLai([&]() {
+                    thulai([&]() {
                         std::string maBTS = Inputhelper::Docstring("Ma Tram moi (" + banSao.getMaTram() + "): ", true);
                         if (!maBTS.empty()) {
-                            std::string maChuan = Inputhelper::tuTaoMa(maBTS, "BTS");
+                            std::string maChuan = Inputhelper::TuTaoMa(maBTS, "BTS");
                             if (!repoTramBTS.findById(maChuan)) {
                                 throw Ngoailerangbuoc("Loi: Ma Tram nay khong ton tai trong he thong!");
                             }
@@ -110,40 +111,40 @@ public:
                         }
                         });
 
-                    thuLai([&]() {
+                    thulai([&]() {
                         std::string ten = Inputhelper::Docstring("Ten chu nha moi (" + banSao.getTenChuNha() + "): ", true);
                         if (!ten.empty()) banSao.setTenChuNha(ten);
                         });
 
-                    thuLai([&]() {
+                    thulai([&]() {
                         std::string sdt = Inputhelper::Docstring("SDT moi (" + banSao.getSoDienThoai() + "): ", true);
                         if (!sdt.empty()) banSao.setSoDienThoai(sdt);
                         });
 
-                    thuLai([&]() {
+                    thulai([&]() {
                         std::string giaStr = Inputhelper::Docstring("Gia moi (" + std::to_string(banSao.getGiaThueThang()) + " VND): ", true);
                         if (!giaStr.empty()) banSao.setGiaThueThang(std::stoll(giaStr));
                         });
 
-                    thuLai([&]() {
+                    thulai([&]() {
                         std::string ngay = Inputhelper::Docstring("Ngay bat dau moi (" + banSao.getNgayBatDau() + "): ", true);
                         if (!ngay.empty()) banSao.setNgayBatDau(ngay);
                         });
 
-                    thuLai([&]() {
+                    thulai([&]() {
                         std::string thangStr = Inputhelper::Docstring("Thoi han moi (" + std::to_string(banSao.getThoiHanThang()) + " thang): ", true);
                         if (!thangStr.empty()) banSao.setThoiHanThang(std::stoi(thangStr));
                         });
 
-                    *hd = banSao; // Ghi de ban nhap vao ban chinh
+                    *hd = banSao; // ghi de ban nhap vao ban chinh
                     repoHopDong.update();
                     std::cout << "[+] Cap nhat thanh cong!\n";
                 }
                 else if (chon == 4) {
                     std::string rawId = Inputhelper::Docstring("\nMa HD can xoa (4 so): ");
-                    std::string id = Inputhelper::tuTaoMa(rawId, "HD");
+                    std::string id = Inputhelper::TuTaoMa(rawId, "HD");
 
-                    if (!repoHopDong.findById(id)) throw Ngoailekotimthay("Khong tim thay Ma HD nay!");
+                    if (!repoHopDong.findById(id)) throw Ngoailekotimthay("Khong tim thay Ma HD nay");
 
                     std::string xacNhan = Inputhelper::Docstring("Chac chan xoa? (y/n): ");
                     if (xacNhan == "y" || xacNhan == "Y") {
@@ -157,7 +158,7 @@ public:
                 else if (chon == 5) {
                     std::cout << "\n-- Tim Kiem --\n";
                     std::string rawId = Inputhelper::Docstring("Nhap Ma HD can tim (4 so): ");
-                    std::string id = Inputhelper::tuTaoMa(rawId, "HD");
+                    std::string id = Inputhelper::TuTaoMa(rawId, "HD");
                     auto hd = repoHopDong.findById(id);
 
                     if (!hd) {
@@ -167,11 +168,11 @@ public:
                         std::cout << "\n";
                         HopDongThue::displayHeader();
                         hd->display();
-                        std::cout << std::string(95, '-') << "\n";
+                        std::cout << std::string(95, '-') << std::endl;
                     }
                 }
                 else {
-                    std::cout << "[-] Lua chon khong hop le!\n";
+                    std::cout << "[-] Lua chon khong hop le"<<std::endl;
                 }
             }
             catch (const Baseexception& e) { std::cout << "[-] Loi Nghiep Vu: " << e.getMessage() << "\n"; }
