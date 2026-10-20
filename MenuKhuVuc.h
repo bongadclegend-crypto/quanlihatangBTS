@@ -1,5 +1,6 @@
 // Tac gia: Nguyen Cong Vinh
-// code moi sua ngay 19
+// code fix ngay 20
+
 #pragma once
 #include <iostream>
 #include <memory>
@@ -8,7 +9,7 @@
 #include <cctype>
 #include "Exceptions.h"
 #include "Repository.h"
-#include "Inputhelper.h" // Đã fix
+#include "Inputhelper.h" 
 #include "KhuVuc.h"
 #include "TramBTS.h"
 
@@ -43,14 +44,14 @@ private:
     }
 
 public:
-    // Giữ nguyên tham số repoTram để Application.h không bị báo lỗi sai cấu trúc
+    
     static void run(Repository<KhuVuc>& repoKV, Repository<TramBTS>& repoTram) {
         while (true) {
             std::cout << "\n================= QUAN LY KHU VUC / TINH =================\n";
             std::cout << "1. Them khu vuc moi\n";
-            std::cout << "2. Xem danh sach khu vuc\n";
-            std::cout << "3. Tim kiem khu vuc\n";
-            std::cout << "4. Cap nhat thong tin khu vuc\n";
+            std::cout << "2. Xem danh sach \n";
+            std::cout << "3. Tim kiem \n";
+            std::cout << "4. Cap nhat thong tin\n";
             std::cout << "5. Xoa khu vuc\n";
             std::cout << "0. Quay lai menu chinh\n";
             std::cout << "==========================================================\n";
@@ -119,13 +120,13 @@ public:
                     repoKV.update();
                     std::cout << "[+] Cap nhat thanh cong!\n";
                 }
-                else if (choice == 5) {                   // XOA - ĐÃ THÁO CHẶN LIÊN KẾT
+                else if (choice == 5) {                  
                     std::string id = KhuVuc::taoMaKV(Inputhelper::Docstring("Nhap Ma KV can xoa (4 so, VD: 0001): "));
                     auto kv = repoKV.findById(id);
                     if (!kv) throw Ngoailekotimthay("Loi: Khong tim thay ma khu vuc [" + id + "]!");
                     inBang({ kv });
 
-                    // Đã bỏ hàm kiểm tra khóa ngoại demTramThuoc ở đây, cho phép xóa tự do
+                    
 
                     std::string xn = Inputhelper::Docstring("Ban co chac chan muon xoa (y/n)? ");
                     if (xn == "y" || xn == "Y") {
