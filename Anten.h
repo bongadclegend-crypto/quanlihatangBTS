@@ -1,5 +1,5 @@
 // Tac gia: Nguyen Cong Vinh
-// code moi ngay 19
+// fix ngay 20
 #pragma once
 #include <iostream>
 #include <string>
@@ -9,7 +9,7 @@
 #include <vector>
 #include "Exceptions.h"
 #include "Entity.h"
-#include "Inputhelper.h" // Đã fix
+#include "Inputhelper.h"
 
 class Anten : public Entity {
 private:
@@ -22,7 +22,6 @@ private:
         if (s.find('|') != std::string::npos)
             throw Loixacthuc("Loi: " + tenTruong + " khong duoc chua ky tu '|'!");
     }
-
 public:
     Anten() : chieuCao(0.0), gocAzimuth(0) {}
 
@@ -43,7 +42,8 @@ public:
 
     static std::string taoMaAnten(const std::string& maNhap) {
         std::string clean = chuanHoaMa(maNhap);
-        std::string ma = Inputhelper::tuTaoMa(clean, "AT");
+       
+        std::string ma = Inputhelper::TuTaoMa(clean, "AT");
 
         if (ma.size() != 6 || ma.compare(0, 2, "AT") != 0) {
             throw Loixacthuc("Loi: Ma Anten phai gom dung 4 chu so (VD: nhap 0001)!");
@@ -58,7 +58,8 @@ public:
 
     static std::string taoMaTram(const std::string& maNhap) {
         std::string clean = chuanHoaMa(maNhap);
-        std::string ma = Inputhelper::tuTaoMa(clean, "BTS");
+       
+        std::string ma = Inputhelper::TuTaoMa(clean, "BTS");
 
         if (ma.size() != 7 || ma.compare(0, 3, "BTS") != 0) {
             throw Loixacthuc("Loi: Ma Tram BTS phai gom dung 4 chu so (VD: nhap 1001)!");
@@ -110,7 +111,9 @@ public:
         std::string clean = Inputhelper::catkhoangtrang(loai);
         if (clean.empty()) throw Loixacthuc("Loi: Loai Anten khong duoc de trong!");
         kiemTraKyTuCam(clean, "Loai Anten");
-        loaiAnten = Inputhelper::vietHoaChuDau(clean);
+
+       
+        loaiAnten = Inputhelper::VietHoaChuaDau(clean);
     }
 
     double getChieuCao() const { return chieuCao; }
@@ -133,12 +136,12 @@ public:
         gocAzimuth = az;
     }
 
-    std::string toFilerecord() const override {
+    std::string tofilerecord() const override {
         return id + "|" + maTram + "|" + loaiAnten + "|" +
             chieuCaoToString() + "|" + std::to_string(gocAzimuth);
     }
 
-    void fromFilerecord(const std::string& record) override {
+    void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() != 5) throw Loixacthuc("Loi: Dong du lieu Anten sai dinh dang!");
         Anten parsed(data[0], data[1], data[2],
@@ -146,7 +149,6 @@ public:
         *this = parsed;
     }
 
-    // Đã fix bảng hiển thị khít dấu | theo phong cách TramBTS
     void display() const override {
         std::cout << std::left
             << std::setw(10) << id << "| "
