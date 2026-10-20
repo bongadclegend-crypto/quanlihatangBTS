@@ -76,10 +76,10 @@ input = catkhoangtrang(input);
                     return so; //thi tra ve so
                 }
             }
-            catch (const std::invalid_argument& e) {//sai khai bao ngoai le
+            catch (const std::invalid_argument& ) {//sai khai bao ngoai le
                 // Chuoi khong chuyen duoc thanh so nguyen
             }
-            catch (const std::out_of_range& e) {
+            catch (const std::out_of_range& ) {
                 // So vuot pham vi cua int
             }
 
@@ -88,7 +88,7 @@ input = catkhoangtrang(input);
     }
 
     // kiem tra chuoi co it nhat mot chu cai
-    static bool coChuaChuCai(const std::string& str) {
+    static bool CoChuaChuCai(const std::string& str) {
         for (unsigned char c : str) {
             if (std::isalpha(c)) {
                 return true;
@@ -99,10 +99,10 @@ input = catkhoangtrang(input);
     }
 
     // viet hoa chu cai dau moi tu
-    static std:: string vietHoaChuDau(std::string  str) {
+    static std:: string VietHoaChuDau(std::string  str) {
         bool dauTu = true;
 
-        for (char& c : str) { // Da bo unsigned char
+        for (char& c : str) { 
             if (isspace(c)) {
                 dauTu = true;
             }
@@ -120,7 +120,7 @@ input = catkhoangtrang(input);
     }
 
     // Kiem tra so dien thoai co tu 10 den 12 chu so
-    static void kiemTraSdt(const std::string& sdt) {
+    static void KiemTraSdt(const std::string& sdt) {
         if (sdt.length() < 10 || sdt.length() > 12) {
             throw Loixacthuc(
                 "Loi: So dien thoai phai co tu 10 den 12 chu so"
@@ -137,7 +137,7 @@ input = catkhoangtrang(input);
     }
 
     // Ghep tien to voi phan ma gom 4 chu so
-    static std::string tuTaoMa( const std::string& maNhap,const std::string& tienTo) {
+    static std::string TuTaoMa( const std::string& maNhap,const std::string& tienTo) {
 
         std::string clean = catkhoangtrang(maNhap);
         std::string phanSo = clean;
@@ -162,7 +162,7 @@ input = catkhoangtrang(input);
     }
 
     // Nhap so thuc(giong cai nhap so nguyen thoi)
-    static double Docdouble(const std::string& prompt) {
+    static double Docdouble(const std::string& prompt) {//cai nay dung de ghep voi tien
         while (true) {
             std::string input = Docstring(prompt, true);
 
@@ -185,8 +185,8 @@ input = catkhoangtrang(input);
         }
     }
 
-    //cai nay thi giong cai doc songuyen va dung de ghep voi tien
-    static bool DocdoubleCapNhat(const std::string& prompt, double& giaTri) {
+    //cai nay thi giong cai doc songuyen 
+    static bool DocdoubleCapNhat(const std::string& prompt, double& giaTri) {// cho cai ban kinh cho sua va up date
 
         while (true) {
             std::string input = Docstring(prompt, true);
@@ -217,7 +217,7 @@ input = catkhoangtrang(input);
 
     // Kiem tra chuoi co chu cai va chi gom chu cai, ky tu trang
     static bool chiChuaChuCaiVaKhoangTrang(const std::string& str) {
-        if (!coChuaChuCai(str)) {
+        if (!CoChuaChuCai(str)) {
             return false;
         }
 
