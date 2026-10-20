@@ -1,5 +1,6 @@
 // Tac gia: Nguyen Cong Vinh
-// code fix ngay 19
+// code moi ngay 20
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -8,7 +9,7 @@
 #include <cctype>
 #include "Exceptions.h"
 #include "Entity.h"
-#include "Inputhelper.h" // Đã fix chữ h viết thường
+#include "Inputhelper.h" 
 
 class KhuVuc : public Entity {
 private:
@@ -26,7 +27,6 @@ private:
             }
         }
     }
-
 public:
     KhuVuc() = default;
 
@@ -44,7 +44,7 @@ public:
 
     static std::string taoMaKV(const std::string& maNhap) {
         std::string clean = chuanHoaMa(maNhap);
-        std::string ma = Inputhelper::tuTaoMa(clean, "KV");
+        std::string ma = Inputhelper::TuTaoMa(clean, "KV");
 
         if (ma.size() != 6 || ma.compare(0, 2, "KV") != 0) {
             throw Loixacthuc("Loi: Ma KV phai gom dung 4 chu so (VD: nhap 0001)!");
@@ -66,7 +66,8 @@ public:
         std::string clean = Inputhelper::catkhoangtrang(ten);
         if (clean.empty()) throw Loixacthuc("Loi: Ten khu vuc khong duoc de trong!");
         kiemTraChiChuaChu(clean, "Ten khu vuc");
-        tenKhuVuc = Inputhelper::vietHoaChuDau(clean);
+        
+        tenKhuVuc = Inputhelper::VietHoaChuaDau(clean);
     }
 
     std::string getNguoiQuanLy() const { return nguoiQuanLy; }
@@ -77,22 +78,24 @@ public:
         }
         else {
             kiemTraChiChuaChu(clean, "Nguoi quan ly");
-            nguoiQuanLy = Inputhelper::vietHoaChuDau(clean);
+            
+            nguoiQuanLy = Inputhelper::VietHoaChuaDau(clean);
         }
     }
 
-    std::string toFilerecord() const override {
+    
+    std::string tofilerecord() const override {
         return id + "|" + tenKhuVuc + "|" + nguoiQuanLy;
     }
 
-    void fromFilerecord(const std::string& record) override {
+    
+    void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() != 3) throw Loixacthuc("Loi: Dong du lieu Khu vuc sai dinh dang!");
         KhuVuc parsed(data[0], data[1], data[2]);
         *this = parsed;
     }
 
-    // Đã fix bảng hiển thị khít dấu | theo phong cách TramBTS
     void display() const override {
         std::cout << std::left
             << std::setw(10) << id << "| "
