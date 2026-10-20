@@ -1,4 +1,4 @@
-
+//Hoang Tuan Thanh
 #pragma once
 #include <iostream>
 #include <iomanip>
@@ -12,25 +12,25 @@
 class TramBTS : public Entity {
 private:
     std::string tenTram;
-    std::string loaiCot;       // Cột tự dựng / Dây neo / Ngụy trang
-    double banKinhPhuSong;     // Đơn vị: km (phải > 0)
-    std::string trangThai;     // VD: Hoat dong, Bao tri, Loi
+    std::string loaiCot;       // cot tu dung day neo nguy trang
+    double banKinhPhuSong;     // don vi km
+    std::string trangThai;     // hd, bao tri, loi
 
     //ham kiem tra va chuan hoa ma tram BTS
     static std::string chuanHoaMaBTS(const std::string& ma) {
-        std::string maChuan = Inputhelper::tuTaoMa(ma, "BTS");
+        std::string machuan = Inputhelper::TuTaoMa(ma, "BTS");
 
-        if (maChuan.size() != 7 || maChuan.substr(0, 3) != "BTS") {
-            throw Loixacthuc("Loi: Ma tram phai co dang BTS + 4 chu so!");
+        if (machuan.size() != 7 || machuan.substr(0, 3) != "BTS") {//ma chuan phai dai du 7 ki tu BTS va 4 chu so
+            throw Loixacthuc("Loi: Ma tram phai co dang BTS + 4 chu so");
         }
 
-        for (std::size_t i = 3; i < maChuan.size(); i++) {
-            if (maChuan[i] < '0' || maChuan[i] > '9') {
-                throw Loixacthuc("Loi: Ma tram phai co 4 chu so sau BTS!");
+        for (std::size_t i = 3; i < machuan.size(); i++) {//tuy vi tri so 3 neu co xuat hien ki tu khac ngoai so bao loi luon 
+            if (machuan[i] < '0' || machuan[i] > '9') {
+                throw Loixacthuc("Loi: Ma tram phai co 4 chu so sau BTS");
             }
         }
 
-        return maChuan;
+        return machuan;
     }
 
 public:
@@ -39,16 +39,16 @@ public:
 
     // constructor ham khoi tao co so (Thay chieuCao và maKV bằng banKinh và trangThai)
     TramBTS(std::string ma, std::string ten, std::string loai,
-            double banKinh, std::string tt) {
+            double bankinh, std::string tt) {
 
         setId(chuanHoaMaBTS(ma));
         setTenTram(ten);
         setLoaiCot(loai);
-        setBanKinhPhuSong(banKinh);
+        setBanKinhPhuSong(bankinh);
         setTrangThai(tt);
     }
 
-    // getter setter
+    // getter setter lay du lieu va dat du lieu
     std::string getTenTram() const {
         return tenTram;
     }
@@ -56,21 +56,21 @@ public:
     void setTenTram(const std::string& ten) {
         std::string clean = Inputhelper::catkhoangtrang(ten);
 
-        if (clean.empty()) {
-            throw Loixacthuc("Loi: Ten Tram BTS khong duoc de trong!");
+        if (clean.empty()) {//neu chi co dau cach bao sai luon
+            throw Loixacthuc("Loi: Ten Tram BTS khong duoc de trong");
         }
 
-        // BẮT LỖI: Không cho phép nhập toàn số (VD: "0000")
-        if (!Inputhelper::coChuaChuCai(clean)) {
-            throw Loixacthuc("Loi: Ten Tram phai chua it nhat 1 chu cai!");
+       //ten tram phai co chu cai
+        if (!Inputhelper::CoChuaChuCai(clean)) {
+            throw Loixacthuc("Loi: Ten Tram phai chua it nhat 1 chu cai");
         }
 
-        if (clean.find('|') != std::string::npos) {
-            throw Loixacthuc("Loi: Ten tram khong duoc chua ky tu | !");
+        if (clean.find('|') != std::string::npos) {//neu tim thay cai dau| thi bao loi
+            throw Loixacthuc("Loi: Ten tram khong duoc chua ky tu | ");
         }
 
-        // Tự động viết hoa chữ cái đầu
-        tenTram = Inputhelper::vietHoaChuDau(clean);
+        // tu dong viet hoa chu cai dau
+        tenTram = Inputhelper::VietHoaChuDau(clean);
     }
 
     std::string getLoaiCot() const {
@@ -81,27 +81,27 @@ public:
         std::string clean = Inputhelper::catkhoangtrang(loai);
 
         if (clean.empty()) {
-            throw Loixacthuc("Loi: Loai cot khong duoc de trong!");
+            throw Loixacthuc("Loi: Loai cot khong duoc de trong");
         }
 
-        if (!Inputhelper::chiChuaChuCaiVaKhoangTrang(clean)) {
-            throw Loixacthuc("Loi: Loai cot chi duoc phep chua chu cai va khoang trang!");
+        if (!Inputhelper::chiChuaChuCaiVaKhoangTrang(clean)) {//chi co chu thoi
+            throw Loixacthuc("Loi: Loai cot chi duoc phep chua chu cai va khoang trang");
         }
 
-        // Tự động viết hoa chữ cái đầu
-        loaiCot = Inputhelper::vietHoaChuDau(clean);
+       
+        loaiCot = Inputhelper::VietHoaChuDau(clean);
     }
 
     double getBanKinhPhuSong() const {
         return banKinhPhuSong;
     }
 
-    void setBanKinhPhuSong(double banKinh) {
-        if (!std::isfinite(banKinh) || banKinh <= 0.0) {
+    void setBanKinhPhuSong(double bankinh) {
+        if (!std::isfinite(bankinh) || bankinh <= 0.0) {//neu ban kinh phu song la vo cuc hay nho hon 0 bao loi
             throw Loixacthuc("Loi: Ban kinh phu song phai la so duong hop le!");
         }
 
-        banKinhPhuSong = banKinh;
+        banKinhPhuSong = bankinh;
     }
 
     std::string getTrangThai() const {
@@ -115,7 +115,7 @@ public:
             throw Loixacthuc("Loi: Trang thai khong duoc de trong!");
         }
 
-        if (!Inputhelper::coChuaChuCai(clean)) {
+        if (!Inputhelper::CoChuaChuCai(clean)) {
             throw Loixacthuc("Loi: Trang thai phai chua it nhat 1 chu cai!");
         }
 
@@ -123,28 +123,28 @@ public:
             throw Loixacthuc("Loi: Trang thai khong duoc chua ky tu | !");
         }
 
-        // Tự động viết hoa chữ cái đầu (VD: "hoat dong" -> "Hoat Dong")
-        trangThai = Inputhelper::vietHoaChuDau(clean);
+       //viet hoa chu cai dau
+        trangThai = Inputhelper::VietHoaChuDau(clean);
     }
 
     // cap nhat doc va ghi file
-    std::string toFilerecord() const override {
+    std::string tofilerecord() const override {//chi doc override doi chieu va bat loi luc bien dich
         return id + "|" + tenTram + "|" + loaiCot + "|"
-            + std::to_string(banKinhPhuSong) + "|" + trangThai;
+            + std::to_string(banKinhPhuSong) + "|" + trangThai;//chuyen ban kinh ve ki tu vi ko the thuc hien toan tu cong chuoi voi csai
     }
 
-    void fromFilerecord(const std::string& record) override {
-        std::vector<std::string> data = Inputhelper::chia(record, '|');
+    void fromfilerecord(const std::string& record) override {
+        std::vector<std::string> data = Inputhelper::chia(record, '|');//chia cac doan co chuadau |
 
-        if (data.size() != 5) {
-            throw Loixacthuc("Loi: Ban ghi tram BTS phai co dung 5 truong!");
+        if (data.size() != 5) {//neu ko du 5 cai thi bao loi
+            throw Loixacthuc("Loi: Ban ghi tram BTS phai co dung 5 truong");
         }
 
         double banKinh;
-        std::size_t viTriCuoi = 0;
+        std::size_t vitricuoi = 0;
 
         try {
-            banKinh = std::stod(data[3], &viTriCuoi);
+            banKinh = std::stod(data[3], &vitricuoi);//chuyen doi du lieu tu o data thu3  va luu cai vi tri cuoi cung doc dc
         }
         catch (const std::invalid_argument&) {
             throw Loixacthuc("Loi: Ban kinh phu song phai la so!");
@@ -153,35 +153,35 @@ public:
             throw Loixacthuc("Loi: Ban kinh phu song vuot qua pham vi!");
         }
 
-        if (viTriCuoi != data[3].size()) {
+        if (vitricuoi != data[3].size()) {//day neu cac vi tri cuoi cung ko phai ss
             throw Loixacthuc("Loi: Ban kinh phu song chua ky tu khong hop le!");
         }
 
         //tao doi tuong tam de kiem tra du lieu truoc
-        TramBTS tramTam(data[0], data[1], data[2], banKinh, data[4]);
+        TramBTS tramTam(data[0], data[1], data[2], banKinh, data[4]);//tao ra 1 doi tuong ao de dua len ram neu trong qua trinh co loi no se vut bo ma ko lam ton hai j
 
         //chi cap nhat doi tuong khi du lieu da hop le
-        *this = tramTam;
+        *this = tramTam;//con tro this,dau * de giai tham chieu ch con tro this va gan no voi tram tam
     }
 
     // giao dien hien thi con sole
-    void display() const override {
-        std::cout << std::left
-            << std::setw(10) << id << "| "
-            << std::setw(25) << (tenTram.length() > 22 ? tenTram.substr(0, 19) + "..." : tenTram) << "| "
+    void display() const override {//dien chu cho tung ham
+        std::cout << std::left//cai nay lam ki tu dc viet ra bam sat vo ben trai
+            << std::setw(10) << id << "| "//setw de lay do rong
+            << std::setw(25) << (tenTram.length() > 22 ? tenTram.substr(0, 19) + "..." : tenTram) << "| "//toan tu 3 ngoi ? va : (dieu kien? lay cai nay neu dung:lay cai nay neu sai) dai qua 22 ki tu thi 20 ki tu dau du nguyen 3 ki tu sau thay = dau ...
             << std::setw(15) << loaiCot << "| "
             << std::setw(14) << banKinhPhuSong << "| "
             << std::setw(15) << trangThai << "\n";
     }
 
-    static void displayHeader() {
+    static void displayHeader() {//in ra cai giao dien
         std::cout << std::left
             << std::setw(10) << "Ma Tram" << "| "
             << std::setw(25) << "Ten Tram" << "| "
             << std::setw(15) << "Loai Cot" << "| "
             << std::setw(14) << "Ban Kinh(km)" << "| "
-            << std::setw(15) << "Trang Thai" << "\n";
+            << std::setw(15) << "Trang Thai" << std::endl;
 
-        std::cout << std::string(87, '-') << "\n";
+        std::cout << std::string(87, '-') << std::endl;
     }
 };
