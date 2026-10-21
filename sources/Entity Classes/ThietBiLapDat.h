@@ -1,4 +1,4 @@
-#pragma once // Lenh tien xu ly, dam bao file chi bien dich 1 lan
+#pragma once 
 #include <iostream>   // Thu vien I/O
 #include <iomanip>    // Thu vien dinh dang cot (setw)
 #include <vector>     // Thu vien xu ly mang dong
