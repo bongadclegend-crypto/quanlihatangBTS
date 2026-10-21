@@ -1,14 +1,17 @@
+// Thanh vien thuc hien: Vo Manh Thang
+// Sua ngay 21/10
 #pragma once
 #include <iostream>
 #include <string>
 #include <vector>
 #include <iomanip>
-#include "Entity.h"
+#include "Entity.h" 
 #include "InputHelper.h"
 #include "Exceptions.h"
 
 using namespace std;
 
+// Lop NhaCungCap ke thua tu Entity de dung chung thuoc tinh 'id' va cac ham ao
 class NhaCungCap : public Entity {
 private:
     string tenNCC;
@@ -19,17 +22,20 @@ public:
     NhaCungCap() {}
 
     NhaCungCap(string maNCC, string ten, string sdt, string dc) {
-        setId(Inputhelper::TuTaoMa(maNCC, "NCC"));
+        setId(Inputhelper::tuTaoMa(maNCC, "NCC"));
         setTenNCC(ten);
         setSoDienThoai(sdt);
         setDiaChi(dc);
     }
 
-    // --- CÃC HÃ€M GETTER & SETTER ---
+     // --- GETTER & SETTER ---
+
+    /* Cac phuong thuc Setter duoc tich hop san logic kiem tra tinh toan ven du lieu.
+       Neu du lieu dau vao khong hop le, he thong se nem ra ngoai le Loixacthuc. */
 
     std::string getMaNCC() const { return id; }
     void setMaNCC(const std::string& maNCC) {
-        id = Inputhelper::TuTaoMa(maNCC, "NCC");
+        id = Inputhelper::tuTaoMa(maNCC, "NCC");
     }
 
     string getTenNCC() const { return tenNCC; }
@@ -53,15 +59,19 @@ public:
         diaChi = clean;
     }
 
-    // GHI DE (OVERRIDE)
+    // --- GHI DE (OVERRIDE) --- 
 
-    string tofilerecord() const override {
+    /* Ghi de phuong thuc tu lop cha Entity de tuong tac voi File */
+
+    // Tra ve chuoi dinh dang chuan de ghi dong moi vao file text
+    string toFilerecord() const override {
         return id + "|" + tenNCC + "|" + soDienThoai + "|" + diaChi;
     }
 
-    void fromfilerecord(const string& record) override {
+    // Phan tich chuoi doc tu file va anh xa vao cac thuoc tinh cua doi tuong
+    void fromFilerecord(const string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
-        if (data.size() >= 7) {
+        if (data.size() >= 4) {
             setId(data[0]);
             tenNCC = data[1];
             soDienThoai = data[2];
@@ -69,20 +79,22 @@ public:
         }
     }
 
-    // HIEN THI TREN CONSOLE
-
+    // --- HIEN THI TREN CONSOLE --- 
+   
+    // Dinh dang cot hien thi tren Console
     void display() const override {
         cout << left << setw(10) << id
             << "| " << setw(22) << tenNCC
             << "| " << setw(15) << soDienThoai
             << "| " << setw(25) << diaChi << endl;
     }
+
     static void displayHeader() {
         cout << left
-            << setw(10) << "Ma Nha Cung Cap" << "| "
+            << setw(10) << "Ma NCC" << "| "
             << setw(22) << "Ten Nha Cung Cap" << "| "
             << setw(15) << "SDT" << "| "
             << setw(25) << "Dia Chi" << endl;
-        cout << string(88, '-') << "\n";
+        cout << string(80, '-') << "\n";
     }
 };
