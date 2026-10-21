@@ -72,7 +72,7 @@ public:
                     thulai([&]() {
                         std::string maLoai = Inputhelper::Docstring("Ma Loai (4 so): ");
                         std::string maChuan = Inputhelper::TuTaoMa(maLoai, "LT");
-                        // Query tren kho cua LoaiThietBi xem LTxxxx nay co ton tai khong
+                       
                         if (!repoLoai.findById(maChuan)) {
                             throw Ngoailerangbuoc("Tu choi: Ma Loai Thiet Bi khong ton tai trong danh muc!");
                         }
