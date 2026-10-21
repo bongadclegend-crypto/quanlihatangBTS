@@ -1,4 +1,4 @@
-// Tac gia: Nguyen Cong Vinh
+//  Nguyen Cong Vinh
 // code fix ngay 20
 
 #pragma once
