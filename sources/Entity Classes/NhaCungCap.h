@@ -1,3 +1,5 @@
+// Thanh vien thuc hien: Vo Manh Thang
+// Sua ngay 21/10
 #pragma once
 #include <iostream>
 #include <string>
@@ -25,6 +27,8 @@ public:
         setSoDienThoai(sdt);
         setDiaChi(dc);
     }
+
+     // --- GETTER & SETTER ---
 
     /* Cac phuong thuc Setter duoc tich hop san logic kiem tra tinh toan ven du lieu.
        Neu du lieu dau vao khong hop le, he thong se nem ra ngoai le Loixacthuc. */
@@ -55,12 +59,16 @@ public:
         diaChi = clean;
     }
 
+    // --- GHI DE (OVERRIDE) --- 
+
     /* Ghi de phuong thuc tu lop cha Entity de tuong tac voi File */
 
+    // Tra ve chuoi dinh dang chuan de ghi dong moi vao file text
     string toFilerecord() const override {
         return id + "|" + tenNCC + "|" + soDienThoai + "|" + diaChi;
     }
 
+    // Phan tich chuoi doc tu file va anh xa vao cac thuoc tinh cua doi tuong
     void fromFilerecord(const string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() >= 4) {
@@ -71,6 +79,9 @@ public:
         }
     }
 
+    // --- HIEN THI TREN CONSOLE --- 
+   
+    // Dinh dang cot hien thi tren Console
     void display() const override {
         cout << left << setw(10) << id
             << "| " << setw(22) << tenNCC
