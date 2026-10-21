@@ -1,10 +1,10 @@
 #pragma once 
-#include <iostream>     // Thu vien ho tro cac luong nhap xuat chuan (cin, cout)
-#include <iomanip>      // Thu vien ho tro dinh dang luong (setw, left) de ve bang
-#include <vector>       // Thu vien cung cap mang dong vector de luu danh sach cac chuoi sau khi cat
-#include <string>       // Thu vien ho tro xu ly kieu du lieu chuoi (string)
-#include "Entity.h"     // Include file lop cha Entity de thuc hien Tinh ke thua
-#include "InputHelper.h" // Include file tien ich chuan hoa dau vao
+#include <iostream>    
+#include <iomanip>     
+#include <vector>       
+#include <string>     
+#include "Entity.h"     
+#include "InputHelper.h" 
 
 // Lop LoaiThietBi dai dien cho the loai thiet bi, su dung Tinh ke thua (public Entity)
 class LoaiThietBi : public Entity {
