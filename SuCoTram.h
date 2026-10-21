@@ -1,3 +1,4 @@
+// Kieu Binh Nhan B24DCVT285
 #pragma once
 #include <iostream>
 #include <iomanip>
@@ -6,19 +7,19 @@
 #include "Entity.h"
 #include "InputHelper.h"
 #include "Date.h"
-
+// Lop quan ly thong tin su co tram, ke thua tu lop Entity
 class SuCoTram : public Entity {
 private:
-    std::string maTram;
-    Date ngayXayRa;
-    std::string moTaLoi;
-    std::string mucDo;
-    std::string maKTV;
-    std::string trangThai;
+    std::string matram;
+    Date ngayxayra;
+    std::string motaloi;
+    std::string mucdo;
+    std::string maktv;
+    std::string trangthai;
 
 public:
+	// Ham khoi tao mac dinh
     SuCoTram() {}
-
     SuCoTram(std::string maSC, std::string maBTS, std::string ngay, std::string moTa,
         std::string mucDoLoi, std::string ktv, std::string tt) {
         setId(Inputhelper::tuTaoMa(maSC, "SC"));
@@ -29,63 +30,63 @@ public:
         setMaKTV(ktv);
         setTrangThai(tt);
     }
-
-    std::string getMaTram() const { return maTram; }
+	// Cac ham lay va gan du lieu
+    std::string getMaTram() const { return matram; }
     void setMaTram(const std::string& maBTS) {
-        maTram = Inputhelper::tuTaoMa(maBTS, "BTS");
+		matram = Inputhelper::tuTaoMa(maBTS, "BTS"); // Tu gan BTS cho ma tram
     }
 
-    std::string getNgayXayRa() const { return ngayXayRa.toString(); }
+    std::string getNgayXayRa() const { return ngayxayra.toString(); }
     void setNgayXayRa(const std::string& ngay) {
         if (ngay == "") throw Loixacthuc("Loi: Ngay khong duoc de trong!");
-        ngayXayRa.docchuoi(ngay);
+		ngayxayra.docchuoi(ngay); // Dung ham docchuoi de kiem tra va gan ngay thang nam
     }
 
-    std::string getMoTaLoi() const { return moTaLoi; }
+    std::string getMoTaLoi() const { return motaloi; }
     void setMoTaLoi(const std::string& moTa) {
         if (moTa == "") throw Loixacthuc("Loi: Mo ta khong duoc de trong!");
-        moTaLoi = moTa;
+        motaloi = moTa;
     }
-
-    std::string getMucDo() const { return mucDo; }
+	// Muc do chi duoc nhap 1, 2 hoac 3
+    std::string getMucDo() const { return mucdo; }
     void setMucDo(const std::string& mucDoLoi) {
         if (mucDoLoi != "1" && mucDoLoi != "2" && mucDoLoi != "3") {
             throw Loixacthuc("Loi: Muc do chi duoc nhap 1, 2 hoac 3!");
         }
-        mucDo = mucDoLoi;
+        mucdo = mucDoLoi;
     }
 
-    std::string getMaKTV() const { return maKTV; }
+    std::string getMaKTV() const { return maktv; }
     void setMaKTV(const std::string& ktv) {
-        maKTV = Inputhelper::tuTaoMa(ktv, "KTV");
+		maktv = Inputhelper::tuTaoMa(ktv, "KTV"); // Tu gan KTV cho ma ky thuat vien
     }
-
-    std::string getTrangThai() const { return trangThai; }
+	// Trang thai chi duoc nhap "da sua" hoac "chua sua"
+    std::string getTrangThai() const { return trangthai; }
     void setTrangThai(const std::string& tt) {
         if (tt != "da sua" && tt != "chua sua" && tt != "Da sua" && tt != "Chua sua") {
             throw Loixacthuc("Loi: Trang thai chi duoc nhap 'da sua' hoac 'chua sua'!");
         }
-        trangThai = tt;
+        trangthai = tt;
     }
-
+	// Ham su ly file
     std::string toFilerecord() const override {
-        return id + "|" + maTram + "|" + ngayXayRa.toString() + "|" +
-            moTaLoi + "|" + mucDo + "|" + maKTV + "|" + trangThai;
+        return id + "|" + matram + "|" + ngayxayra.toString() + "|" +
+            motaloi + "|" + mucdo + "|" + maktv + "|" + trangthai;
     }
-
+	// Ham doc du lieu tu file va nap vao doi tuong
     void fromFilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() >= 7) {
             setId(data[0]);
-            maTram = data[1];
-            ngayXayRa.docchuoi(data[2]);
-            moTaLoi = data[3];
-            mucDo = data[4];
-            maKTV = data[5];
-            trangThai = data[6];
+            matram = data[1];
+            ngayxayra.docchuoi(data[2]);
+            motaloi = data[3];
+            mucdo = data[4];
+            maktv = data[5];
+            trangthai = data[6];
         }
     }
-
+    // Ham hien thi thong tin su co tram
     static void displayHeader() {
         std::cout << std::left
             << std::setw(10) << "Ma SC" << "| "
@@ -101,11 +102,11 @@ public:
     void display() const override {
         std::cout << std::left
             << std::setw(10) << id << "| "
-            << std::setw(10) << maTram << "| "
-            << std::setw(15) << ngayXayRa.toString() << "| "
-            << std::setw(20) << moTaLoi << "| "
-            << std::setw(10) << mucDo << "| "
-            << std::setw(10) << maKTV << "| "
-            << std::setw(15) << trangThai << "\n";
+            << std::setw(10) << matram << "| "
+            << std::setw(15) << ngayxayra.toString() << "| "
+            << std::setw(20) << motaloi << "| "
+            << std::setw(10) << mucdo << "| "
+            << std::setw(10) << maktv << "| "
+            << std::setw(15) << trangthai << "\n";
     }
 };
