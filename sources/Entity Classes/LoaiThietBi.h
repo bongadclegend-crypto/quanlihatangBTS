@@ -60,7 +60,7 @@ public:
         congSuatTieuThu = congSuat;
     }
 
-    // --- ĐA HÌNH (POLYMORPHISM): Ghi đè (Override) các hàm ảo từ lớp Entity ---
+  
 
     // 1. Ham tofilerecord: Nen doi tuong thanh 1 chuoi de ghi xuong file .txt
     std::string tofilerecord() const override {
