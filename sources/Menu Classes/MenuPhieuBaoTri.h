@@ -20,8 +20,8 @@ public:
 			std::cout << "       QUAN LY PHIEU BAO TRI           \n";
 			std::cout << "======================================\n";
 			std::cout << "1. Xem danh sach phieu moi\n";
-			std::cout << "2. Cap nhat phieu bao tri\n";
-			std::cout << "3. Them phieu bao tri\n";
+			std::cout << "2. Them phieu bao tri\n";
+			std::cout << "3. Cap nhat phieu bao tri\n";
 			std::cout << "4. Xoa phieu bao tri\n";
 			std::cout << "0. Quay lai menu chinh\n";
 			int chon = Inputhelper::Docint(">> Nhap lua chon: ");
