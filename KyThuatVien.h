@@ -1,3 +1,4 @@
+// Kieu Binh Nhan B24DCVT285
 #pragma once
 #include <iostream>
 #include <iomanip>
@@ -5,14 +6,14 @@
 #include <string>
 #include "Entity.h"
 #include "InputHelper.h"
-
+// Lop quan ly thong tin ky thuat vien, ke thua tu lop Entity
 class KyThuatVien : public Entity {
 private:
     std::string tenktv;
     std::string chuyenmon;
     std::string sodienthoai;
-
 public:
+    // Ham khoi tao mac dinh
     KyThuatVien() {}
     KyThuatVien(std::string ma, std::string ten, std::string cm, std::string sdt) {
         setId(Inputhelper::tuTaoMa(ma, "KTV"));
@@ -20,7 +21,7 @@ public:
         setChuyenMon(cm);
         setSoDienThoai(sdt);
     }
-
+    // Cac ham lay va gan du lieu
     std::string getTenKTV() const { return tenktv; }
     void setTenKTV(const std::string& ten) {
         if (ten == "") throw Loixacthuc("Loi: Ten khong duoc de trong!");
@@ -40,11 +41,11 @@ public:
         Inputhelper::kiemTraSdt(sdt);
         sodienthoai = sdt;
     }
-
+    // Ham su ly file 
     std::string toFilerecord() const override {
         return id + "|" + tenktv + "|" + chuyenmon + "|" + sodienthoai;
     }
-
+	// Ham doc file
     void fromFilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() >= 4) {
@@ -54,7 +55,7 @@ public:
             sodienthoai = data[3];
         }
     }
-
+	// Ham hien thi danh sach KTV
     static void displayHeader() {
         std::cout << std::left
             << std::setw(10) << "Ma KTV" << "| "
@@ -63,7 +64,7 @@ public:
             << std::setw(15) << "So Dien Thoai" << "\n";
         std::cout << std::string(79, '-') << "\n";
     }
-
+	// Ham hien thi thong tin KTV
     void display() const override {
         std::cout << std::left
             << std::setw(10) << id << "| "
