@@ -7,7 +7,7 @@
 #include "InputHelper.h" 
 #include "Date.h"     
 
-// Lop ThietBiLapDat dai dien cho Thiet bi dang lap o mot Tram, ke thua Entity (Relationship is-a)
+// Lop ThietBiLapDat dai dien cho Thiet bi dang lap o mot Tram, ke thua Entity 
 class ThietBiLapDat : public Entity {
 private: // Tinh dong goi (Encapsulation): An cac thuoc tinh
     std::string tenThietBi;  
