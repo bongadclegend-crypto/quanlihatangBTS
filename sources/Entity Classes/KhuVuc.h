@@ -1,5 +1,3 @@
-// Vinh , them ma tram
-
 #pragma once
 #include <iostream>
 #include <string>
@@ -10,28 +8,33 @@
 #include "Entity.h"
 #include "Inputhelper.h" 
 
-class KhuVuc : public Entity {
-private:
+class KhuVuc : public Entity { // ke thua lop entity 
+private: // cac thuoc tinh trong lop khu vuc
     std::string tenKhuVuc;
     std::string nguoiQuanLy;
-    std::string maTram; 
+    std::string maTram;
 
+    // doan nay dung stactic de tiet kiem bo nho 
+ 
     static void kiemTraChiChuaChu(const std::string& s, const std::string& tenTruong) {
         for (char c : s) {
             unsigned char uc = static_cast<unsigned char>(c);
             if (std::isdigit(uc)) {
-                throw Loixacthuc("Loi: " + tenTruong + " chi duoc nhap chu, khong duoc chua chu so!");
+                throw Loixacthuc("Loi: " + tenTruong + " chi duoc nhap chu, khong duoc chua chu so!"); // neu co chu so thi bao loi
             }
             if (!std::isalpha(uc) && !std::isspace(uc)) {
                 throw Loixacthuc("Loi: " + tenTruong + " chi duoc chua chu cai va khoang trang!");
             }
         }
     }
-public:
-    KhuVuc() = default;
+    // cai nay de check xem neu nhap so thi se bao loi va chi duoc nhap chu 
 
-    
+public: // cac ham khoi tao 
+    KhuVuc() = default; 
+
+    //khoi tao co tham so de khoi tao doi tuong khi doc file
     KhuVuc(const std::string& ma, const std::string& ten, const std::string& ql, const std::string& qlTram) {
+        
         setMa(ma);
         setTenKhuVuc(ten);
         setNguoiQuanLy(ql);
@@ -44,6 +47,7 @@ public:
         return r;
     }
 
+    // ham nay de tao ma khu vuc va kiem tra xem co dung dinh dang hay khong
     static std::string taoMaKV(const std::string& maNhap) {
         std::string clean = chuanHoaMa(maNhap);
         std::string ma = Inputhelper::TuTaoMa(clean, "KV");
@@ -57,10 +61,10 @@ public:
             }
         }
         return ma;
-    }
+    } // chi can nhap 4 chu so thi se tu dong them tien to KV vao truoc va kiem tra xem co dung dinh dang hay khong
 
-    
-    static std::string taoMaTram(const std::string& maNhap) {
+
+    static std::string taoMaTram(const std::string& maNhap) { // tuong tu nhu ham tao ma khu vuc nhung tien to la BTS
         std::string clean = chuanHoaMa(maNhap);
         std::string ma = Inputhelper::TuTaoMa(clean, "BTS");
 
@@ -78,6 +82,7 @@ public:
     void setMa(const std::string& maNhap) {
         setId(taoMaKV(maNhap));
     }
+    // de tao ma khu vuc va kiem tra xem co dung dinh dang hay khong
 
     std::string getTenKhuVuc() const { return tenKhuVuc; }
     void setTenKhuVuc(const std::string& ten) {
@@ -92,11 +97,11 @@ public:
     void setNguoiQuanLy(const std::string& ql) {
         std::string clean = Inputhelper::catkhoangtrang(ql);
         if (clean.empty()) {
+            // neu chua co nguoi quan ly thi se thong bao la chua phan cong
             nguoiQuanLy = "Chua phan cong";
         }
         else {
             kiemTraChiChuaChu(clean, "Nguoi quan ly");
-
             nguoiQuanLy = Inputhelper::VietHoaChuaDau(clean);
         }
     }
@@ -110,31 +115,26 @@ public:
             maTram = taoMaTram(mt);
         }
     }
-
- 
     std::string tofilerecord() const override {
         return id + "|" + tenKhuVuc + "|" + nguoiQuanLy + "|" + maTram;
     }
 
-
     void fromfilerecord(const std::string& record) override {
+        
         std::vector<std::string> data = Inputhelper::chia(record, '|');
-        // Kiem tra du 4 truong (id, tenKhuVuc, nguoiQuanLy, maTram)
+        // kiem tra du 4 truong (id, tenKhuVuc, nguoiQuanLy, maTram)
         if (data.size() != 4) throw Loixacthuc("Loi: Dong du lieu Khu vuc sai dinh dang (Can 4 truong)!");
         KhuVuc parsed(data[0], data[1], data[2], data[3]);
         *this = parsed;
-    }
-
-   
-    void display() const override {
+    } // ham nay de doc va ghi file txt
+        void display() const override {
+        // GIẢI THÍCH: Toán tử 3 ngôi (dieu_kien ? dung : sai). Nếu tên dài quá 22 ký tự thì cắt lấy 19 ký tự đầu rồi nối "...". Nếu không thì in bình thường.
         std::cout << std::left
             << std::setw(10) << id << "| "
             << std::setw(24) << (tenKhuVuc.length() > 22 ? tenKhuVuc.substr(0, 19) + "..." : tenKhuVuc) << "| "
             << std::setw(20) << (nguoiQuanLy.length() > 18 ? nguoiQuanLy.substr(0, 15) + "..." : nguoiQuanLy) << "| "
             << std::setw(12) << maTram << "\n";
     }
-
- 
     static void displayHeader() {
         std::cout << std::left
             << std::setw(10) << "Ma KV" << "| "
@@ -142,5 +142,5 @@ public:
             << std::setw(20) << "Nguoi Quan Ly" << "| "
             << std::setw(12) << "Ma Tram" << "\n";
         std::cout << std::string(72, '-') << "\n";
-    }
+    } // nay de hien thi tieu de cua bang 
 };
