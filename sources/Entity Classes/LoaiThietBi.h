@@ -1,5 +1,4 @@
-#pragma once // Lenh tien xu ly: dam bao file nay chi duoc bien dich dung 1 lan, tranh loi trung lap
-// Nguoi thuc hien: Nguyen Anh Tu - B24DCVT368 // 
+#pragma once 
 #include <iostream>     // Thu vien ho tro cac luong nhap xuat chuan (cin, cout)
 #include <iomanip>      // Thu vien ho tro dinh dang luong (setw, left) de ve bang
 #include <vector>       // Thu vien cung cap mang dong vector de luu danh sach cac chuoi sau khi cat
