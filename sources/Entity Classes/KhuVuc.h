@@ -1,5 +1,4 @@
-// Tac gia: Nguyen Cong Vinh
-// code moi ngay 20
+// Vinh , them ma tram
 
 #pragma once
 #include <iostream>
@@ -15,6 +14,7 @@ class KhuVuc : public Entity {
 private:
     std::string tenKhuVuc;
     std::string nguoiQuanLy;
+    std::string maTram; 
 
     static void kiemTraChiChuaChu(const std::string& s, const std::string& tenTruong) {
         for (char c : s) {
@@ -30,10 +30,12 @@ private:
 public:
     KhuVuc() = default;
 
-    KhuVuc(const std::string& ma, const std::string& ten, const std::string& ql) {
+    
+    KhuVuc(const std::string& ma, const std::string& ten, const std::string& ql, const std::string& qlTram) {
         setMa(ma);
         setTenKhuVuc(ten);
         setNguoiQuanLy(ql);
+        setMaTram(qlTram);
     }
 
     static std::string chuanHoaMa(const std::string& s) {
@@ -57,6 +59,22 @@ public:
         return ma;
     }
 
+    
+    static std::string taoMaTram(const std::string& maNhap) {
+        std::string clean = chuanHoaMa(maNhap);
+        std::string ma = Inputhelper::TuTaoMa(clean, "BTS");
+
+        if (ma.size() != 7 || ma.compare(0, 3, "BTS") != 0) {
+            throw Loixacthuc("Loi: Ma Tram BTS phai gom dung 4 chu so (VD: nhap 1001)!");
+        }
+        for (size_t i = 3; i < 7; ++i) {
+            if (!std::isdigit(static_cast<unsigned char>(ma[i]))) {
+                throw Loixacthuc("Loi: Ma Tram BTS phai gom dung 4 chu so (VD: nhap 1001)!");
+            }
+        }
+        return ma;
+    }
+
     void setMa(const std::string& maNhap) {
         setId(taoMaKV(maNhap));
     }
@@ -67,7 +85,7 @@ public:
         if (clean.empty()) throw Loixacthuc("Loi: Ten khu vuc khong duoc de trong!");
         kiemTraChiChuaChu(clean, "Ten khu vuc");
 
-        tenKhuVuc = Inputhelper::VietHoaChuDau(clean);
+        tenKhuVuc = Inputhelper::VietHoaChuaDau(clean);
     }
 
     std::string getNguoiQuanLy() const { return nguoiQuanLy; }
@@ -79,35 +97,50 @@ public:
         else {
             kiemTraChiChuaChu(clean, "Nguoi quan ly");
 
-            nguoiQuanLy = Inputhelper::VietHoaChuDau(clean);
+            nguoiQuanLy = Inputhelper::VietHoaChuaDau(clean);
         }
     }
 
+    std::string getMaTram() const { return maTram; }
+    void setMaTram(const std::string& mt) {
+        if (mt.empty() || mt == "Chua xac dinh") {
+            maTram = "Chua xac dinh";
+        }
+        else {
+            maTram = taoMaTram(mt);
+        }
+    }
 
+ 
     std::string tofilerecord() const override {
-        return id + "|" + tenKhuVuc + "|" + nguoiQuanLy;
+        return id + "|" + tenKhuVuc + "|" + nguoiQuanLy + "|" + maTram;
     }
 
 
     void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
-        if (data.size() != 3) throw Loixacthuc("Loi: Dong du lieu Khu vuc sai dinh dang!");
-        KhuVuc parsed(data[0], data[1], data[2]);
+        // Kiem tra du 4 truong (id, tenKhuVuc, nguoiQuanLy, maTram)
+        if (data.size() != 4) throw Loixacthuc("Loi: Dong du lieu Khu vuc sai dinh dang (Can 4 truong)!");
+        KhuVuc parsed(data[0], data[1], data[2], data[3]);
         *this = parsed;
     }
 
+   
     void display() const override {
         std::cout << std::left
             << std::setw(10) << id << "| "
             << std::setw(24) << (tenKhuVuc.length() > 22 ? tenKhuVuc.substr(0, 19) + "..." : tenKhuVuc) << "| "
-            << std::setw(25) << nguoiQuanLy << "\n";
+            << std::setw(20) << (nguoiQuanLy.length() > 18 ? nguoiQuanLy.substr(0, 15) + "..." : nguoiQuanLy) << "| "
+            << std::setw(12) << maTram << "\n";
     }
 
+ 
     static void displayHeader() {
         std::cout << std::left
             << std::setw(10) << "Ma KV" << "| "
             << std::setw(24) << "Ten Khu Vuc / Tinh" << "| "
-            << std::setw(25) << "Nguoi Quan Ly" << "\n";
-        std::cout << std::string(62, '-') << "\n";
+            << std::setw(20) << "Nguoi Quan Ly" << "| "
+            << std::setw(12) << "Ma Tram" << "\n";
+        std::cout << std::string(72, '-') << "\n";
     }
 };
