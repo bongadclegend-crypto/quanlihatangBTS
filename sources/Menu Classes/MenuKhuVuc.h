@@ -1,5 +1,4 @@
-//  Nguyen Cong Vinh
-// code fix ngay 20
+// them ma tram
 
 #pragma once
 #include <iostream>
@@ -44,7 +43,6 @@ private:
     }
 
 public:
-
     static void run(Repository<KhuVuc>& repoKV, Repository<TramBTS>& repoTram) {
         while (true) {
             std::cout << "\n================= QUAN LY KHU VUC / TINH =================\n";
@@ -62,20 +60,39 @@ public:
             try {
                 if (choice == 1) {
                     auto kv = std::make_shared<KhuVuc>();
+
                     thuLai([&]() {
                         kv->setMa(Inputhelper::Docstring("Nhap Ma KV (4 so, VD: 0001): "));
                         if (repoKV.findById(kv->getId()))
                             throw Ngoailerangbuoc("Loi: Ma khu vuc [" + kv->getId() + "] da ton tai!");
                         });
+
                     thuLai([&]() {
                         std::string ten = Inputhelper::Docstring("Nhap Ten khu vuc / tinh (chi nhap chu): ");
                         kv->setTenKhuVuc(ten);
                         if (trungTen(repoKV, ten, ""))
                             throw Ngoailerangbuoc("Loi: Ten khu vuc da ton tai!");
                         });
+
                     thuLai([&]() {
                         kv->setNguoiQuanLy(Inputhelper::Docstring("Nhap Nguoi quan ly (chi nhap chu, Enter de bo qua): ", true));
                         });
+
+                    // [MOI THEM] Luong nhap Ma Tram
+                    thuLai([&]() {
+                        std::string rawTram = Inputhelper::Docstring("Nhap Ma Tram BTS dieu phoi (4 so, VD: 1001, Enter de bo qua): ", true);
+                        if (!rawTram.empty()) {
+                            std::string maTramChuan = KhuVuc::taoMaTram(rawTram);
+                            if (!repoTram.findById(maTramChuan)) {
+                                throw Ngoailerangbuoc("Loi: Ma Tram [" + maTramChuan + "] khong ton tai tren he thong!");
+                            }
+                            kv->setMaTram(maTramChuan);
+                        }
+                        else {
+                            kv->setMaTram("Chua xac dinh");
+                        }
+                        });
+
                     repoKV.add(kv);
                     std::cout << "[+] Them khu vuc moi thanh cong (Ma: " << kv->getId() << ")!\n";
                 }
@@ -108,11 +125,29 @@ public:
                     std::cout << "(*) Nhap gia tri moi (Enter de giu nguyen):\n";
                     KhuVuc banSao = *kv;
 
+                    
                     thuLai([&]() {
                         std::string ql = Inputhelper::Docstring("Quan ly moi (" + banSao.getNguoiQuanLy() + ") [Nhap '-' de xoa]: ", true);
                         if (!ql.empty()) {
                             if (ql == "-") banSao.setNguoiQuanLy("");
                             else banSao.setNguoiQuanLy(ql);
+                        }
+                        });
+
+                   
+                    thuLai([&]() {
+                        std::string rawTram = Inputhelper::Docstring("Ma Tram dieu phoi moi (" + banSao.getMaTram() + ") [Nhap '-' de xoa]: ", true);
+                        if (!rawTram.empty()) {
+                            if (rawTram == "-") {
+                                banSao.setMaTram("Chua xac dinh");
+                            }
+                            else {
+                                std::string maTramChuan = KhuVuc::taoMaTram(rawTram);
+                                if (!repoTram.findById(maTramChuan)) {
+                                    throw Ngoailerangbuoc("Loi: Ma Tram [" + maTramChuan + "] khong ton tai tren he thong!");
+                                }
+                                banSao.setMaTram(maTramChuan);
+                            }
                         }
                         });
 
@@ -126,8 +161,7 @@ public:
                     if (!kv) throw Ngoailekotimthay("Loi: Khong tim thay ma khu vuc [" + id + "]!");
                     inBang({ kv });
 
-
-
+                    
                     std::string xn = Inputhelper::Docstring("Ban co chac chan muon xoa (y/n)? ");
                     if (xn == "y" || xn == "Y") {
                         repoKV.remove(id);
