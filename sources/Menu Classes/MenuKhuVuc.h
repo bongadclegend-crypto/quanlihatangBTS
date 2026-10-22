@@ -53,8 +53,8 @@ public:
     static void run(Repository<KhuVuc>& repoKV, Repository<TramBTS>& repoTram) {
         while (true) {
             std::cout << "\n================= QUAN LY KHU VUC / TINH =================\n";
-            std::cout << "1. Them khu vuc moi\n";
-            std::cout << "2. Xem danh sach \n";
+            std::cout << "1. Xem danh sach\n";
+            std::cout << "2. Them khu vuc moi \n";
             std::cout << "3. Tim kiem \n";
             std::cout << "4. Cap nhat thong tin\n";
             std::cout << "5. Xoa khu vuc\n";
@@ -66,7 +66,7 @@ public:
 
             try {
                 // Them moi Khu Vuc
-                if (chon == 1) {
+                if (chon == 2) {
                     auto kv = std::make_shared<KhuVuc>();
 
                     thuLai([&]() {
@@ -109,7 +109,7 @@ public:
                     std::cout << "[+] Them khu vuc moi thanh cong (Ma: " << kv->getId() << ")!\n";
                 }
                 // Xem toan bo danh sach
-                else if (chon == 2) {
+                else if (chon == 1) {
                     const auto& ds = repoKV.getAll();
                     if (ds.empty()) std::cout << "[-] Danh sach khu vuc dang trong.\n";
                     else inBang(ds);
@@ -153,7 +153,7 @@ public:
 
 
                     thuLai([&]() {
-                        std::string rawTram = Inputhelper::Docstring("Ma Tram dieu phoi moi (" + banSao.getMaTram() + ") [Nhap '-' de xoa]: ", true);
+                        std::string rawTram = Inputhelper::Docstring("Ma Tram moi (" + banSao.getMaTram() + ") [Nhap '-' de xoa]: ", true);
                         if (!rawTram.empty()) {
                             if (rawTram == "-") {
                                 banSao.setMaTram("Chua xac dinh");
