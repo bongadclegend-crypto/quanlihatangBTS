@@ -1,5 +1,5 @@
 // Thanh vien thuc hien: Vo Manh Thang
-// Sua ngay 21/10
+// Sua ngay 22/10
 #pragma once
 #include <iostream>
 #include <vector>
@@ -10,6 +10,23 @@
 #include "InputHelper.h"
 
 class MenuNhaCungCap {
+private:
+    template <typename A>
+    static void nhapAnToan(A thaoTac) {
+        bool thanhCong = false;
+        do {
+            try {
+                thaoTac();
+                thanhCong = true;
+            }
+            catch (const Baseexception& err) {
+                std::cout << "   -> [Canh bao]: " << err.getMessage() << " (Vui long nhap lai)\n";
+            }
+            catch (const std::exception&) {
+                std::cout << "   -> [Loi kieu du lieu]: Dinh dang chua chinh xac. (Vui long nhap lai)\n";
+            }
+        } while (!thanhCong);
+    }
 public:
 	static void run(Repository<NhaCungCap>& repoNCC) {
 		while (true) {
