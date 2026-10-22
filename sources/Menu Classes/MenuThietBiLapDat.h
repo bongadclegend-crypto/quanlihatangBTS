@@ -4,7 +4,7 @@
 #include <memory>   
 #include "Repository.h" 
 #include "ThietBiLapDat.h"
-#include "LoaiThietBi.h" 
+// Da xoa #include "LoaiThietBi.h" vi khong con dung den nua
 #include "TramBTS.h"     
 #include "NhaCungCap.h" 
 #include "InputHelper.h" 
@@ -22,7 +22,8 @@ private:
     }
 
 public:
-    static void run(Repository<ThietBiLapDat>& repoTB, Repository<LoaiThietBi>& repoLoai, Repository<TramBTS>& repoTram, Repository<NhaCungCap>& repoNCC) {
+    // LUU Y: Da xoa tham so Repository<LoaiThietBi>& repoLoai khoi ham run()
+    static void run(Repository<ThietBiLapDat>& repoTB, Repository<TramBTS>& repoTram, Repository<NhaCungCap>& repoNCC) {
         while (true) {
             std::cout << "\n--- QUAN LY THIET BI LAP DAT TAI TRAM ---\n";
             std::cout << "1. Xem danh sach\n2. Lap dat thiet bi moi\n3. Cap nhat thong tin\n4. Go bo thiet bi\n0. Quay lai\n";
@@ -52,12 +53,10 @@ public:
                         tb->setId(Inputhelper::TuTaoMa(ma, "TB"));
                         if (repoTB.findById(tb->getId())) throw Ngoailerangbuoc("Loi: Ma Thiet Bi nay da ton tai!");
                         });
-                    thulai([&]() { tb->setTenThietBi(Inputhelper::Docstring("Ten the hien : ")); });
-                    thulai([&]() {
-                        std::string maLoai = Inputhelper::TuTaoMa(Inputhelper::Docstring("Ma Loai (4 so): "), "LT");
-                        if (!repoLoai.findById(maLoai)) throw Ngoailerangbuoc("Tu choi: Ma Loai Thiet Bi khong ton tai!");
-                        tb->setMaLoai(maLoai);
-                        });
+                    thulai([&]() { tb->setTenThietBi(Inputhelper::Docstring("Ten the hien: ")); });
+
+                    // Da xoa khoi nhap maLoai
+
                     thulai([&]() {
                         std::string maTram = Inputhelper::TuTaoMa(Inputhelper::Docstring("Ma Tram BTS (4 so): "), "BTS");
                         if (!repoTram.findById(maTram)) throw Ngoailerangbuoc("Tu choi: Ma Tram BTS khong ton tai!");
@@ -76,51 +75,44 @@ public:
                 }
                 else if (chon == 3) {
                     std::cout << "\n-- Cap Nhat (Nhan Enter de bo qua truong khong sua) --\n";
-                    std::string rawId = Inputhelper::Docstring("Ma TB can cap nhat: ");
+                    std::string rawId = Inputhelper::Docstring("Ma TB can cap nhat (4 so): ");
                     auto tb = repoTB.findById(Inputhelper::TuTaoMa(rawId, "TB"));
                     if (!tb) throw Ngoailekotimthay("Khong tim thay Thiet bi nay!");
 
-                    ThietBiLapDat banSao = *tb;
+                    // Ghi de truc tiep, khong tao banSao, khong in trang thai cu
+                    thulai([&]() {
+                        std::string ten = Inputhelper::Docstring("Ten the hien moi: ", true);
+                        if (!ten.empty()) tb->setTenThietBi(ten);
+                        });
+
+                    // Da xoa khoi cap nhat maLoai
 
                     thulai([&]() {
-                        std::string ten = Inputhelper::Docstring("Ten the hien moi (" + banSao.getTenThietBi() + "): ", true);
-                        if (!ten.empty()) banSao.setTenThietBi(ten);
-                        });
-                    thulai([&]() {
-                        std::string mLoai = Inputhelper::Docstring("Ma Loai moi (" + banSao.getMaLoai() + "): ", true);
-                        if (!mLoai.empty()) {
-                            std::string maChuan = Inputhelper::TuTaoMa(mLoai, "LT");
-                            if (!repoLoai.findById(maChuan)) throw Ngoailerangbuoc("Ma Loai moi khong ton tai!");
-                            banSao.setMaLoai(mLoai);
-                        }
-                        });
-                    thulai([&]() {
-                        std::string mTram = Inputhelper::Docstring("Ma Tram moi (" + banSao.getMaTram() + "): ", true);
+                        std::string mTram = Inputhelper::Docstring("Ma Tram moi: ", true);
                         if (!mTram.empty()) {
                             std::string maChuan = Inputhelper::TuTaoMa(mTram, "BTS");
                             if (!repoTram.findById(maChuan)) throw Ngoailerangbuoc("Ma Tram moi khong ton tai!");
-                            banSao.setMaTram(mTram);
+                            tb->setMaTram(mTram);
                         }
                         });
                     thulai([&]() {
-                        std::string mNCC = Inputhelper::Docstring("Ma NCC moi (" + banSao.getMaNCC() + "): ", true);
+                        std::string mNCC = Inputhelper::Docstring("Ma NCC moi: ", true);
                         if (!mNCC.empty()) {
                             std::string maChuan = Inputhelper::TuTaoMa(mNCC, "NCC");
                             if (!repoNCC.findById(maChuan)) throw Ngoailerangbuoc("Ma NCC moi khong ton tai!");
-                            banSao.setMaNCC(mNCC);
+                            tb->setMaNCC(mNCC);
                         }
                         });
                     thulai([&]() {
-                        std::string ngay = Inputhelper::Docstring("Ngay lap dat moi (" + banSao.getNgayLapDat() + "): ", true);
-                        if (!ngay.empty()) banSao.setNgayLapDat(ngay);
+                        std::string ngay = Inputhelper::Docstring("Ngay lap dat moi: ", true);
+                        if (!ngay.empty()) tb->setNgayLapDat(ngay);
                         });
                     thulai([&]() {
-                        std::string tt = Inputhelper::Docstring("Trang thai moi (" + banSao.getTrangThai() + "): ", true);
-                        if (!tt.empty()) banSao.setTrangThai(tt);
+                        std::string tt = Inputhelper::Docstring("Trang thai moi: ", true);
+                        if (!tt.empty()) tb->setTrangThai(tt);
                         });
 
-                    *tb = banSao;
-                    repoTB.update();
+                    repoTB.update(); // Luu truc tiep su thay doi cua tb xuong file
                     std::cout << "[+] Cap nhat hoan tat!\n";
                 }
                 else if (chon == 4) {
