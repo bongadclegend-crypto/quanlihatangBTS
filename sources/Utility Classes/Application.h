@@ -90,7 +90,7 @@ public:
 
             }
             else if (chon == 4) {
-                MenuThietBiLapDat::run( repoThietBiLapDat, repoLoaiThietBi, repoTramBTS,repoNCC);
+                MenuThietBiLapDat::run(repoThietBiLapDat, repoTramBTS, repoNCC);
             }
             else if (chon == 5) {
                 MenuKhuVuc::run(repoKhuVuc,repoTramBTS);
