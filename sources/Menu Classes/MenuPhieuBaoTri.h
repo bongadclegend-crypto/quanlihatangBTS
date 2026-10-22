@@ -1,5 +1,5 @@
 // Thanh vien thuc hien: Vo Manh Thang
-// Sua ngay 21/10
+// Sua ngay 22/10
 #pragma once
 #include <iostream>
 #include <vector>
