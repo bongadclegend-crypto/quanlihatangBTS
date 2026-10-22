@@ -136,8 +136,8 @@ public:
         gocAzimuth = az;
     }
     double tinhCuLyTamNhinThangToiThietBiDiDong() const {
-        // Chieu cao thiet bi thu (dien thoai di dong) co dinh la 0.179 m
-        const double hr = 0.179;
+        // mô phỏng người dùng cầm thiết bị ngang ngực/tai.1.5m
+        const double hr = 1.5;
         // Cong thuc: r0 = 3.57 * (sqrt(ht) + sqrt(hr))
         // Voi ht chinh la chieuCao cua Anten
         return 3.57 * (std::sqrt(chieuCao) + std::sqrt(hr));
