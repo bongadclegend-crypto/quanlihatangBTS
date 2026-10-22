@@ -1,5 +1,3 @@
-// Thanh vien thuc hien: Vo Manh Thang
-// Sua ngay 21/10
 #pragma once
 #include <iostream>
 #include <string>
@@ -12,6 +10,8 @@
 class PhieuBaoTri : public Entity {
 private:
     std::string maTram;
+    std::string maTB;  //khoa ngoai thietbilapdat
+    std::string maNCC;
     Date ngayBaoTri;
     std::string noiDung;
     std::string trangThai;
@@ -20,28 +20,32 @@ private:
 public:
     PhieuBaoTri() { chiPhi = 0; }
 
-    PhieuBaoTri(std::string maPBT, std::string maBTS, std::string ngay, std::string nd, std::string tt, double cp) {
-        setId(Inputhelper::tuTaoMa(maPBT, "PBT"));
+    // [ÄÃƒ NÃ‚NG Cáº¤P] LÃªn 8 tham sá»‘ (thÃªm mTB)
+    PhieuBaoTri(std::string maPBT, std::string maBTS, std::string mTB, std::string mNCC, std::string ngay, std::string nd, std::string tt, double cp) {
+        setId(Inputhelper::TuTaoMa(maPBT, "PBT"));
         setMaTram(maBTS);
+        setMaTB(mTB);
+        setMaNCC(mNCC);
         setNgayBaoTri(ngay);
         setNoiDung(nd);
         setTrangThai(tt);
         setChiPhi(cp);
     }
 
-    // --- GETTER & SETTER ---
-
     std::string getMaTram() const { return maTram; }
-    void setMaTram(const std::string& maTram) {
-        this->maTram = Inputhelper::tuTaoMa(maTram, "BTS");
-    }
+    void setMaTram(const std::string& maTram) { this->maTram = Inputhelper::TuTaoMa(maTram, "BTS"); }
+
+    // [ÄÃƒ THÃŠM] Getter / Setter cho MaTB
+    std::string getMaTB() const { return maTB; }
+    void setMaTB(const std::string& mTB) { this->maTB = Inputhelper::TuTaoMa(mTB, "TB"); }
+
+    std::string getMaNCC() const { return maNCC; }
+    void setMaNCC(const std::string& maNCC) { this->maNCC = Inputhelper::TuTaoMa(maNCC, "NCC"); }
 
     std::string getNgayBaoTri() const { return ngayBaoTri.toString(); }
     void setNgayBaoTri(const std::string& ngay) {
         std::string clean = Inputhelper::catkhoangtrang(ngay);
         if (clean.empty()) throw Loixacthuc("Loi: Ngay bao tri khong duoc de trong!");
-
-        // Chuyen viec xac thuc cau truc chuoi ngay thang cho object Date xu ly
         ngayBaoTri.docchuoi(clean);
     }
 
@@ -61,52 +65,51 @@ public:
 
     double getChiPhi() const { return chiPhi; }
     void setChiPhi(double cp) {
-        // Rang buoc gia tri so: chi phi bao tri khong duoc phep nho hon 0
         if (cp < 0) throw Loixacthuc("Loi: Chi phi bao tri khong duoc la so am!");
         chiPhi = cp;
     }
 
-    // --- GHI DE (OVERRIDE) --- 
-
-    /* Cac ham xu ly I/O dinh dang file */
-
-    std::string toFilerecord() const override {
-        return id + "|" + maTram + "|" + ngayBaoTri.toString() + "|" + noiDung + "|" + trangThai + "|" + std::to_string(chiPhi);
+    // [ÄÃƒ NÃ‚NG Cáº¤P] Xá»­ lÃ½ I/O 8 trÆ°á»ng
+    std::string tofilerecord() const override {
+        return id + "|" + maTram + "|" + maTB + "|" + maNCC + "|" + ngayBaoTri.toString() + "|" + noiDung + "|" + trangThai + "|" + std::to_string(chiPhi);
     }
 
-    void fromFilerecord(const std::string& record) override {
+    void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
-        // Phai dam bao doc du 6 cot du lieu de tranh loi tran bo nho
-        if (data.size() >= 6) {
+        if (data.size() >= 8) {
             setId(data[0]);
             maTram = data[1];
-            ngayBaoTri.docchuoi(data[2]);
-            noiDung = data[3];
-            trangThai = data[4];
-            chiPhi = std::stod(data[5]);
+            maTB = data[2];
+            maNCC = data[3];
+            ngayBaoTri.docchuoi(data[4]);
+            noiDung = data[5];
+            trangThai = data[6];
+            chiPhi = std::stod(data[7]);
         }
     }
-
-    // --- HIEN THI TREN CONSOLE ---
 
     void display() const override {
         std::cout << std::left
             << std::setw(8) << id << "| "
             << std::setw(10) << maTram << "| "
+            << std::setw(10) << maTB << "| "
+            << std::setw(10) << maNCC << "| "
             << std::setw(14) << ngayBaoTri.toString() << "| "
-            << std::setw(22) << noiDung << "| "
-            << std::setw(15) << trangThai << "| "
-            << std::setw(12) << std::fixed << std::setprecision(0) << chiPhi << " VND" << std::endl;
+            << std::setw(18) << (noiDung.length() > 15 ? noiDung.substr(0, 12) + "..." : noiDung) << "| "
+            << std::setw(12) << trangThai << "| "
+            << std::setw(10) << std::fixed << std::setprecision(0) << chiPhi << "\n";
     }
 
     static void displayHeader() {
         std::cout << std::left
             << std::setw(8) << "Ma PBT" << "| "
             << std::setw(10) << "Ma Tram" << "| "
+            << std::setw(10) << "Ma TB" << "| "
+            << std::setw(10) << "Ma NCC" << "| "
             << std::setw(14) << "Ngay Bao Tri" << "| "
-            << std::setw(22) << "Noi Dung" << "| "
-            << std::setw(15) << "Trang Thai" << "| "
-            << std::setw(12) << "Chi Phi" << "\n";
-        std::cout << std::string(95, '-') << "\n";
+            << std::setw(18) << "Noi Dung" << "| "
+            << std::setw(12) << "Trang Thai" << "| "
+            << std::setw(10) << "Chi Phi" << "\n";
+        std::cout << std::string(105, '-') << "\n";
     }
 };
