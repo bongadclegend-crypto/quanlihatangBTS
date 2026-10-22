@@ -128,7 +128,7 @@ public: // cac ham khoi tao
         *this = parsed;
     } // ham nay de doc va ghi file txt
         void display() const override {
-        // GIẢI THÍCH: Toán tử 3 ngôi (dieu_kien ? dung : sai). Nếu tên dài quá 22 ký tự thì cắt lấy 19 ký tự đầu rồi nối "...". Nếu không thì in bình thường.
+       
         std::cout << std::left
             << std::setw(10) << id << "| "
             << std::setw(24) << (tenKhuVuc.length() > 22 ? tenKhuVuc.substr(0, 19) + "..." : tenKhuVuc) << "| "
