@@ -10,7 +10,6 @@
 class ThietBiLapDat : public Entity {
 private:
     std::string tenThietBi;
-    std::string maLoai;
     std::string maTram;
     std::string maNCC;
     Date ngayLapDat;
@@ -19,10 +18,10 @@ private:
 public:
     ThietBiLapDat() {}
 
-    ThietBiLapDat(std::string ma, std::string ten, std::string loai, std::string tram, std::string ncc, std::string ngay, std::string tt) {
+    // Đã xóa tham số loai và hàm setMaLoai
+    ThietBiLapDat(std::string ma, std::string ten, std::string tram, std::string ncc, std::string ngay, std::string tt) {
         setId(Inputhelper::TuTaoMa(ma, "TB"));
         setTenThietBi(ten);
-        setMaLoai(loai);
         setMaTram(tram);
         setMaNCC(ncc);
         setNgayLapDat(ngay);
@@ -37,9 +36,6 @@ public:
         if (clean.find('|') != std::string::npos) throw Loixacthuc("Loi: Khong duoc chua ky tu |!");
         tenThietBi = clean;
     }
-
-    std::string getMaLoai() const { return maLoai; }
-    void setMaLoai(const std::string& loai) { maLoai = Inputhelper::TuTaoMa(loai, "LT"); }
 
     std::string getMaTram() const { return maTram; }
     void setMaTram(const std::string& tram) { maTram = Inputhelper::TuTaoMa(tram, "BTS"); }
@@ -62,43 +58,44 @@ public:
         trangThai = Inputhelper::VietHoaChuDau(clean);
     }
 
+    // Xóa maLoai khỏi chuỗi lưu file
     std::string tofilerecord() const override {
-        return id + "|" + tenThietBi + "|" + maLoai + "|" + maTram + "|" + maNCC + "|" + ngayLapDat.toString() + "|" + trangThai;
+        return id + "|" + tenThietBi + "|" + maTram + "|" + maNCC + "|" + ngayLapDat.toString() + "|" + trangThai;
     }
 
+    // Cập nhật lại logic đọc file, giảm size xuống 6 và lùi các index lại
     void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
-        if (data.size() >= 7) {
+        if (data.size() >= 6) {
             setId(data[0]);
             tenThietBi = data[1];
-            maLoai = data[2];
-            maTram = data[3];
-            maNCC = data[4];
-            ngayLapDat.docchuoi(data[5]);
-            trangThai = data[6];
+            maTram = data[2];
+            maNCC = data[3];
+            ngayLapDat.docchuoi(data[4]);
+            trangThai = data[5];
         }
     }
 
+    // Xóa cột maLoai khỏi bảng hiển thị
     void display() const override {
         std::cout << std::left
             << std::setw(8) << id << "| "
             << std::setw(22) << (tenThietBi.length() > 19 ? tenThietBi.substr(0, 16) + "..." : tenThietBi) << "| "
-            << std::setw(10) << maLoai << "| "
             << std::setw(10) << maTram << "| "
             << std::setw(10) << maNCC << "| "
             << std::setw(12) << ngayLapDat.toString() << "| "
             << std::setw(15) << trangThai << "\n";
     }
 
+    // Cập nhật lại Header, thu ngắn đường kẻ ngang
     static void displayHeader() {
         std::cout << std::left
             << std::setw(8) << "Ma TB" << "| "
             << std::setw(22) << "Ten Thiet Bi" << "| "
-            << std::setw(10) << "Ma Loai" << "| "
             << std::setw(10) << "Ma Tram" << "| "
             << std::setw(10) << "Ma NCC" << "| "
             << std::setw(12) << "Ngay Lap" << "| "
             << std::setw(15) << "Trang Thai" << "\n";
-        std::cout << std::string(96, '-') << "\n";
+        std::cout << std::string(84, '-') << "\n";
     }
 };
