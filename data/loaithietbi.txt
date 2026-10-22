@@ -1,0 +1,11 @@
+#Danh sach doi tuong
+LT1001|Anten Parabol 5G|Ericsson|Bang tan Sub-6GHz|150.5
+LT1002|Tu Nguon DC 48V|Huawei|Dien ap 48V-200A|1200.0
+LT1003|Thiet Bi BBU Baseband|Nokia|Xu ly tin hieu mang loi|350.0
+LT1004|Thiet Bi RRU Remote|ZTE|Khuech dai cong suat RF|250.5
+LT1005|Cap Quang Single Mode|Prysmian|Truyen dan toc do cao|5.0
+LT1006|Tu Nguon AC Chuyen Dung|Delta|Chuyen doi AC-DC|1500.0
+LT1007|Ac Quy Du Phong|Vision|Luu tru 12V-150Ah|0.0
+LT1008|May Lanh Chinh Xac|Daikin|Lam mat tram BTS 24/7|2500.0
+LT1009|Switch Core 10G|Cisco|Chuyen mach 10Gbps|450.0
+LT1010|Router Quang Dinh Tuyen|Juniper|Dinh tuyen mang IP|320.5

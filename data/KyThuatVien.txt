@@ -1,0 +1,10 @@
+KTV1001|Nguyen Van An|Ky Su Vo Tuyen|0987654321
+KTV1002|Tran Thi Binh|Chuyen Vien Truyen Dan|0901234567
+KTV1003|Le Hoang Cuong|Ky Su Dien|0912345678
+KTV1004|Pham Thi Dung|Bao Tri Vien|0945678901
+KTV1005|Do Doan Giao|Ky Su Vo Tuyen|0978123456
+KTV1006|Ngo Thi Lan|Chuyen Vien IT|0934567890
+KTV1007|Bui Van Kien|Ky Su Dien|0867123456
+KTV1008|Dinh Thi Mai|Bao Tri Vien|0898765432
+KTV1009|Truong Quang Vinh|Ky Su Vo Tuyen|0923456789
+KTV1010|Vu Thi Tuyet|Chuyen Vien Truyen Dan|0888123456

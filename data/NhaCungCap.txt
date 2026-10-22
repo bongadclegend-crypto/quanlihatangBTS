@@ -1,0 +1,10 @@
+NCC1001|Cong Ty Vien Thong Viettel|0987654321|Ha Noi
+NCC1002|Thiet Bi Mang FPT|0912345678|Da Nang
+NCC1003|Dich Vu Bao Tri VNPT|0901122334|TP Ho Chi Minh
+NCC1004|Cong Ty Dien Luc EVN|0977889900|Hai Phong
+NCC1005|Vat Tu Vien Thong Sao Mai|0933445566|Can Tho
+NCC1006|Cong Ty Ky Thuat Ha Thinh|0988776655|Nam Dinh
+NCC1007|Dien Tu Vien Thong Hoa Binh|0911223344|Thai Binh
+NCC1008|Giai Phap Mang Cisco VN|0909887766|Ha Noi
+NCC1009|Thiet Bi Dien Dong A|0966554433|Hai Duong
+NCC1010|Cong Ty Bao Tri Bach Khoa|0944332211|Ha Noi

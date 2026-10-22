@@ -1,0 +1,11 @@
+#Danh sach doi tuong
+BTS1001|Tram Cau Giay|Cot tu dung|15.5|Hoat dong
+BTS1002|Tram Hoang Mai|Cot day neo|20.0|Bao tri
+BTS1003|Tram Ba Dinh|Nguy trang|12.5|Hoat dong
+BTS1004|Tram Ha Dong|Cot tu dung|18.0|Loi ket noi
+BTS1005|Tram Tay Ho|Cot day neo|22.5|Hoat dong
+BTS1006|Tram Long Bien|Cot tu dung|25.0|Hoat dong
+BTS1007|Tram Thanh Xuan|Nguy trang|10.0|Hoat dong
+BTS1008|Tram Nam Tu Liem|Cot day neo|30.0|Bao tri
+BTS1009|Tram Dong Da|Cot tu dung|14.0|Hoat dong
+BTS1010|Tram Hai Ba Trung|Nguy trang|11.5|Loi ket noi
