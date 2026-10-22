@@ -13,6 +13,23 @@
 #include "Exceptions.h"
 
 class MenuPhieuBaoTri {
+private:
+    template <typename A>
+    static void nhapAnToan(A thaoTac) {
+        bool thanhCong = false;
+        do {
+            try {
+                thaoTac();
+                thanhCong = true;
+            }
+            catch (const Baseexception& err) {
+                std::cout << "   -> [Canh bao]: " << err.getMessage() << " (Vui long nhap lai)\n";
+            }
+            catch (const std::exception&) {
+                std::cout << "   -> [Loi kieu du lieu]: Dinh dang chua chinh xac. (Vui long nhap lai)\n";
+            }
+        } while (!thanhCong);
+    }
 public:
 	static void run(Repository<PhieuBaoTri>& repoPBT, Repository<TramBTS>& repoTram) {
 		while (true) {
