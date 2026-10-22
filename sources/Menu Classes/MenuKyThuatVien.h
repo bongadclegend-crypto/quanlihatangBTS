@@ -1,3 +1,4 @@
+// Kieu Binh Nhan B24DCVT285
 #pragma once
 #include <iostream>
 #include <string>
@@ -8,86 +9,133 @@
 
 class MenuKyThuatVien {
 public:
+    // Chay menu quan ly, truyen vao repoKTV de thao tac du lieu
     static void run(Repository<KyThuatVien>& repoKTV) {
         while (true) {
             std::cout << "\n--- QUAN LY KY THUAT VIEN ---\n";
-            std::cout << "1. Xem danh sach KTV\n";
-            std::cout << "2. Them KTV moi\n";
-            std::cout << "3. Cap nhat thong tin\n";
-            std::cout << "4. Xoa KTV\n";
-            std::cout << "0. Quay lai Menu Chinh\n";
+            std::cout << "1. Xem danh sach\n2. Them moi\n3. Cap nhat\n4. Xoa\n0. Quay lai\n";
 
-            int chon = Inputhelper::Docint(">> Ban chon so may (0-4): ");
+            int chon = Inputhelper::Docint(">> Chon so (0-4): ");
             if (chon == 0) break;
 
             try {
                 if (chon == 1) {
                     std::cout << "\n";
                     KyThuatVien::displayHeader();
-                    for (const auto& ktv : repoKTV.getAll()) {
-                        ktv->display();
-                    }
+                    // Duyet tung ktv trong repoKTV va in ra
+                    for (const auto& ktv : repoKTV.getAll()) ktv->display();
                 }
-
                 else if (chon == 2) {
                     std::cout << "\n-- Them Ky Thuat Vien --\n";
-                    std::string ma = Inputhelper::Docstring("Nhap Ma KTV (chi can 4 so): ");
-                    std::string ten = Inputhelper::Docstring("Nhap Ten KTV: ");
-                    std::string cm = Inputhelper::Docstring("Nhap Chuyen mon: ");
-                    std::string sdt = Inputhelper::Docstring("Nhap So dien thoai: ");
+					auto ktv = std::make_shared<KyThuatVien>(); // Tao doi tuong KTV moi
+					// Nhap ma KTV, kiem tra xem ma da ton tai hay chua
+                    while (true) {
+                        try { 
+                            std::string ma = Inputhelper::Docstring("Ma KTV (4 so, Enter de Huy): ", true);
+                            if (ma == "") break;
 
-                    auto ktvMoi = std::make_shared<KyThuatVien>(ma, ten, cm, sdt);
+                            std::string id = Inputhelper::tuTaoMa(ma, "KTV");
+                            if (repoKTV.findById(id)) throw Loixacthuc("Loi: Ma nay da ton tai!");
 
-                    repoKTV.add(ktvMoi);
-                    std::cout << "[+] Da them thanh cong!\n";
+                            ktv->setId(id); // Ma hop le luu vao KTV
+                            break;
+                        }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
+                    }
+					if (ktv->getId() == "") { std::cout << "[!] Da huy.\n"; continue; } // Huy thi quay lai menu
+					// Nhap cac thong tin con lai
+                    while (true) {
+                        try { ktv->setTenKTV(Inputhelper::Docstring("Ten KTV: ")); break; }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
+                    }
+                    while (true) {
+                        try { ktv->setChuyenMon(Inputhelper::Docstring("Chuyen mon: ")); break; }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
+                    }
+                    while (true) {
+                        try { ktv->setSoDienThoai(Inputhelper::Docstring("So dien thoai: ")); break; }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
+                    }
+
+					repoKTV.add(ktv); // Them KTV vao repo va luu vao file
+                    std::cout << "[+] Them thanh cong!\n";
                 }
-
                 else if (chon == 3) {
-                    std::string maCanSua = Inputhelper::Docstring("Nhap Ma KTV can sua (4 so): ");
-                    maCanSua = Inputhelper::TuTaoMa(maCanSua, "KTV");
-                    auto ktv = repoKTV.findById(maCanSua);
+                    std::cout << "\n-- Cap Nhat Thong Tin --\n";
+                    std::string masua;
+					// Nhap ma KTV can sua, kiem tra ton tai
+                    while (true) {
+                        try {
+                            masua = Inputhelper::Docstring("Ma KTV can sua (Enter de Huy): ", true);
+                            if (masua == "") break;
 
-                    if (ktv == nullptr) {
-                        throw Loixacthuc("Khong tim thay Ma KTV nay!");
+                            masua = Inputhelper::tuTaoMa(masua, "KTV");
+                            if (!repoKTV.findById(masua)) throw Loixacthuc("Loi: Khong tim thay Ma KTV nay!");
+                            break;
+                        }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
+                    }
+                    if (masua == "") { std::cout << "[!] Da huy.\n"; continue; }
+
+					auto ktv = repoKTV.findById(masua); // Lay doi tuong KTV can sua
+                    std::cout << "\n--- Nhan Enter de bo qua neu khong muon sua ---\n";
+                    // Nhap thong tin moi, neu an enter thi bo qua
+                    while (true) {
+                        try {
+                            std::string ten = Inputhelper::Docstring("Ten moi: ", true);
+                            if (ten != "") ktv->setTenKTV(ten);
+                            break;
+                        }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
+                    }
+					// Nhap chuyen mon moi, neu an enter thi bo qua
+                    while (true) {
+                        try {
+                            std::string cm = Inputhelper::Docstring("Chuyen mon moi: ", true);
+                            if (cm != "") ktv->setChuyenMon(cm);
+                            break;
+                        }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
+                    }
+					// Nhap so dien thoai moi, neu an enter thi bo qua
+                    while (true) {
+                        try {
+                            std::string sdt = Inputhelper::Docstring("SDT moi: ", true);
+                            if (sdt != "") ktv->setSoDienThoai(sdt);
+                            break;
+                        }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
                     }
 
-                    std::string tenMoi = Inputhelper::Docstring("Ten moi: ", true);
-                    if (tenMoi != "") {
-                        ktv->setTenKTV(tenMoi);
-                    }
-
-                    std::string cmMoi = Inputhelper::Docstring("Chuyen mon moi: ", true);
-                    if (cmMoi != "") {
-                        ktv->setChuyenMon(cmMoi);
-                    }
-
-                    std::string sdtMoi = Inputhelper::Docstring("SDT moi: ", true);
-                    if (sdtMoi != "") {
-                        ktv->setSoDienThoai(sdtMoi);
-                    }
-
-                    repoKTV.update();
-                    std::cout << "[+] Da cap nhat thanh cong!\n";
+					repoKTV.update(); // Luu lai thay doi vao file
+                    std::cout << "[+] Cap nhat thanh cong!\n";
                 }
-
                 else if (chon == 4) {
-                    std::string maCanXoa = Inputhelper::Docstring("\nNhap Ma KTV can xoa (4 so): ");
-                    maCanXoa = Inputhelper::TuTaoMa(maCanXoa, "KTV");
-
-                    if (repoKTV.findById(maCanXoa) == nullptr) {
-                        throw Loixacthuc("Khong tim thay Ma KTV nay!");
+                    std::string maXoa;
+					// Nhap ma KTV can xoa, kiem tra ton tai
+                    while (true) {
+                        try {
+                            maXoa = Inputhelper::Docstring("\nMa KTV can xoa (Enter de Huy): ", true);
+                            if (maXoa == "") break;
+                            maXoa = Inputhelper::tuTaoMa(maXoa, "KTV");
+                            break;
+                        }
+                        catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
                     }
+                    if (maXoa == "") { std::cout << "[!] Da huy.\n"; continue; }
 
-                    std::string xacNhan = Inputhelper::Docstring("Ban co chac chan xoa KTV nay? (y/n): ");
+                    if (!repoKTV.findById(maXoa)) throw Loixacthuc("Loi: Khong tim thay Ma KTV nay!");
+					// Xac nhan truoc khi xoa
+                    std::string xacNhan = Inputhelper::Docstring("Chac chan xoa KTV nay? (y/n): ");
                     if (xacNhan == "y" || xacNhan == "Y") {
-                        repoKTV.remove(maCanXoa);
+						repoKTV.remove(maXoa); // Xoa KTV khoi repo va luu vao file
                         std::cout << "[+] Da xoa thanh cong!\n";
                     }
                 }
             }
-
+			// Bat loi tu cac ham trong repo va KTV, in ra thong bao loi
             catch (const Baseexception& e) {
-                std::cout << "[-] Loi: " << e.getMessage() << "\n";
+                std::cout << "[-] Loi he thong: " << e.getMessage() << "\n";
             }
         }
     }
