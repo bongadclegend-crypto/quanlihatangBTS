@@ -30,7 +30,7 @@ public:
 			std::cout << "\n======================================\n";
 			std::cout << "       QUAN LY PHIEU BAO TRI           \n";
 			std::cout << "======================================\n";
-			std::cout << "1. Xem danh sach phieu bao tri\n2. Lap phieu bao tri moi\n3. Cap nhat phieu bao tri\n4. Xoa phieu bao tri\n0. Quay lai menu chinh\n";
+			std::cout << "1. Xem danh sach phieu bao tri\n2. Them phieu bao tri moi\n3. Cap nhat phieu bao tri\n4. Xoa phieu bao tri\n0. Quay lai menu chinh\n";
 			int chon = Inputhelper::Docint(">> Nhap lua chon: ");
 			if (chon == 0) break;
 
