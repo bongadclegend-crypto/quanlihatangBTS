@@ -1,5 +1,4 @@
-// Tac gia: Nguyen Cong Vinh
-// fix ngay 20
+
 #pragma once
 #include <iostream>
 #include <string>
