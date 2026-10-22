@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <cctype>
 #include <vector>
+#include <cmath>
 #include "Exceptions.h"
 #include "Entity.h"
 #include "Inputhelper.h"
@@ -135,7 +136,13 @@ public:
             throw Loixacthuc("Loi: Goc Azimuth phai trong khoang [0, 359] do!");
         gocAzimuth = az;
     }
-
+    double tinhCuLyTamNhinThangToiThietBiDiDong() const {
+        // Chieu cao thiet bi thu (dien thoai di dong) co dinh la 0.179 m
+        const double hr = 0.179;
+        // Cong thuc: r0 = 3.57 * (sqrt(ht) + sqrt(hr))
+        // Voi ht chinh la chieuCao cua Anten
+        return 3.57 * (std::sqrt(chieuCao) + std::sqrt(hr));
+    }
     std::string tofilerecord() const override {
         return id + "|" + maTram + "|" + loaiAnten + "|" +
             chieuCaoToString() + "|" + std::to_string(gocAzimuth);
