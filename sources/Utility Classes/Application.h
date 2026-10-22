@@ -20,8 +20,8 @@
 #include "MenuSuCoTram.h"
 #include"PhieuBaoTri.h"
 #include"NhaCungCap.h"
-#include"menunhacungcap.h"
-#include"menuphieubaotri.h"
+#include"MenuPhieuBaoTri.h"
+#include"MenuNhaCungCap.h"
 
 
 
@@ -41,16 +41,16 @@ private:
 public:
     Application() {
         // Khởi động chỉ nạp dữ liệu của Trạm và Hợp đồng
-        repoTramBTS.loadFromFile();
-        repoHopDong.loadFromFile();
-        repoThietBiLapDat.loadFromFile();
-        repoLoaiThietBi.loadFromFile();
-        repoKhuVuc.loadFromFile();
-        repoAnten.loadFromFile();
-        repoSC.loadFromFile();
-        repoKTV.loadFromFile();
-        repoNCC.loadFromFile();
-        repoPBT.loadFromFile();
+        repoTramBTS.loadfromfile();
+        repoHopDong.loadfromfile();
+        repoThietBiLapDat.loadfromfile();
+        repoLoaiThietBi.loadfromfile();
+        repoKhuVuc.loadfromfile();
+        repoAnten.loadfromfile();
+        repoSC.loadfromfile();
+        repoKTV.loadfromfile();
+        repoNCC.loadfromfile();
+        repoPBT.loadfromfile();
         
     }
 
@@ -61,14 +61,14 @@ public:
             std::cout << "============================================\n";
             std::cout << "1. Quan ly Tram BTS\n";
             std::cout << "2. Quan ly Hop dong thue vi tri\n";
-            std::cout << "3 Quan ly Loai thiet bi\n";
+            std::cout << "3. Quan ly Loai thiet bi\n";
             std::cout << "4. Quan ly Thiet bi lap dat\n";
             std::cout << "5. Quan ly Khu Vuc / Tinh\n";
             std::cout << "6. Quan ly Anten va Cau hinh phat\n";
             std::cout << "7. Ky Thuat Vien\n";
             std::cout << "8. Su co Tram\n";
             std::cout << "9. Nha Cung Cap\n";
-            std::cout << "10. Phieu Bao Tri\n";
+            std::cout << "10.Phieu Bao Tri\n";
             std::cout << "0. Thoat chuong trinh\n";
             std::cout << "--------------------------------------------\n";
 
@@ -90,7 +90,7 @@ public:
 
             }
             else if (chon == 4) {
-                MenuThietBiLapDat::run( repoThietBiLapDat, repoLoaiThietBi, repoTramBTS);
+                MenuThietBiLapDat::run( repoThietBiLapDat, repoLoaiThietBi, repoTramBTS,repoNCC);
             }
             else if (chon == 5) {
                 MenuKhuVuc::run(repoKhuVuc,repoTramBTS);
@@ -106,10 +106,10 @@ public:
                 MenuSuCoTram::run(repoSC, repoTramBTS, repoKTV);
             }
             else if (chon == 9) {
-                MenuNhaCungCap::run(repoNCC);
+                MenuNhaCungCap::run(repoNCC,repoPBT);
             }
             else if (chon == 10) {
-                MenuPhieuBaoTri::run(repoPBT);
+                MenuPhieuBaoTri::run(repoPBT,repoTramBTS,repoNCC,repoThietBiLapDat);
             }
             else {
                 std::cout << "[-] Lua chon khong hop le!\n";
