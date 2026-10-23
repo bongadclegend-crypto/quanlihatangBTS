@@ -4,7 +4,7 @@
 #include <memory>   
 #include "Repository.h" 
 #include "ThietBiLapDat.h"
-// Da xoa #include "LoaiThietBi.h" vi khong con dung den nua
+
 #include "TramBTS.h"     
 #include "NhaCungCap.h" 
 #include "InputHelper.h" 
