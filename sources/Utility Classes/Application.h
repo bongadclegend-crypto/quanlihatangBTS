@@ -52,7 +52,7 @@ public:
         repoKTV.loadfromfile();
         repoNCC.loadfromfile();
         repoPBT.loadfromfile();
-        
+
     }
 
     void run() {
@@ -81,7 +81,7 @@ public:
             }
             // Đi thẳng vào các Use Case
             else if (chon == 1) {
-                MenuTramBTS::run(repoTramBTS);
+                MenuTramBTS::run(repoTramBTS, repoAnten, repoKhuVuc, repoSC, repoThietBiLapDat, repoHopDong);
             }
             else if (chon == 2) {
                 MenuHopDongThue::run(repoHopDong, repoTramBTS);
@@ -94,10 +94,10 @@ public:
                 MenuThietBiLapDat::run(repoThietBiLapDat, repoTramBTS, repoNCC);
             }
             else if (chon == 5) {
-                MenuKhuVuc::run(repoKhuVuc,repoTramBTS);
+                MenuKhuVuc::run(repoKhuVuc, repoTramBTS);
             }
             else if (chon == 6) {
-                MenuAnten::run(repoAnten , repoTramBTS);
+                MenuAnten::run(repoAnten, repoTramBTS);
             }
             else if (chon == 7) {
                 MenuKyThuatVien::run(repoKTV);
@@ -107,10 +107,10 @@ public:
                 MenuSuCoTram::run(repoSC, repoTramBTS, repoKTV);
             }
             else if (chon == 9) {
-                MenuNhaCungCap::run(repoNCC,repoPBT);
+                MenuNhaCungCap::run(repoNCC, repoPBT);
             }
             else if (chon == 10) {
-                MenuPhieuBaoTri::run(repoPBT,repoTramBTS,repoNCC,repoThietBiLapDat);
+                MenuPhieuBaoTri::run(repoPBT, repoTramBTS, repoNCC, repoThietBiLapDat);
             }
             else {
                 std::cout << "[-] Lua chon khong hop le!\n";
