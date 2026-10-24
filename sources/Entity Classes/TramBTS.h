@@ -17,7 +17,7 @@ private:
     double banKinhPhuSong;     // don vi km
     std::string trangThai;     // Hoat dong, Dung hoat dong
 
-    //ham kiem tra va chuan hoa ma tram BTS
+    //ham kiem tra va chuanHoa ma tram BTS
     static std::string chuanHoaMaBTS(const std::string& ma) {
         std::string machuan = Inputhelper::TuTaoMa(ma, "BTS");
 
