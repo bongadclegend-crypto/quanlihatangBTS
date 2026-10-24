@@ -6,15 +6,16 @@
 #include <string>
 #include <stdexcept>
 #include <cmath>
+#include <algorithm> // Thu vien ho tro kiem tra mang
 #include "Entity.h"
 #include "Inputhelper.h"
 
 class TramBTS : public Entity {
 private:
     std::string tenTram;
-    std::string loaiCot;       // cot tu dung day neo nguy trang
+    std::string loaiCot;       // cot tu dung, day neo, nguy trang... (Chi dc 5 loai)
     double banKinhPhuSong;     // don vi km
-    std::string trangThai;     // hd, bao tri, loi
+    std::string trangThai;     // Hoat dong, Dung hoat dong
 
     //ham kiem tra va chuan hoa ma tram BTS
     static std::string chuanHoaMaBTS(const std::string& ma) {
@@ -39,7 +40,7 @@ public:
 
     // constructor ham khoi tao co so (Thay chieuCao và maKV bằng banKinh và trangThai)
     TramBTS(std::string ma, std::string ten, std::string loai,
-            double bankinh, std::string tt) {
+        double bankinh, std::string tt) {
 
         setId(chuanHoaMaBTS(ma));
         setTenTram(ten);
@@ -60,7 +61,7 @@ public:
             throw Loixacthuc("Loi: Ten Tram BTS khong duoc de trong");
         }
 
-       //ten tram phai co chu cai
+        //ten tram phai co chu cai
         if (!Inputhelper::CoChuaChuCai(clean)) {
             throw Loixacthuc("Loi: Ten Tram phai chua it nhat 1 chu cai");
         }
@@ -88,8 +89,28 @@ public:
             throw Loixacthuc("Loi: Loai cot chi duoc phep chua chu cai va khoang trang");
         }
 
-       
-        loaiCot = Inputhelper::VietHoaChuDau(clean);
+        // viet hoa de chuan hoa truoc khi so sanh
+        std::string loaiDaChuanHoa = Inputhelper::VietHoaChuDau(clean);
+
+        // rang buoc chi co 5 loai cot
+        std::vector<std::string> danhSachCot = {
+            "Cot Tu Dung", "Cot Day Co", "Cot Nguy Trang", "Cot Than Ong", "Cot Tren Mai"
+        };
+
+        // cot nhap vao co dung 5 loai ko
+        bool hople = false;
+        for (const std::string& cotChuam : danhSachCot) {
+            if (loaiDaChuanHoa == cotChuam) {
+                hople = true;
+                break;
+            }
+        }
+
+        if (!hople) {
+            throw Loixacthuc("Loi: Loai cot chi duoc phep la 1 trong 5 loai: Cot Tu Dung, Cot Day Co, Cot Nguy Trang, Cot Than Ong, Cot Tren Mai");
+        }
+
+        loaiCot = loaiDaChuanHoa;
     }
 
     double getBanKinhPhuSong() const {
@@ -115,16 +136,19 @@ public:
             throw Loixacthuc("Loi: Trang thai khong duoc de trong!");
         }
 
-        if (!Inputhelper::CoChuaChuCai(clean)) {
-            throw Loixacthuc("Loi: Trang thai phai chua it nhat 1 chu cai!");
-        }
-
         if (clean.find('|') != std::string::npos) {
             throw Loixacthuc("Loi: Trang thai khong duoc chua ky tu | !");
         }
 
-       //viet hoa chu cai dau
-        trangThai = Inputhelper::VietHoaChuDau(clean);
+        //viet hoa chu cai dau de chuan hoa so sanh
+        std::string ttDaChuanHoa = Inputhelper::VietHoaChuDau(clean);
+
+        // RANG BUOC 2 TRANG THAI
+        if (ttDaChuanHoa != "Hoat Dong" && ttDaChuanHoa != "Dung Hoat Dong") {
+            throw Loixacthuc("Loi: Trang thai chi duoc nhap 'Hoat Dong' hoac 'Dung Hoat Dong'");
+        }
+
+        trangThai = ttDaChuanHoa;
     }
 
     // cap nhat doc va ghi file
