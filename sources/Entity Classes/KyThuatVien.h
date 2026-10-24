@@ -10,66 +10,71 @@
 class KyThuatVien : public Entity {
 private:
     std::string tenktv;
-    std::string chuyenmon;
+    std::string doinguchuyenmon;
     std::string sodienthoai;
 public:
     // Ham khoi tao mac dinh
     KyThuatVien() {}
     KyThuatVien(std::string ma, std::string ten, std::string cm, std::string sdt) {
-        setId(Inputhelper::tuTaoMa(ma, "KTV"));
+        setId(Inputhelper::TuTaoMa(ma, "KTV"));
         setTenKTV(ten);
-        setChuyenMon(cm);
+        setDoiNguChuyenMon(cm);
         setSoDienThoai(sdt);
     }
     // Cac ham lay va gan du lieu
     std::string getTenKTV() const { return tenktv; }
     void setTenKTV(const std::string& ten) {
         if (ten == "") throw Loixacthuc("Loi: Ten khong duoc de trong!");
-        if (!Inputhelper::coChuaChuCai(ten)) throw Loixacthuc("Loi: Ten phai co chu cai!");
-        tenktv = Inputhelper::vietHoaChuDau(ten);
+        if (!Inputhelper::CoChuaChuCai(ten)) throw Loixacthuc("Loi: Ten phai co chu cai!");
+        tenktv = Inputhelper::VietHoaChuDau(ten);
     }
-
-    std::string getChuyenMon() const { return chuyenmon; }
-    void setChuyenMon(const std::string& cm) {
-        if (cm == "") throw Loixacthuc("Loi: Chuyen mon khong duoc de trong!");
-        chuyenmon = Inputhelper::vietHoaChuDau(cm);
+    std::string getDoiNguChuyenMon() const { return doinguchuyenmon; }
+    void setDoiNguChuyenMon(const std::string& cm) {
+        if (cm == "") throw Loixacthuc("Loi: Doi ngu chuyen mon khong duoc de trong!");
+        std::string chuanhoa = Inputhelper::VietHoaChuDau(cm);
+        if (chuanhoa != "Sua chua" && chuanhoa != "Sua Chua" &&
+            chuanhoa != "Lap dat" && chuanhoa != "Lap Dat" &&
+            chuanhoa != "Van hanh" && chuanhoa != "Van Hanh" &&
+            chuanhoa != "Phat trien" && chuanhoa != "Phat Trien") {
+            throw Loixacthuc("Loi: Doi ngu chuyen mon chi duoc nhap: Sua chua, Lap dat, Van hanh, hoac Phat trien!");
+        }
+        doinguchuyenmon = chuanhoa;
     }
-
     std::string getSoDienThoai() const { return sodienthoai; }
     void setSoDienThoai(const std::string& sdt) {
         if (sdt == "") throw Loixacthuc("Loi: So dien thoai khong duoc de trong!");
-        Inputhelper::kiemTraSdt(sdt);
+        Inputhelper::KiemTraSdt(sdt);
         sodienthoai = sdt;
     }
     // Ham su ly file 
-    std::string toFilerecord() const override {
-        return id + "|" + tenktv + "|" + chuyenmon + "|" + sodienthoai;
+    std::string tofilerecord() const override {
+        return id + "|" + tenktv + "|" + doinguchuyenmon + "|" + sodienthoai;
     }
-	// Ham doc file
-    void fromFilerecord(const std::string& record) override {
+    // Ham doc file
+    void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() >= 4) {
             setId(data[0]);
             tenktv = data[1];
-            chuyenmon = data[2];
+            doinguchuyenmon = data[2];
             sodienthoai = data[3];
         }
     }
-	// Ham hien thi danh sach KTV
+    // Ham hien thi danh sach KTV
     static void displayHeader() {
         std::cout << std::left
-            << std::setw(10) << "Ma KTV" << "| "
+            << std::setw(8) << "Ma KTV" << "| "
             << std::setw(25) << "Ten Ky Thuat Vien" << "| "
-            << std::setw(25) << "Chuyen Mon" << "| "
+            << std::setw(20) << "Doi ngu chuyen mon" << "| "
             << std::setw(15) << "So Dien Thoai" << "\n";
-        std::cout << std::string(79, '-') << "\n";
+        std::cout << std::string(72, '-') << "\n";
     }
-	// Ham hien thi thong tin KTV
+    // Ham hien thi thong tin KTV
     void display() const override {
         std::cout << std::left
-            << std::setw(10) << id << "| "
+            << std::setw(8) << id << "| "
             << std::setw(25) << tenktv << "| "
-            << std::setw(25) << chuyenmon << "| "
+            << std::setw(20) << doinguchuyenmon << "| "
             << std::setw(15) << sodienthoai << "\n";
     }
 };
