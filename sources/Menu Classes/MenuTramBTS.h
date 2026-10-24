@@ -115,102 +115,99 @@ public:
                         });
 
                     thulai([&]() {
-                        thulai([&]() {
-                            std::cout << "Loai Cot: Cot Tu Dung, Cot Day Co, Cot Nguy Trang, Cot Than Ong, Cot Tren Mai" << std::endl;
-                            std::string loai = Inputhelper::Docstring("Loai cot moi (" + banSao.getLoaiCot() + "): ", true);
-                            if (!loai.empty()) banSao.setLoaiCot(loai);
-                            });
-
-
-                        thulai([&]() {
-                            double banKinhMoi = banSao.getBanKinhPhuSong();
-                            if (Inputhelper::DocdoubleCapNhat("Ban kinh moi (" + std::to_string(banKinhMoi) + " km): ", banKinhMoi)) {
-                                banSao.setBanKinhPhuSong(banKinhMoi);
-                            }
-                            });
-
-                        thulai([&]() {
-                            std::cout << "Trang Thai: Hoat Dong, Dung Hoat Dong\n";
-                            std::string tt = Inputhelper::Docstring("Trang thai moi (" + banSao.getTrangThai() + "): ", true);
-                            if (!tt.empty()) banSao.setTrangThai(tt);
-                            });
-
-                        *tram = banSao;
-                        repoTramBTS.update();
-                        std::cout << "[+] Cap nhat thanh cong!" << std::endl;
+                        std::cout << "Loai Cot: Cot Tu Dung, Cot Day Co, Cot Nguy Trang, Cot Than Ong, Cot Tren Mai\n";
+                        std::string loai = Inputhelper::Docstring("Loai cot moi (" + banSao.getLoaiCot() + "): ", true);
+                        if (!loai.empty()) banSao.setLoaiCot(loai);
                         });
-                }
-                else if (chon == 4) {
-                    std::string maInput = Inputhelper::Docstring("\nMa Tram can xoa (4 so): ");
-                    std::string ma = Inputhelper::TuTaoMa(maInput, "BTS");
 
-                    if (!repoTramBTS.findById(ma)) throw Ngoailekotimthay("Khong tim thay Ma Tram nay");
+                    thulai([&]() {
+                        double banKinhMoi = banSao.getBanKinhPhuSong();
+                        if (Inputhelper::DocdoubleCapNhat("Ban kinh moi (" + std::to_string(banKinhMoi) + " km): ", banKinhMoi)) {
+                            banSao.setBanKinhPhuSong(banKinhMoi);
+                        }
+                        });
 
-                    // thuat toan quet khoia ngoai: Kiem tra 5 bang con xem co dang xai maTram nay khong
-                    // chu y y: cac bang con nay (Anten, KhuVuc...) phai co ham getMaTram() moi hoat dong dc
+                    thulai([&]() {
+                        std::cout << "Trang Thai: Hoat Dong, Dung Hoat Dong\n";
+                        std::string tt = Inputhelper::Docstring("Trang thai moi (" + banSao.getTrangThai() + "): ", true);
+                        if (!tt.empty()) banSao.setTrangThai(tt);
+                        });
 
-                    int loiThamChieu = 0;
-                    std::string baoLoi = "TỪ CHỐI XÓA: Trạm " + ma + " đang bị ràng buộc bởi:\n";
+                    *tram = banSao;
+                    repoTramBTS.update();
+                    std::cout << "[+] Cap nhat thanh cong!\n";
+                    }
+                    else if (chon == 4) {
+                        std::string maInput = Inputhelper::Docstring("\nMa Tram can xoa (4 so): ");
+                        std::string ma = Inputhelper::TuTaoMa(maInput, "BTS");
 
-                    // 1. Quet Anten
-                    for (const auto& item : repoAnten.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Dữ liệu Anten\n"; break; }
-                    }
-                    // 2. Quet Khu vuc
-                    for (const auto& item : repoKhuVuc.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Dữ liệu Khu Vực\n"; break; }
-                    }
-                    // 3. Quet Su co
-                    for (const auto& item : repoSuCo.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Dữ liệu Sự Cố Trạm\n"; break; }
-                    }
-                    // 4. Quet Thiet bi lap dat
-                    for (const auto& item : repoThietBiLapDat.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Dữ liệu Thiết Bị Lắp Đặt\n"; break; }
-                    }
-                    // 5. Quet Hop dong
-                    for (const auto& item : repoHopDong.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Hợp Đồng Thuê Vị Trí\n"; break; }
-                    }
+                        if (!repoTramBTS.findById(ma)) throw Ngoailekotimthay("Khong tim thay Ma Tram nay");
 
-                    // Neu phat hien co bang con dang bam vao -> Quăng lỗi không cho xóa
-                    if (loiThamChieu > 0) {
-                        baoLoi += "Vui lòng xóa các dữ liệu phụ thuộc trên trước khi tháo dỡ Trạm";
-                        throw Ngoailerangbuoc(baoLoi);
-                    }
+                        // thuat toan quet khoia ngoai: Kiem tra 5 bang con xem co dang xai maTram nay khong
+                        // chu y y: cac bang con nay (Anten, KhuVuc...) phai co ham getMaTram() moi hoat dong dc
 
-                    // Neu an toan (loiThamChieu == 0) thi moi cho hien thong bao xac nhan xoa
-                    std::string xacNhan = Inputhelper::Docstring("Chac chan xoa? (y/n): ");
-                    if (xacNhan == "y" || xacNhan == "Y") {
-                        repoTramBTS.remove(ma);
-                        std::cout << "[+] Da xoa!" << std::endl;
+                        int loiThamChieu = 0;
+                        std::string baoLoi = "TỪ CHỐI XÓA: Trạm " + ma + " đang bị ràng buộc bởi:\n";
+
+                        // 1. Quet Anten
+                        for (const auto& item : repoAnten.getAll()) {
+                            if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Dữ liệu Anten\n"; break; }
+                        }
+                        // 2. Quet Khu vuc
+                        for (const auto& item : repoKhuVuc.getAll()) {
+                            if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Dữ liệu Khu Vực\n"; break; }
+                        }
+                        // 3. Quet Su co
+                        for (const auto& item : repoSuCo.getAll()) {
+                            if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Dữ liệu Sự Cố Trạm\n"; break; }
+                        }
+                        // 4. Quet Thiet bi lap dat
+                        for (const auto& item : repoThietBiLapDat.getAll()) {
+                            if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Dữ liệu Thiết Bị Lắp Đặt\n"; break; }
+                        }
+                        // 5. Quet Hop dong
+                        for (const auto& item : repoHopDong.getAll()) {
+                            if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Hợp Đồng Thuê Vị Trí\n"; break; }
+                        }
+
+                        // Neu phat hien co bang con dang bam vao -> Quăng lỗi không cho xóa
+                        if (loiThamChieu > 0) {
+                            baoLoi += "Vui lòng xóa các dữ liệu phụ thuộc trên trước khi tháo dỡ Trạm";
+                            throw Ngoailerangbuoc(baoLoi);
+                        }
+
+                        // Neu an toan (loiThamChieu == 0) thi moi cho hien thong bao xac nhan xoa
+                        std::string xacNhan = Inputhelper::Docstring("Chac chan xoa? (y/n): ");
+                        if (xacNhan == "y" || xacNhan == "Y") {
+                            repoTramBTS.remove(ma);
+                            std::cout << "[+] Da xoa!" << std::endl;
+                        }
+                        else {
+                            std::cout << "[*] Da huy thao tac xoa" << std::endl;
+                        }
+                    }
+                    else if (chon == 5) {
+                        std::cout << "\n-- Tim Kiem --\n";
+                        std::string maInput = Inputhelper::Docstring("Nhap Ma Tram can tim (4 so): ");
+                        std::string ma = Inputhelper::TuTaoMa(maInput, "BTS");
+                        auto tram = repoTramBTS.findById(ma);
+
+                        if (!tram) {
+                            std::cout << "[-] Khong tim thay tram co ma: " << ma << std::endl;
+                        }
+                        else {
+                            std::cout << "\n";
+                            TramBTS::displayHeader();
+                            tram->display();
+                            std::cout << std::string(87, '-') << std::endl;
+                        }
                     }
                     else {
-                        std::cout << "[*] Da huy thao tac xoa" << std::endl;
+                        std::cout << "[-] Lua chon khong hop le" << std::endl;
                     }
                 }
-                else if (chon == 5) {
-                    std::cout << "\n-- Tim Kiem --\n";
-                    std::string maInput = Inputhelper::Docstring("Nhap Ma Tram can tim (4 so): ");
-                    std::string ma = Inputhelper::TuTaoMa(maInput, "BTS");
-                    auto tram = repoTramBTS.findById(ma);
-
-                    if (!tram) {
-                        std::cout << "[-] Khong tim thay tram co ma: " << ma << std::endl;
-                    }
-                    else {
-                        std::cout << "\n";
-                        TramBTS::displayHeader();
-                        tram->display();
-                        std::cout << std::string(87, '-') << std::endl;
-                    }
-                }
-                else {
-                    std::cout << "[-] Lua chon khong hop le" << std::endl;
-                }
-            }
-            catch (const Baseexception& e) { std::cout << "[-] Loi Nghiep Vu: " << e.getMessage() << "\n"; }
-            catch (const std::exception& e) { std::cout << "[-] Loi He Thong: " << e.what() << "\n"; }
+                catch (const Baseexception& e) { std::cout << "[-] Loi Nghiep Vu: " << e.getMessage() << "\n"; }
+                catch (const std::exception& e) { std::cout << "[-] Loi He Thong: " << e.what() << "\n"; }
         }
     }
 };
