@@ -53,7 +53,7 @@ public:
                     const auto& ds = repoTramBTS.getAll();
 
                     if (ds.empty()) {
-                        std::cout << "[-] Danh sach dang trong\n";
+                        std::cout << " Danh sach dang trong"<<std::endl;
                     }
                     else {
                         TramBTS::displayHeader();
@@ -64,14 +64,14 @@ public:
                     }
                 }
                 else if (chon == 2) {
-                    std::cout << "\n-- Them Tram --\n";
+                    std::cout << "\n-- them tram --\n";
                     auto tram = std::make_shared<TramBTS>();
 
                     thulai([&]() {
-                        std::string ma = Inputhelper::Docstring("Ma Tram (4 so): ");
+                        std::string ma = Inputhelper::Docstring("ma tram (4 so): ");
                         tram->setId(Inputhelper::TuTaoMa(ma, "BTS"));
                         if (repoTramBTS.findById(tram->getId())) {
-                            throw Ngoailerangbuoc("Loi: Ma Tram nay da ton tai");
+                            throw Ngoailerangbuoc("loi: ma tram nay da ton tai");
                         }
                         });
 
@@ -97,7 +97,7 @@ public:
                     std::cout << "[+] Them thanh cong!\n";
                 }
                 else if (chon == 3) {
-                    std::cout << "\n-- Cap Nhat (van phai nhap id nhung cac truong khac thi bo qua bang nut nhan enter) --\n";
+                    std::cout << "\n-- Cap Nhat (van phai nhap id nhung cac truong khac ko nhap thi bo qua bang nut nhan enter) --\n";
                     std::string maInput = Inputhelper::Docstring("Ma Tram can sua (4 so): ");
                     auto tram = repoTramBTS.findById(Inputhelper::TuTaoMa(maInput, "BTS"));
                     if (!tram) throw Ngoailekotimthay("Khong tim thay Ma Tram nay!");
@@ -110,19 +110,19 @@ public:
                         });
 
                     // ra canh bao ve thay doi loai cot phai thay doi anten
-                    std::cout << "\n[!] thong bao quan trong:\n";
+                    std::cout << "\n thong bao quan trong:\n";
                     std::cout << "neu thay doi loai cot thi phai thay doi loai anten ,neu ko thay doi co loi gi thi tu chiu trach nhiem  "<<std::endl;
-                    std::cout << "cap nhat lai cac anten dang treo neu chung khong con phu hop voi Cot moi!\n";
+                    std::cout << "cap nhat lai cac anten dang treo neu chung khong con phu hop voi Cot moi!"<<std::endl;
 
                     thulai([&]() {
-                        std::cout << "Loai Cot: Cot Tu Dung, Cot Day Co, Cot Nguy Trang, Cot Than Ong, Cot Tren Mai"<<std::endl;
-                        std::string loai = Inputhelper::Docstring("Loai cot moi (" + banSao.getLoaiCot() + "): ", true);
+                        std::cout << "loai cot: Cot Tu Dung, Cot Day Co, Cot Nguy Trang, Cot Than Ong, Cot Tren Mai"<<std::endl;
+                        std::string loai = Inputhelper::Docstring("loai cot moi (" + banSao.getLoaiCot() + "): ", true);
                         if (!loai.empty()) banSao.setLoaiCot(loai);
                         });
 
                     thulai([&]() {
                         double banKinhMoi = banSao.getBanKinhPhuSong();
-                        if (Inputhelper::DocdoubleCapNhat("Ban kinh moi (" + std::to_string(banKinhMoi) + " km): ", banKinhMoi)) {
+                        if (Inputhelper::DocdoubleCapNhat("ban kinh moi (" + std::to_string(banKinhMoi) + " km): ", banKinhMoi)) {
                             banSao.setBanKinhPhuSong(banKinhMoi);
                         }
                         });
@@ -144,7 +144,7 @@ public:
                     if (!repoTramBTS.findById(ma)) throw Ngoailekotimthay("Khong tim thay Ma Tram nay");
 
                     int loiThamChieu = 0;
-                    std::string baoLoi = "TU CHOI XOA: Tram " + ma + " dang bi rang buoc boi:\n";
+                    std::string baoLoi = "ko duoc xoa: Tram " + ma + " dang bi rang buoc boi:\n";
 
                     for (const auto& item : repoAnten.getAll()) {
                         if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Du lieu Anten\n"; break; }
@@ -166,7 +166,7 @@ public:
                     }
 
                     if (loiThamChieu > 0) {
-                        baoLoi += "Vui long xoa cac du lieu phu thuoc tren truoc khi thao do Tram";
+                        baoLoi += "vui long xoa cac du lieu phu thuoc tren truoc khi thao do tram";
                         throw Ngoailerangbuoc(baoLoi);
                     }
 
@@ -176,11 +176,11 @@ public:
                         std::cout << "[+] Da xoa!\n";
                     }
                     else {
-                        std::cout << "[*] Da huy thao tac xoa\n";
+                        std::cout << "[-] Da huy thao tac xoa\n";
                     }
                 }
                 else if (chon == 5) {
-                    std::cout << "\n-- Tim Kiem --\n";
+                    std::cout << "\n-- tim kiem --\n";
                     std::string maInput = Inputhelper::Docstring("Nhap Ma Tram can tim (4 so): ");
                     std::string ma = Inputhelper::TuTaoMa(maInput, "BTS");
                     auto tram = repoTramBTS.findById(ma);
@@ -189,7 +189,7 @@ public:
                         std::cout << "[-] Khong tim thay tram co ma: " << ma << "\n";
                     }
                     else {
-                        std::cout << "\n";
+                        std::cout << std::endl;
                         TramBTS::displayHeader();
                         tram->display();
                         std::cout << std::string(87, '-') << "\n";
