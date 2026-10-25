@@ -1,4 +1,3 @@
-
 #pragma once
 #include <iostream>
 #include <string>
@@ -13,8 +12,8 @@
 
 class Anten : public Entity {
 private:
-    std::string maTram;
-    std::string loaiAnten;
+	std::string maTram; // ma tram BTS ma anten thuoc ve
+    std::string loaiAnten; // Loai anten 
     double chieuCao;
     int gocAzimuth;
 
@@ -23,9 +22,9 @@ private:
             throw Loixacthuc("Loi: " + tenTruong + " khong duoc chua ky tu '|'!");
     }
 public:
-    Anten() : chieuCao(0.0), gocAzimuth(0) {}
+	Anten() : chieuCao(0.0), gocAzimuth(0) {} // thuoc tinh mac dinh cua anten, chieu cao 0.0 va goc azimuth 0
 
-    Anten(const std::string& ma, const std::string& mt, const std::string& loai,
+	Anten(const std::string& ma, const std::string& mt, const std::string& loai, // ham khoi tao doi tuong anten, nhan vao ma, ma tram, loai anten, chieu cao va goc azimuth
         double cao, int az) {
         setMa(ma);
         setMaTram(mt);
@@ -34,49 +33,45 @@ public:
         setGocAzimuth(az);
     }
 
-    static std::string chuanHoaMa(const std::string& s) {
+    static std::string chuanHoaMa(const std::string& s) { // ham de chuan hoa ma antenloai bo khoang trang va viet hoa chu cai
         std::string r = Inputhelper::catkhoangtrang(s);
         for (char& c : r) c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
         return r;
     }
 
-    static std::string taoMaAnten(const std::string& maNhap) {
+	static std::string taoMaAnten(const std::string& maNhap) { // chi can nhap 4 so thi ham nay se tu dong them AT vao dau
         std::string clean = chuanHoaMa(maNhap);
-
         std::string ma = Inputhelper::TuTaoMa(clean, "AT");
-
-        if (ma.size() != 6 || ma.compare(0, 2, "AT") != 0) {
+		if (ma.size() != 6 || ma.compare(0, 2, "AT") != 0) { // neu nhap ki tu khong phai la so thi nem ngoai le
             throw Loixacthuc("Loi: Ma Anten phai gom dung 4 chu so (VD: nhap 0001)!");
         }
         for (size_t i = 2; i < 6; ++i) {
-            if (!std::isdigit(static_cast<unsigned char>(ma[i]))) {
+			if (!std::isdigit(static_cast<unsigned char>(ma[i]))) { // neu co ky tu khong phai la so thi nem ngoai le
                 throw Loixacthuc("Loi: Ma Anten phai gom dung 4 chu so (VD: nhap 0001)!");
             }
         }
-        return ma;
+		return ma; // tra ve ma anten hop le
     }
 
-    static std::string taoMaTram(const std::string& maNhap) {
+	static std::string taoMaTram(const std::string& maNhap) { // chi can nhap 4 so ma tram se tu dong them BTS vao dau ma tram
         std::string clean = chuanHoaMa(maNhap);
-
         std::string ma = Inputhelper::TuTaoMa(clean, "BTS");
-
         if (ma.size() != 7 || ma.compare(0, 3, "BTS") != 0) {
-            throw Loixacthuc("Loi: Ma Tram BTS phai gom dung 4 chu so (VD: nhap 1001)!");
+			throw Loixacthuc("Loi: Ma tram BTS phai gom dung 4 chu so (VD: nhap 1001)!"); // kiem tra tuong tu nhu ma anten, neu khong hop le thi nem ngoai le
         }
         for (size_t i = 3; i < 7; ++i) {
             if (!std::isdigit(static_cast<unsigned char>(ma[i]))) {
-                throw Loixacthuc("Loi: Ma Tram BTS phai gom dung 4 chu so (VD: nhap 1001)!");
+                throw Loixacthuc("Loi: Ma tram BTS phai gom dung 4 chu so (VD: nhap 1001)!");
             }
         }
         return ma;
     }
 
-    void setMa(const std::string& maNhap) {
+	void setMa(const std::string& maNhap) { // chuan hoa ma nhap (VD: 1001 thanh AT1001) va luu vao thuoc tinh id ke thua tu lop entity
         setId(taoMaAnten(maNhap));
     }
 
-    static double phanTichSoThuc(const std::string& s) {
+	static double phanTichSoThuc(const std::string& s) { // kiem tra thong so cua anten co phai so thuc hay khong neu khong thi nem ngoai le
         if (s.empty()) throw Loixacthuc("Loi: Gia tri phai la so thuc!");
         for (size_t i = 0; i < s.size(); ++i) {
             char c = s[i];
@@ -106,15 +101,51 @@ public:
         maTram = taoMaTram(mt);
     }
 
+    
+    static std::vector<std::string> danhSachAntenHopLe(const std::string& loaiCot) {
+        if (loaiCot == "Cot Tu Dung") {
+            return { "Anten Ma Tran 5G", "Anten Chao Viba", "Anten Loa" };
+        }
+        else if (loaiCot == "Cot Day Co") {
+            return { "Anten Quat 4G", "Anten Yagi", "Anten GPS" };
+        }
+        else if (loaiCot == "Cot Than Ong") {
+            return { "Anten Quat 3G", "Anten Vi Mo" };
+        }
+        else if (loaiCot == "Cot Tren Mai") {
+            return { "Anten Op Tuong", "Anten Chao Mini" };
+        }
+        else if (loaiCot == "Cot Nguy Trang") {
+            return { "Anten Dang Huong", "Anten Ong Khoi", "Anten Roi" };
+        }
+        return {}; // Truong hop loi, tra ve mang rong
+    }
+
     std::string getLoaiAnten() const { return loaiAnten; }
-    void setLoaiAnten(const std::string& loai) {
+
+    
+    
+    void setLoaiAnten(const std::string& loai, const std::string& loaiCot = "") {
         std::string clean = Inputhelper::catkhoangtrang(loai);
         if (clean.empty()) throw Loixacthuc("Loi: Loai Anten khong duoc de trong!");
         kiemTraKyTuCam(clean, "Loai Anten");
 
+        std::string loaiChuan = Inputhelper::VietHoaChuDau(clean);
 
-        loaiAnten = Inputhelper::VietHoaChuDau(clean);
+        
+        if (!loaiCot.empty()) {
+            std::vector<std::string> hopLe = danhSachAntenHopLe(loaiCot);
+            bool ok = false;
+            for (const auto& a : hopLe) {
+                if (loaiChuan == a) { ok = true; break; }
+            }
+            if (!ok) {
+                throw Ngoailerangbuoc("Tu choi: [" + loaiCot + "] khong ho tro lap dat [" + loaiChuan + "]!");
+            }
+        }
+        loaiAnten = loaiChuan;
     }
+ 
 
     double getChieuCao() const { return chieuCao; }
     void setChieuCao(double cao) {
@@ -135,13 +166,12 @@ public:
             throw Loixacthuc("Loi: Goc Azimuth phai trong khoang [0, 359] do!");
         gocAzimuth = az;
     }
+
     double tinhCuLyTamNhinThangToiThietBiDiDong() const {
-        // mô phỏng người dùng cầm thiết bị ngang ngực/tai.1.5m
-        const double hr = 1.5;
-        // Cong thuc: r0 = 3.57 * (sqrt(ht) + sqrt(hr))
-        // Voi ht chinh la chieuCao cua Anten
+        const double hr = 1.5; // Do cao thiet bi thu 1.5m
         return 3.57 * (std::sqrt(chieuCao) + std::sqrt(hr));
     }
+
     std::string tofilerecord() const override {
         return id + "|" + maTram + "|" + loaiAnten + "|" +
             chieuCaoToString() + "|" + std::to_string(gocAzimuth);
@@ -159,7 +189,7 @@ public:
         std::cout << std::left
             << std::setw(10) << id << "| "
             << std::setw(10) << maTram << "| "
-            << std::setw(16) << loaiAnten << "| "
+            << std::setw(22) << (loaiAnten.length() > 20 ? loaiAnten.substr(0, 17) + "..." : loaiAnten) << "| "
             << std::setw(10) << chieuCaoToString() << "| "
             << std::setw(8) << gocAzimuth << "\n";
     }
@@ -168,9 +198,9 @@ public:
         std::cout << std::left
             << std::setw(10) << "Ma Anten" << "| "
             << std::setw(10) << "Ma Tram" << "| "
-            << std::setw(16) << "Loai Anten" << "| "
+            << std::setw(22) << "Loai Anten" << "| "
             << std::setw(10) << "Cao(m)" << "| "
             << std::setw(8) << "Azimuth" << "\n";
-        std::cout << std::string(59, '-') << "\n";
+        std::cout << std::string(68, '-') << "\n";
     }
 };
