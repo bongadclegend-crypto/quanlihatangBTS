@@ -20,10 +20,10 @@ private:
                 return; // neu ko co loi thoat vong lap va tiep tuc
             }
             catch (const Baseexception& e) {
-                std::cout << "[!] " << e.getMessage() << " -> Moi nhap lai\n";
+                std::cout << "[!] " << e.getMessage() << " -> Moi nhap lai"<<std::endl;
             }
             catch (const std::exception&) {
-                std::cout << "[!] Gia tri khong hop le -> Moi nhap lai\n";
+                std::cout << "[!] Gia tri khong hop le -> Moi nhap lai"<<std::endl;
             }
         }
     }
