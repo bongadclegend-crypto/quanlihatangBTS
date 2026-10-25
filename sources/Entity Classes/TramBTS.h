@@ -38,7 +38,7 @@ public:
     // constructor mac dinh giup doc file
     TramBTS() : banKinhPhuSong(0.0) {}
 
-    // constructor ham khoi tao co so (Thay chieuCao vÃ  maKV báº±ng banKinh vÃ  trangThai)
+    // constructor ham khoi tao co so 
     TramBTS(std::string ma, std::string ten, std::string loai,
         double bankinh, std::string tt) {
 
@@ -143,7 +143,7 @@ public:
         //viet hoa chu cai dau de chuan hoa so sanh
         std::string ttDaChuanHoa = Inputhelper::VietHoaChuDau(clean);
 
-        // RANG BUOC 2 TRANG THAI
+        // rang buoc 2 tyrang thai
         if (ttDaChuanHoa != "Hoat Dong" && ttDaChuanHoa != "Dung Hoat Dong") {
             throw Loixacthuc("Loi: Trang thai chi duoc nhap 'Hoat Dong' hoac 'Dung Hoat Dong'");
         }
