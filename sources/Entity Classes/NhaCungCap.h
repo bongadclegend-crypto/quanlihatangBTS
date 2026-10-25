@@ -1,82 +1,68 @@
 #pragma once
 #include <iostream>
-#include <string>
-#include <vector>
 #include <iomanip>
-#include "Entity.h" 
+#include <vector>
+#include <string>
+#include "Entity.h"
 #include "InputHelper.h"
-#include "Exceptions.h"
-
-using namespace std;
 
 class NhaCungCap : public Entity {
 private:
-    string tenNCC;
-    string soDienThoai;
-    string diaChi;
+    std::string tenNCC;
+    std::string diaChi;
+    std::string soDienThoai;
 
 public:
     NhaCungCap() {}
 
-    NhaCungCap(string maNCC, string ten, string sdt, string dc) {
-        setId(Inputhelper::TuTaoMa(maNCC, "NCC"));
-        setTenNCC(ten);
-        setSoDienThoai(sdt);
-        setDiaChi(dc);
+    std::string getTenNCC() const { return tenNCC; }
+    void setTenNCC(const std::string& ten) {
+        std::string clean = Inputhelper::catkhoangtrang(ten);
+        if (clean.empty()) throw Loixacthuc("Loi: Ten NCC khong duoc de trong!");
+        tenNCC = clean;
     }
 
-    std::string getMaNCC() const { return id; }
-    void setMaNCC(const std::string& maNCC) {
-        id = Inputhelper::TuTaoMa(maNCC, "NCC");
-    }
-
-    string getTenNCC() const { return tenNCC; }
-    void setTenNCC(const string& ten) {
-        string clean = Inputhelper::catkhoangtrang(ten);
-        if (clean.empty()) throw Loixacthuc("Loi: Ten nha cung cap khong duoc de trong!");
-        tenNCC = Inputhelper::VietHoaChuDau(clean);
-    }
-
-    string getSoDienThoai() const { return soDienThoai; }
-    void setSoDienThoai(const string& sdt) {
-        Inputhelper::KiemTraSdt(sdt); // Su dung ham chuan hoa SDT
-        soDienThoai = sdt;
-    }
-
-    string getDiaChi() const { return diaChi; }
-    void setDiaChi(const string& dc) {
-        string clean = Inputhelper::catkhoangtrang(dc);
+    std::string getDiaChi() const { return diaChi; }
+    void setDiaChi(const std::string& dc) {
+        std::string clean = Inputhelper::catkhoangtrang(dc);
         if (clean.empty()) throw Loixacthuc("Loi: Dia chi khong duoc de trong!");
         diaChi = clean;
     }
 
-    string tofilerecord() const override {
-        return id + "|" + tenNCC + "|" + soDienThoai + "|" + diaChi;
+    std::string getSoDienThoai() const { return soDienThoai; }
+    void setSoDienThoai(const std::string& sdt) {
+        Inputhelper::KiemTraSdt(sdt);
+        soDienThoai = sdt;
     }
 
-    void fromfilerecord(const string& record) override {
+    std::string tofilerecord() const override {
+        return id + "|" + tenNCC + "|" + diaChi + "|" + soDienThoai;
+    }
+
+    void fromfilerecord(const std::string& record) override {
         std::vector<std::string> data = Inputhelper::chia(record, '|');
         if (data.size() >= 4) {
             setId(data[0]);
             tenNCC = data[1];
-            soDienThoai = data[2];
-            diaChi = data[3];
+            diaChi = data[2];
+            soDienThoai = data[3];
         }
     }
 
     void display() const override {
-        cout << left << setw(10) << id
-            << "| " << setw(30) << (tenNCC.length() > 28 ? tenNCC.substr(0, 25) + "..." : tenNCC)
-            << "| " << setw(15) << soDienThoai
-            << "| " << setw(35) << (diaChi.length() > 33 ? diaChi.substr(0, 30) + "..." : diaChi) << endl;
+        std::cout << std::left
+            << std::setw(10) << id << "| "
+            << std::setw(25) << (tenNCC.length() > 22 ? tenNCC.substr(0, 19) + "..." : tenNCC) << "| "
+            << std::setw(30) << (diaChi.length() > 27 ? diaChi.substr(0, 24) + "..." : diaChi) << "| "
+            << std::setw(15) << soDienThoai << "\n";
     }
 
     static void displayHeader() {
-        cout << left
-            << setw(10) << "Ma NCC" << "| "
-            << setw(30) << "Ten Nha Cung Cap" << "| "
-            << setw(15) << "SDT" << "| "
-            << setw(35) << "Dia Chi" << endl;
-        cout << string(95, '-') << "\n";
+        std::cout << std::left
+            << std::setw(10) << "Ma NCC" << "| "
+            << std::setw(25) << "Ten Nha Cung Cap" << "| "
+            << std::setw(30) << "Dia Chi" << "| "
+            << std::setw(15) << "So Dien Thoai" << "\n";
+        std::cout << std::string(85, '-') << "\n";
     }
 };
