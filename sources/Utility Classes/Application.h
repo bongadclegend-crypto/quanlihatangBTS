@@ -1,3 +1,4 @@
+
 //Hoang Tuan Thanh
 #pragma once
 #include <iostream>
@@ -84,17 +85,17 @@ public:
                 MenuTramBTS::run(repoTramBTS, repoAnten, repoKhuVuc, repoSC, repoThietBiLapDat, repoHopDong);
             }
             else if (chon == 2) {
-                MenuHopDongThue::run(repoHopDong, repoTramBTS);
+                MenuHopDongThue::run(repoHopDong, repoTramBTS,repoKhuVuc);
             }
             else if (chon == 3) {
-                MenuLoaiThietBi::run(repoLoaiThietBi);
+                MenuLoaiThietBi::run(repoLoaiThietBi,repoNCC);
 
             }
             else if (chon == 4) {
-                MenuThietBiLapDat::run(repoThietBiLapDat, repoTramBTS, repoNCC);
+                MenuThietBiLapDat::run(repoThietBiLapDat, repoLoaiThietBi, repoTramBTS);
             }
             else if (chon == 5) {
-                MenuKhuVuc::run(repoKhuVuc, repoTramBTS);
+                MenuKhuVuc::run(repoKhuVuc, repoTramBTS,repoHopDong);
             }
             else if (chon == 6) {
                 MenuAnten::run(repoAnten, repoTramBTS);
@@ -107,10 +108,10 @@ public:
                 MenuSuCoTram::run(repoSC, repoTramBTS, repoKTV);
             }
             else if (chon == 9) {
-                MenuNhaCungCap::run(repoNCC, repoPBT);
+                MenuNhaCungCap::run(repoNCC, repoPBT,repoLoaiThietBi);
             }
             else if (chon == 10) {
-                MenuPhieuBaoTri::run(repoPBT, repoTramBTS, repoNCC, repoThietBiLapDat);
+                MenuPhieuBaoTri::run(repoPBT, repoTramBTS, repoNCC, repoThietBiLapDat,repoLoaiThietBi);
             }
             else {
                 std::cout << "[-] Lua chon khong hop le!\n";
