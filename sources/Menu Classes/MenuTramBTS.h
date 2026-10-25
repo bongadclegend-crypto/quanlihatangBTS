@@ -7,8 +7,6 @@
 #include "TramBTS.h"
 #include "Inputhelper.h"
 #include "Exceptions.h"
-
-//  Yeu cau phai include cac file Use Case con de kiem tra khoa ngoai
 #include "Anten.h"
 #include "KhuVuc.h" 
 #include "SuCoTram.h"
@@ -17,25 +15,22 @@
 
 class MenuTramBTS {
 private:
-    // ham bat loi bat loi lai ngay khi nhap sai ngay lap tuc
-    template <class F>//tempplatye nay la 1 buoc nhap du lieu 
+    template <class F>
     static void thulai(F buoc) {
-        while (true) {//vong lap vo han
+        while (true) {
             try {
                 buoc();
-                return; // Nếu không có lỗi thì thoát vòng lặp, đi tiếp
+                return;
             }
             catch (const Baseexception& e) {
-                std::cout << "[!] " << e.getMessage() << " -> Moi nhap lai" << std::endl;
+                std::cout << "[!] " << e.getMessage() << " -> Moi nhap lai"<<std::endl;
             }
             catch (const std::exception&) {
-                std::cout << "[!] Gia tri khong hop le -> Moi nhap lai" << std::endl;;
+                std::cout << "[!] Gia tri khong hop le -> Moi nhap lai"<<std::endl;
             }
         }
     }
 public:
-    //  Truyen them 5 Repository con vao de quet rang buoc khoa ngoai
-    // (Ban can thay doi ten class Anten, KhuVuc... duoi day cho dung voi ten file cac ban trong nhom da viet)
     template <class Anten, class KhuVuc, class SuCo, class ThietBiLapDat, class HopDongThue>
     static void run(Repository<TramBTS>& repoTramBTS,
         Repository<Anten>& repoAnten,
@@ -55,28 +50,28 @@ public:
                 if (chon == 1) {
                     std::cout << "\n";
                     repoTramBTS.loadfromfile();
-                    const auto& ds = repoTramBTS.getAll();//lay toan bo danh sach trong tram bts au to thay shared_ptr,getall lay toan bo danh sach
+                    const auto& ds = repoTramBTS.getAll();
 
                     if (ds.empty()) {
-                        std::cout << "[-] Danh sach dang trong" << std::endl;
+                        std::cout << "[-] Danh sach dang trong\n";
                     }
                     else {
                         TramBTS::displayHeader();
                         for (const auto& tram : ds) {
                             tram->display();
                         }
-                        std::cout << "Tong so ban ghi: " << ds.size() << std::endl;
+                        std::cout << "Tong so ban ghi: " << ds.size() << "\n";
                     }
                 }
                 else if (chon == 2) {
                     std::cout << "\n-- Them Tram --\n";
-                    auto tram = std::make_shared<TramBTS>();//make_shareed ptr tao 1 ban nhap tren ma ko can xoa
+                    auto tram = std::make_shared<TramBTS>();
 
-                    thulai([&]() {//thualai[&] dechuyen tham chieu ma ko chuyen j vo de lay tat ca biem sang mt xuyng quyanh
+                    thulai([&]() {
                         std::string ma = Inputhelper::Docstring("Ma Tram (4 so): ");
                         tram->setId(Inputhelper::TuTaoMa(ma, "BTS"));
                         if (repoTramBTS.findById(tram->getId())) {
-                            throw Ngoailerangbuoc("Loi: Ma Tram nay da ton tai!");
+                            throw Ngoailerangbuoc("Loi: Ma Tram nay da ton tai");
                         }
                         });
 
@@ -102,7 +97,7 @@ public:
                     std::cout << "[+] Them thanh cong!\n";
                 }
                 else if (chon == 3) {
-                    std::cout << "\n-- Cap Nhat (Nhan Enter de bo qua truong khong sua) --\n";
+                    std::cout << "\n-- Cap Nhat (van phai nhap id nhung cac truong khac thi bo qua bang nut nhan enter) --\n";
                     std::string maInput = Inputhelper::Docstring("Ma Tram can sua (4 so): ");
                     auto tram = repoTramBTS.findById(Inputhelper::TuTaoMa(maInput, "BTS"));
                     if (!tram) throw Ngoailekotimthay("Khong tim thay Ma Tram nay!");
@@ -114,8 +109,13 @@ public:
                         if (!ten.empty()) banSao.setTenTram(ten);
                         });
 
+                    // ra canh bao ve thay doi loai cot phai thay doi anten
+                    std::cout << "\n[!] thong bao quan trong:\n";
+                    std::cout << "neu thay doi loai cot thi phai thay doi loai anten ,neu ko thay doi co loi gi thi tu chiu trach nhiem  "<<std::endl;
+                    std::cout << "cap nhat lai cac anten dang treo neu chung khong con phu hop voi Cot moi!\n";
+
                     thulai([&]() {
-                        std::cout << "Loai Cot: Cot Tu Dung, Cot Day Co, Cot Nguy Trang, Cot Than Ong, Cot Tren Mai\n";
+                        std::cout << "Loai Cot: Cot Tu Dung, Cot Day Co, Cot Nguy Trang, Cot Than Ong, Cot Tren Mai"<<std::endl;
                         std::string loai = Inputhelper::Docstring("Loai cot moi (" + banSao.getLoaiCot() + "): ", true);
                         if (!loai.empty()) banSao.setLoaiCot(loai);
                         });
@@ -128,7 +128,7 @@ public:
                         });
 
                     thulai([&]() {
-                        std::cout << "Trang Thai: Hoat Dong, Dung Hoat Dong\n";
+                        std::cout << "Trang Thai: Hoat Dong, Dung Hoat Dong"<<std::endl;
                         std::string tt = Inputhelper::Docstring("Trang thai moi (" + banSao.getTrangThai() + "): ", true);
                         if (!tt.empty()) banSao.setTrangThai(tt);
                         });
@@ -143,47 +143,40 @@ public:
 
                     if (!repoTramBTS.findById(ma)) throw Ngoailekotimthay("Khong tim thay Ma Tram nay");
 
-                    // thuat toan quet khoia ngoai: Kiem tra 5 bang con xem co dang xai maTram nay khong
-                    // chu y y: cac bang con nay (Anten, KhuVuc...) phai co ham getMaTram() moi hoat dong dc
-
                     int loiThamChieu = 0;
-                    std::string baoLoi = "ko duoc xoa: tram " + ma + " dang bi rang buoc:\n";
+                    std::string baoLoi = "TU CHOI XOA: Tram " + ma + " dang bi rang buoc boi:\n";
 
-                    // 1. Quet Anten
                     for (const auto& item : repoAnten.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- du lieu Anten\n"; break; }
-                    }
-                    // 2. Quet Khu vuc
-                    for (const auto& item : repoKhuVuc.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- du lieu khu vuc\n"; break; }
-                    }
-                    // 3. Quet Su co
-                    for (const auto& item : repoSuCo.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- du lieu su co tram\n"; break; }
-                    }
-                    // 4. Quet Thiet bi lap dat
-                    for (const auto& item : repoThietBiLapDat.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- du lieu thiet bi lap dat\n"; break; }
-                    }
-                    // 5. Quet Hop dong
-                    for (const auto& item : repoHopDong.getAll()) {
-                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- \n"; break; }
+                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Du lieu Anten\n"; break; }
                     }
 
-                    // Neu phat hien co bang con dang bam vao -> Quăng lỗi không cho xóa
+                    
+                    for (const auto& item : repoKhuVuc.getAll()) {
+                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Du lieu Khu Vuc\n"; break; }
+                    }
+
+                    for (const auto& item : repoSuCo.getAll()) {
+                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Du lieu Su Co Tram\n"; break; }
+                    }
+                    for (const auto& item : repoThietBiLapDat.getAll()) {
+                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Du lieu Thiet Bi Lap Dat\n"; break; }
+                    }
+                    for (const auto& item : repoHopDong.getAll()) {
+                        if (item->getMaTram() == ma) { loiThamChieu++; baoLoi += "- Hop Dong Thue Vi Tri\n"; break; }
+                    }
+
                     if (loiThamChieu > 0) {
-                        baoLoi += "vui long xoa du lieu rang buoc trc khi xoa tram";
+                        baoLoi += "Vui long xoa cac du lieu phu thuoc tren truoc khi thao do Tram";
                         throw Ngoailerangbuoc(baoLoi);
                     }
 
-                    // Neu an toan (loiThamChieu == 0) thi moi cho hien thong bao xac nhan xoa
                     std::string xacNhan = Inputhelper::Docstring("Chac chan xoa? (y/n): ");
                     if (xacNhan == "y" || xacNhan == "Y") {
                         repoTramBTS.remove(ma);
-                        std::cout << "[+] Da xoa!" << std::endl;
+                        std::cout << "[+] Da xoa!\n";
                     }
                     else {
-                        std::cout << "[*] Da huy thao tac xoa" << std::endl;
+                        std::cout << "[*] Da huy thao tac xoa\n";
                     }
                 }
                 else if (chon == 5) {
@@ -193,17 +186,17 @@ public:
                     auto tram = repoTramBTS.findById(ma);
 
                     if (!tram) {
-                        std::cout << "[-] Khong tim thay tram co ma: " << ma << std::endl;
+                        std::cout << "[-] Khong tim thay tram co ma: " << ma << "\n";
                     }
                     else {
                         std::cout << "\n";
                         TramBTS::displayHeader();
                         tram->display();
-                        std::cout << std::string(87, '-') << std::endl;
+                        std::cout << std::string(87, '-') << "\n";
                     }
                 }
                 else {
-                    std::cout << "[-] Lua chon khong hop le" << std::endl;
+                    std::cout << "[-] Lua chon khong hop le\n";
                 }
             }
             catch (const Baseexception& e) { std::cout << "[-] Loi Nghiep Vu: " << e.getMessage() << "\n"; }
