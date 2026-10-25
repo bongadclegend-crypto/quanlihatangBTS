@@ -26,14 +26,14 @@ private:
     static std::string thuongHoa(std::string s) {
         for (char& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
         return s;
-	} // ham chuyen chuoi thanh chu thuong de so sanh
+    } // ham chuyen chuoi thanh chu thuong de so sanh
 
-	static void inBang(const std::vector<std::shared_ptr<KhuVuc>>& ds) {// ham in bang danh sach khu vuc
+    static void inBang(const std::vector<std::shared_ptr<KhuVuc>>& ds) {// ham in bang danh sach khu vuc
         KhuVuc::displayHeader();
         for (const auto& kv : ds) kv->display();
     }
 
-	static bool trungTen(const Repository<KhuVuc>& repo, const std::string& ten, // ham kiem tra trung ten khu vuc, bo qua id de cap nhat
+    static bool trungTen(const Repository<KhuVuc>& repo, const std::string& ten, // ham kiem tra trung ten khu vuc, bo qua id de cap nhat
         const std::string& boQuaId) {
         std::string t = thuongHoa(Inputhelper::catkhoangtrang(ten));
         for (const auto& kv : repo.getAll())
@@ -51,24 +51,24 @@ private:
     }
 
 public:
-	static void run(Repository<KhuVuc>& repoKV, Repository<TramBTS>& repoTram, Repository<HopDongThue>& repoHopDong) { // ham chinh de quan ly khu vuc repoHopDong de kiem tra xem co hop dong thue nao dang quan ly khu vuc nay hay khong
+    static void run(Repository<KhuVuc>& repoKV, Repository<TramBTS>& repoTram, Repository<HopDongThue>& repoHopDong) { // ham chinh de quan ly khu vuc repoHopDong de kiem tra xem co hop dong thue nao dang quan ly khu vuc nay hay khong
         while (true) {
-            std::cout << "\n================= QUAN LY KHU VUC ( 12 QUAN THUOC NOI THANH HA NOI ) =================\n";
+            std::cout << "\n================= QUAN LY KHU VUC =================\n";
             std::cout << "1. Xem danh sach\n";
             std::cout << "2. Them khu vuc moi \n";
             std::cout << "3. Tim kiem \n";
             std::cout << "4. Cap nhat thong tin\n";
             std::cout << "5. Xoa khu vuc\n";
             std::cout << "0. Quay lai menu chinh\n";
-            std::cout << "==========================================================\n";
+            std::cout << "===================================================\n";
 
             int chon = Inputhelper::Docint(">> Nhap lua chon: ");
             if (chon == 0) break;
 
             try {
-				// them moi
+                // them moi
                 if (chon == 2) {
-					auto kv = std::make_shared<KhuVuc>(); // lay ra 1 doi tuong khu vuc moi de them vao danh sach
+                    auto kv = std::make_shared<KhuVuc>(); // lay ra 1 doi tuong khu vuc moi de them vao danh sach
 
                     thuLai([&]() {
                         std::string maInput = Inputhelper::Docstring("Nhap Ma KV (4 so, VD: 0001) [Enter de huy]: ", true);
@@ -79,19 +79,13 @@ public:
                             throw Ngoailerangbuoc("Loi: Ma khu vuc [" + kv->getId() + "] da ton tai!");
                         });
 
-                   
-                    std::cout << "\n--- CHU THICH: CHI NHAP 12 QUAN NOI THANH HA NOI ---\n";
-                    std::cout << "(Ba Dinh, Hoan Kiem, Tay Ho, Long Bien, Cau Giay, Dong Da,\n";
-                    std::cout << " Hai Ba Trung, Hoang Mai, Thanh Xuan, Ha Dong, Bac Tu Liem, Nam Tu Liem)\n";
-                    std::cout << "----------------------------------------------------\n";
-
                     thuLai([&]() {
-                        std::string ten = Inputhelper::Docstring("Nhap Ten Quan (VD: Quan Cau Giay) [Enter de huy]: ", true);
+                        std::string ten = Inputhelper::Docstring("Nhap Ten Khu Vuc (VD: Quan Cau Giay) [Enter de huy]: ", true);
                         if (ten.empty()) throw 0;
 
-						kv->setTenKhuVuc(ten); // neu nhap dung thi set ten khu vuc cho doi tuong kv
+                        kv->setTenKhuVuc(ten); // neu nhap dung thi set ten khu vuc cho doi tuong kv
                         if (trungTen(repoKV, ten, ""))
-                            throw Ngoailerangbuoc("Loi: Ten quan nay da ton tai!");
+                            throw Ngoailerangbuoc("Loi: Ten khu vuc nay da ton tai tren he thong!");
                         });
 
                     thuLai([&]() {
@@ -118,15 +112,15 @@ public:
                     repoKV.add(kv);
                     std::cout << "[+] Them khu vuc moi thanh cong (Ma: " << kv->getId() << ")!\n";
                 }
-				// xem danh sach
+                // xem danh sach
                 else if (chon == 1) {
                     const auto& ds = repoKV.getAll();
                     if (ds.empty()) std::cout << "[-] Danh sach khu vuc dang trong.\n";
                     else inBang(ds);
                 }
-				// tim kiem
+                // tim kiem
                 else if (chon == 3) {
-                    std::string tuKhoa = Inputhelper::Docstring("Nhap ma (VD: 0001 / KV0001) hoac ten quan can tim [Enter de huy]: ", true);
+                    std::string tuKhoa = Inputhelper::Docstring("Nhap ma (VD: 0001 / KV0001) hoac ten khu vuc can tim [Enter de huy]: ", true);
                     if (tuKhoa.empty()) throw 0;
 
                     std::string ma = KhuVuc::chuanHoaMa(tuKhoa);
@@ -142,7 +136,7 @@ public:
                     if (ketQua.empty()) std::cout << "[-] Khong tim thay khu vuc phu hop.\n";
                     else inBang(ketQua);
                 }
-				// cap nhat
+                // cap nhat
                 else if (chon == 4) {
                     std::string inputSua = Inputhelper::Docstring("Nhap Ma KV can sua (4 so, VD: 0001) [Enter de huy]: ", true);
                     if (inputSua.empty()) throw 0;
@@ -155,50 +149,44 @@ public:
                     std::cout << "(*) Nhap gia tri moi (Enter de giu nguyen):\n";
                     KhuVuc banSao = *kv;
 
-					// chu thich chi nhap 12 quan noi thanh Ha Noi vi he thong chi quan ly 12 quan noi thanh Ha Noi
-                    std::cout << "\n--- CHU THICH: CHI NHAP 12 QUAN NOI THANH HA NOI ---\n";
-                    std::cout << "(Ba Dinh, Hoan Kiem, Tay Ho, Long Bien, Cau Giay, Dong Da,\n";
-                    std::cout << " Hai Ba Trung, Hoang Mai, Thanh Xuan, Ha Dong, Bac Tu Liem, Nam Tu Liem)\n";
-                    std::cout << "----------------------------------------------------\n";
-
                     thuLai([&]() {
-                        std::string ten = Inputhelper::Docstring("Ten Quan moi (" + banSao.getTenKhuVuc() + ") [Enter giu nguyen]: ", true);
+                        std::string ten = Inputhelper::Docstring("Ten Khu Vuc moi (" + banSao.getTenKhuVuc() + ") [Enter giu nguyen]: ", true);
                         if (!ten.empty()) {
                             banSao.setTenKhuVuc(ten);
-							// Check xem ten moi co trung voi ten cua cac khu vuc khac hay khong
+                            // Check xem ten moi co trung voi ten cua cac khu vuc khac hay khong
                             if (trungTen(repoKV, ten, banSao.getId()))
-								throw Ngoailerangbuoc("Loi: Ten quan nay da ton tai tren he thong!"); // neu trung thi bao loi va yeu cau nhap lai
+                                throw Ngoailerangbuoc("Loi: Ten khu vuc nay da ton tai tren he thong!"); // neu trung thi bao loi va yeu cau nhap lai
                         }
                         });
 
-					thuLai([&]() { // ham thuLai de nhap lai neu co loi xay ra
+                    thuLai([&]() { // ham thuLai de nhap lai neu co loi xay ra
                         std::string ql = Inputhelper::Docstring("Quan ly moi (" + banSao.getNguoiQuanLy() + ") [Nhap '-' de xoa, Enter giu nguyen]: ", true);
-						if (!ql.empty()) { // if nay de kiem tra xem nguoi quan ly co nhap gi hay khong neu khong thi giu nguyen
+                        if (!ql.empty()) { // if nay de kiem tra xem nguoi quan ly co nhap gi hay khong neu khong thi giu nguyen
                             if (ql == "-") banSao.setNguoiQuanLy("");
                             else banSao.setNguoiQuanLy(ql);
                         }
                         });
 
-					thuLai([&]() { // ham nay kiem tra xem tram moi co ton tai trong he thong hay khon neu khong thi bao loi va yeu cau nhap lai
+                    thuLai([&]() { // ham nay kiem tra xem tram moi co ton tai trong he thong hay khon neu khong thi bao loi va yeu cau nhap lai
                         std::string rawTram = Inputhelper::Docstring("Ma Tram moi (" + banSao.getMaTram() + ") [Nhap '-' de xoa, Enter giu nguyen]: ", true);
-						if (!rawTram.empty()) { // neu nhap ma tram chua them o tram bts thi bao la chua xac dinh vi phai them o lop tram bts truoc khi them vao khu vuc
+                        if (!rawTram.empty()) { // neu nhap ma tram chua them o tram bts thi bao la chua xac dinh vi phai them o lop tram bts truoc khi them vao khu vuc
                             if (rawTram == "-") {
                                 banSao.setMaTram("Chua xac dinh");
                             }
                             else {
                                 std::string maTramChuan = KhuVuc::taoMaTram(rawTram);
-								if (!repoTram.findById(maTramChuan)) { // doi chieu xem ma tram co ton tai trong he thong hay khong neu khong thi bao loi va yeu cau nhap lai
+                                if (!repoTram.findById(maTramChuan)) { // doi chieu xem ma tram co ton tai trong he thong hay khong neu khong thi bao loi va yeu cau nhap lai
                                     throw Ngoailerangbuoc("Loi: Ma Tram [" + maTramChuan + "] khong ton tai tren he thong!");
                                 }
-								if (kiemTraTramDaCoKhuVuc(repoKV, maTramChuan, banSao.getId())) { // doi chieu xem tram da tom tai o khu vuc khac hay chua neu co thi bao loi va yeu cau nhap lai
+                                if (kiemTraTramDaCoKhuVuc(repoKV, maTramChuan, banSao.getId())) { // doi chieu xem tram da tom tai o khu vuc khac hay chua neu co thi bao loi va yeu cau nhap lai
                                     throw Ngoailerangbuoc("Tu choi: Tram [" + maTramChuan + "] da ton tai o Khu Vuc khac!");
                                 }
-								banSao.setMaTram(maTramChuan); // nay la neu ma tram hop le va chua ton tai o khu vuc khac thi moi cap nhat vao khu vuc hien tai
+                                banSao.setMaTram(maTramChuan); // nay la neu ma tram hop le va chua ton tai o khu vuc khac thi moi cap nhat vao khu vuc hien tai
                             }
                         }
                         });
 
-					*kv = banSao; // cap nhat doi tuong khu vuc hien tai voi ban sao moi
+                    *kv = banSao; // cap nhat doi tuong khu vuc hien tai voi ban sao moi
                     repoKV.update();
                     std::cout << "[+] Cap nhat thanh cong!\n";
                 }
@@ -228,7 +216,7 @@ public:
                     if (loiThamChieu > 0) {
                         throw Ngoailerangbuoc("TU CHOI XOA: Khu vuc nay dang quan ly Tram co Hop Dong Thue. Vui long xoa Hop Dong do truoc!");
                     }
-					// neu muon xoa thi phai xoa hop dong tham chieu toi khu vuc do truoc
+                    // neu muon xoa thi phai xoa hop dong tham chieu toi khu vuc do truoc
                     std::string xn = Inputhelper::Docstring("Ban co chac chan muon xoa (y/n)? ");
                     if (xn == "y" || xn == "Y") {
                         repoKV.remove(id);
