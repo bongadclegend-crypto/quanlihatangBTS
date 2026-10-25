@@ -1,3 +1,4 @@
+//Hoang Tuan Thanh
 #pragma once 
 #include <iostream> 
 #include <string>  
@@ -5,8 +6,8 @@
 #include "Repository.h" 
 #include "NhaCungCap.h"
 #include "PhieuBaoTri.h"
-#include "LoaiThietBi.h" // Thêm để đồng bộ chéo
-#include "InputHelper.h" 
+#include "LoaiThietBi.h" 
+#include "Inputhelper.h" 
 #include "Exceptions.h"  
 
 class MenuNhaCungCap {
@@ -19,9 +20,7 @@ private:
             catch (const std::exception&) { std::cout << "   -> [Loi]: Gia tri khong hop le (Moi nhap lai)\n"; }
         }
     }
-
 public:
-    // Nhận thêm repoLoai để thực hiện cập nhật lan truyền
     static void run(Repository<NhaCungCap>& repoNCC, Repository<PhieuBaoTri>& repoPBT, Repository<LoaiThietBi>& repoLoai) {
         while (true) {
             std::cout << "\n--- QUAN LY NHA CUNG CAP ---\n";
@@ -70,19 +69,19 @@ public:
                     while (true) {
                         try {
                             std::string rawId = Inputhelper::Docstring("Ma NCC can cap nhat (4 so) hoac nhap '0' de huy: ");
-                            if (rawId == "0") break;
+                            if (rawId == "0") throw 0;
 
                             oldId = Inputhelper::TuTaoMa(rawId, "NCC");
                             ncc = repoNCC.findById(oldId);
                             if (!ncc) throw Ngoailekotimthay("Khong tim thay Nha Cung Cap nay tren he thong!");
                             break;
                         }
+                        catch (int) { break; }
                         catch (const Baseexception& e) { std::cout << "   -> " << e.getMessage() << "\n"; }
                     }
 
                     if (!ncc) continue;
 
-                    // 1. Cho phép sửa Mã NCC
                     std::string newId = oldId;
                     thulai([&]() {
                         std::string rawNewId = Inputhelper::Docstring("Ma NCC moi (Enter de giu nguyen '" + oldId + "'): ", true);
@@ -108,26 +107,24 @@ public:
                         if (!sdt.empty()) ncc->setSoDienThoai(sdt);
                         });
 
-                    // Nếu mã thay đổi, thực hiện đổi ID cho đối tượng trong Repository
                     if (newId != oldId) {
-                        repoNCC.remove(oldId); // Xóa bản ghi cũ
-                        ncc->setId(newId);     // Gán ID mới
-                        repoNCC.add(ncc);      // Thêm lại vào Repo
+                        repoNCC.remove(oldId);
+                        ncc->setId(newId);
+                        repoNCC.add(ncc);
                     }
 
-                    repoNCC.update(); // Lưu xuống file nhacungcap.txt
+                    repoNCC.update();
 
-                    // 2. Tự động đồng bộ lan truyền sang Loại thiết bị
                     bool coDongBo = false;
                     for (auto& lt : repoLoai.getAll()) {
                         if (lt->getMaNCC() == oldId || lt->getMaNCC() == newId) {
-                            lt->setMaNCC(newId);          // Cập nhật mã mới
-                            lt->setTenNCC(ncc->getTenNCC()); // Cập nhật tên mới nhất
+                            lt->setMaNCC(newId);
+                            lt->setTenNCC(ncc->getTenNCC());
                             coDongBo = true;
                         }
                     }
                     if (coDongBo) {
-                        repoLoai.update(); // Lưu đè xuống file loaithietbi.txt
+                        repoLoai.update();
                         std::cout << "[+] Da tu dong cap nhat ma va ten NCC sang danh muc Loai Thiet Bi!\n";
                     }
 
@@ -145,21 +142,40 @@ public:
                     while (true) {
                         try {
                             std::string rawId = Inputhelper::Docstring("\nMa NCC can go bo (4 so) hoac nhap '0' de huy: ");
-                            if (rawId == "0") break;
+                            if (rawId == "0") throw 0;
 
                             maChuan = Inputhelper::TuTaoMa(rawId, "NCC");
                             ncc = repoNCC.findById(maChuan);
                             if (!ncc) throw Ngoailekotimthay("Khong tim thay NCC nay tren he thong!");
                             break;
                         }
+                        catch (int) { break; }
                         catch (const Baseexception& e) { std::cout << "   -> " << e.getMessage() << "\n"; }
                     }
 
                     if (!ncc) continue;
 
+                    // THUAT TOAN CHAN XOA CUNG (Bao ve toan ven du lieu)
+                    int loiThamChieu = 0;
+                    std::string baoLoi = "TU CHOI XOA: Nha Cung Cap dang phan phoi cho cac Loai Thiet Bi sau:\n";
+                    for (const auto& lt : repoLoai.getAll()) {
+                        if (lt->getMaNCC() == maChuan) {
+                            loiThamChieu++;
+                            baoLoi += "- " + lt->getId() + "\n";
+                        }
+                    }
+
+                    if (loiThamChieu > 0) {
+                        baoLoi += "Vui long go bo hoac doi Nha Cung Cap cho cac thiet bi tren truoc!";
+                        throw Ngoailerangbuoc(baoLoi);
+                    }
+
                     if (Inputhelper::Docstring("Chac chan xoa? (y/n): ") == "y") {
                         repoNCC.remove(maChuan);
                         std::cout << "[+] Da xoa thanh cong!\n";
+                    }
+                    else {
+                        std::cout << "[*] Da huy thao tac xoa.\n";
                     }
                 }
             }
