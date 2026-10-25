@@ -18,7 +18,7 @@ private:
     Date ngayBatDau;          //  dd/mm/yyyy
     int thoiHanThang;         // so thoi han thang thue
 public:
-    // Constructor mac dinh (danh cho Repository khi doc file)
+    // constructor mac dinh giup doc file
     HopDongThue() : giaThueThang(0), thoiHanThang(0) {}
 
     // Constructor day du du lieu
@@ -60,13 +60,13 @@ public:
 
     long long getGiaThueThang() const { return giaThueThang; }
 
-    // HAM GOC: Nhan so (dung khi doc file)
+    // dung khi doc file
     void setGiaThueThang(long long gia) {
         if (gia <= 0) throw Loixacthuc("Loi: Gia thue moi thang phai lon hon 0 VND");
         giaThueThang = gia;
     }
 
-    // HAM NAP CHONG: Nhan chuoi (dung khi nguoi dung nhap tu Menu)
+    //ham nap chongh chuoi khi nhap tu menu
     void setGiaThueThang(const std::string& giaStr) {
         std::size_t pos = 0;
         long long gia;
@@ -93,13 +93,14 @@ public:
 
     int getThoiHanThang() const { return thoiHanThang; }
 
-    // HAM GOC: Nhan so (dung khi doc file)
+    //nhan so khi doc thoi gianm
     void setThoiHanThang(int thoiHan) {
         if (thoiHan <= 0) throw Loixacthuc("Loi: Thoi han thue phai lon hon 0 thang");
         thoiHanThang = thoiHan;
     }
 
-    // HAM NAP CHONG: Nhan chuoi (dung khi nguoi dung nhap tu Menu)
+    // ham nap chong chuoi de check xem trong cai so no co chua chu k
+
     void setThoiHanThang(const std::string& thangStr) {
         std::size_t pos = 0;
         int thang;
