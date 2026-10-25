@@ -38,7 +38,7 @@ public:
     // constructor mac dinh giup doc file
     TramBTS() : banKinhPhuSong(0.0) {}
 
-    // constructor ham khoi tao co so (Thay chieuCao và maKV bằng banKinh và trangThai)
+    // constructor ham khoi tao co so (Thay chieuCao vÃ  maKV báº±ng banKinh vÃ  trangThai)
     TramBTS(std::string ma, std::string ten, std::string loai,
         double bankinh, std::string tt) {
 
@@ -119,7 +119,7 @@ public:
 
     void setBanKinhPhuSong(double bankinh) {
         if (!std::isfinite(bankinh) || bankinh <= 0.0) {//neu ban kinh phu song la vo cuc hay nho hon 0 bao loi
-            throw Loixacthuc("Loi: Ban kinh phu song phai la so duong hop le!");
+            throw Loixacthuc("Loi: Ban kinh phu song phai la so duong hop le");
         }
 
         banKinhPhuSong = bankinh;
@@ -133,11 +133,11 @@ public:
         std::string clean = Inputhelper::catkhoangtrang(tt);
 
         if (clean.empty()) {
-            throw Loixacthuc("Loi: Trang thai khong duoc de trong!");
+            throw Loixacthuc("Loi: Trang thai khong duoc de trong");
         }
 
         if (clean.find('|') != std::string::npos) {
-            throw Loixacthuc("Loi: Trang thai khong duoc chua ky tu | !");
+            throw Loixacthuc("Loi: Trang thai khong duoc chua ky tu | ");
         }
 
         //viet hoa chu cai dau de chuan hoa so sanh
@@ -171,10 +171,10 @@ public:
             banKinh = std::stod(data[3], &vitricuoi);//chuyen doi du lieu tu o data thu3  va luu cai vi tri cuoi cung doc dc
         }
         catch (const std::invalid_argument&) {
-            throw Loixacthuc("Loi: Ban kinh phu song phai la so!");
+            throw Loixacthuc("Loi: Ban kinh phu song phai la so");
         }
         catch (const std::out_of_range&) {
-            throw Loixacthuc("Loi: Ban kinh phu song vuot qua pham vi!");
+            throw Loixacthuc("Loi: Ban kinh phu song vuot qua pham vi");
         }
 
         if (vitricuoi != data[3].size()) {//day neu cac vi tri cuoi cung ko phai ss
