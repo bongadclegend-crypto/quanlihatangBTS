@@ -20,7 +20,7 @@ private:
 public:
     PhieuBaoTri() { chiPhi = 0; }
 
-    // [ÄÃƒ NÃ‚NG Cáº¤P] LÃªn 8 tham sá»‘ (thÃªm mTB)
+    
     PhieuBaoTri(std::string maPBT, std::string maBTS, std::string mTB, std::string mNCC, std::string ngay, std::string nd, std::string tt, double cp) {
         setId(Inputhelper::TuTaoMa(maPBT, "PBT"));
         setMaTram(maBTS);
@@ -35,7 +35,7 @@ public:
     std::string getMaTram() const { return maTram; }
     void setMaTram(const std::string& maTram) { this->maTram = Inputhelper::TuTaoMa(maTram, "BTS"); }
 
-    // [ÄÃƒ THÃŠM] Getter / Setter cho MaTB
+  
     std::string getMaTB() const { return maTB; }
     void setMaTB(const std::string& mTB) { this->maTB = Inputhelper::TuTaoMa(mTB, "TB"); }
 
@@ -69,7 +69,7 @@ public:
         chiPhi = cp;
     }
 
-    // [ÄÃƒ NÃ‚NG Cáº¤P] Xá»­ lÃ½ I/O 8 trÆ°á»ng
+    
     std::string tofilerecord() const override {
         return id + "|" + maTram + "|" + maTB + "|" + maNCC + "|" + ngayBaoTri.toString() + "|" + noiDung + "|" + trangThai + "|" + std::to_string(chiPhi);
     }
