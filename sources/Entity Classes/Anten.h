@@ -1,3 +1,5 @@
+// Nguyen Cong Vinh 
+
 #pragma once
 #include <iostream>
 #include <string>
@@ -14,8 +16,8 @@ class Anten : public Entity {
 private:
     std::string maTram; // ma tram BTS ma anten thuoc ve
     std::string loaiAnten; // Loai anten 
-    double chieuCao; // do cao treo anten
-    double gocAzimuth; // goc phuong vi 
+    double chieuCao;
+    double gocAzimuth;
 
     static void kiemTraKyTuCam(const std::string& s, const std::string& tenTruong) {
         if (s.find('|') != std::string::npos)
@@ -26,7 +28,7 @@ public:
 
     Anten(const std::string& ma, const std::string& mt, const std::string& loai, // ham khoi tao doi tuong anten, nhan vao ma, ma tram, loai anten, chieu cao va goc azimuth
         double cao, double az) {
-        setMa(ma);
+        setMa(ma); 
         setMaTram(mt);
         setLoaiAnten(loai);
         setChieuCao(cao);
