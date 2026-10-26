@@ -1,4 +1,4 @@
-//Hoang Tuan Thanh
+//Vo Manh Thang
 #pragma once
 #include <iostream>
 #include <string>
@@ -35,7 +35,7 @@ public:
 
     void setTenNCC(const string& ten) {
         string clean = Inputhelper::catkhoangtrang(ten);
-        if (clean.empty()) throw Loixacthuc("Loi: Ten nha cung cap khong duoc de trong!");
+        if (clean.empty()) throw Loixacthuc("Loi: Ten nha cung cap khong duoc de trong");
         tenNCC = Inputhelper::VietHoaChuDau(clean);
     }
 
@@ -50,7 +50,7 @@ public:
 
     void setDiaChi(const string& dc) {
         string clean = Inputhelper::catkhoangtrang(dc);
-        if (clean.empty()) throw Loixacthuc("Loi: Dia chi khong duoc de trong!");
+        if (clean.empty()) throw Loixacthuc("Loi: Dia chi khong duoc de trong");
         diaChi = clean;
     }
 
@@ -62,7 +62,7 @@ public:
         std::vector<std::string> data = Inputhelper::chia(record, '|');
 
         if (data.size() != 4) {
-            throw Loixacthuc("Loi: Ban ghi Nha Cung Cap phai co dung 4 truong");
+            throw Loixacthuc("Loi: Ban ghi Nha cung cap phai co dung 4 truong");
         }
 
         NhaCungCap nccTam;
@@ -87,6 +87,6 @@ public:
             << setw(30) << "Ten Nha Cung Cap" << "| "
             << setw(15) << "SDT" << "| "
             << setw(35) << "Dia Chi" << endl;
-        cout << string(95, '-') << "\n";
+        cout << string(95, '-') << endl;
     }
 };
