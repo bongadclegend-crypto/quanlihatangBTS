@@ -1,4 +1,4 @@
-//Hoang Tuan Thanh
+//Vo Manh Thang
 #pragma once 
 #include <iostream> 
 #include <string>  
@@ -12,90 +12,106 @@
 
 class MenuNhaCungCap {
 private:
+	// Thuat toan bat loi nhap lieu:
+		// Chuong trinh khong bi dung dot ngot khi nhap sai
+		// Su dung vong lap while(true) boc lay khoi try-catch. Bieu thuc Lambda (buoc) duoc truyen vao se 
+		// thuc thi lenh nhap. Neu co bat ky loi nao (sai kieu du lieu, de trong), ngoai le se duoc nem ra, 
+		// catch tai day hien thi thong bao va ep vong lap chay lai, buoc nguoi dung nhap lai cho den khi dung.
     template <class F>
     static void thulai(F buoc) {
         while (true) {
             try { buoc(); return; }
-            catch (const Baseexception& e) { std::cout << "   -> [Canh bao]: " << e.getMessage() << " (Moi nhap lai)\n"; }
-            catch (const std::exception&) { std::cout << "   -> [Loi]: Gia tri khong hop le (Moi nhap lai)\n"; }
+            catch (const Baseexception& e) { std::cout << "   -> [Canh bao]: " << e.getMessage() << " (Moi nhap lai) " << std::endl; }
+            catch (const std::exception&) { std::cout << "   -> [Loi]: Gia tri khong hop le (Moi nhap lai)" << std::endl; }
         }
     }
 public:
     static void run(Repository<NhaCungCap>& repoNCC, Repository<PhieuBaoTri>& repoPBT, Repository<LoaiThietBi>& repoLoai) {
         while (true) {
-            std::cout << "\n--- QUAN LY NHA CUNG CAP ---\n";
-            std::cout << "1. Xem danh sach\n2. Them NCC moi\n3. Cap nhat thong tin\n4. Xoa NCC\n0. Quay lai\n";
+            std::cout << std::endl << "============================================" << std::endl;
+            std::cout << "           QUAN LY NHA CUNG CAP           " << std::endl;
+            std::cout << "============================================" << std::endl;
+            std::cout << "1. Xem danh sach nha cung cap" << std::endl;
+            std::cout << "2. Them nha cung cap moi" << std::endl;
+            std::cout << "3. Cap nhat thong tin nha cung cap" << std::endl;
+            std::cout << "4. Xoa nha cung cap" << std::endl;
+            std::cout << "0. Quay lai menu chinh" << std::endl;
+            std::cout << "--------------------------------------------" << std::endl;   
 
             int chon = Inputhelper::Docint(">> Chon (0-4): ");
             if (chon == 0) break;
 
             try {
+				// [Chuc nang R - READ]: Xem danh sach Nha cung cap
                 if (chon == 1) {
-                    std::cout << "\n";
+                    std::cout << std::endl;
                     const auto& ds = repoNCC.getAll();
-                    if (ds.empty()) std::cout << "[-] Danh sach Nha Cung Cap dang trong.\n";
+                    if (ds.empty()) std::cout << "Danh sach Nha cung cap dang trong" << std::endl;
                     else {
                         NhaCungCap::displayHeader();
                         for (const auto& ncc : ds) ncc->display();
                     }
                 }
+                // [Chuc nang C - CREATE]: Them Nha cung cap moi
                 else if (chon == 2) {
-                    std::cout << "\n-- Them Nha Cung Cap --\n";
+                    std::cout << std::endl << "-- Them Nha cung cap --" << std::endl;
                     auto ncc = std::make_shared<NhaCungCap>();
 
                     thulai([&]() {
                         std::string ma = Inputhelper::Docstring("Ma NCC (4 so): ");
                         ncc->setId(Inputhelper::TuTaoMa(ma, "NCC"));
-                        if (repoNCC.findById(ncc->getId())) throw Ngoailerangbuoc("Loi: Ma NCC nay da ton tai!");
+						// Tra cuu tren file xem ma NCC da ton tai chua (Khong duoc phep co 2 nha cung cap cung chung 1 ID)
+                        if (repoNCC.findById(ncc->getId())) throw Ngoailerangbuoc("Loi: Ma NCC nay da ton tai");
                         });
-
+                    // Cac thuoc tinh con lai da duoc set dieu kien rang buoc (validator) ben trong Entity
                     thulai([&]() { ncc->setTenNCC(Inputhelper::Docstring("Ten Nha Cung Cap: ")); });
                     thulai([&]() { ncc->setDiaChi(Inputhelper::Docstring("Dia chi: ")); });
                     thulai([&]() { ncc->setSoDienThoai(Inputhelper::Docstring("So dien thoai: ")); });
 
-                    repoNCC.add(ncc);
-                    std::cout << "[+] Da ghi nhan Nha Cung Cap len he thong!\n";
+					repoNCC.add(ncc);   // Ghi ban ghi xuong file .txt
+                    std::cout << "Da ghi nhan Nha cung cap moi len he thong" << std::endl;
                 }
+                // [Chuc nang U - UPDATE]: Cap nhat thong tin Nha cung cap
                 else if (chon == 3) {
                     if (repoNCC.getAll().empty()) {
-                        std::cout << "[-] Chua co NCC nao de cap nhat!\n";
+                        std::cout << "Chua co nha cung cap nao de cap nhat" << std::endl;
                         continue;
                     }
 
-                    std::cout << "\n-- Cap Nhat Nha Cung Cap --\n";
+                    std::cout << std::endl << "-- Cap nhat Nha cung cap --" << std::endl;
                     std::shared_ptr<NhaCungCap> ncc = nullptr;
                     std::string oldId = "";
 
                     while (true) {
                         try {
-                            std::string rawId = Inputhelper::Docstring("Ma NCC can cap nhat (4 so) hoac nhap '0' de huy: ");
+                            std::string rawId = Inputhelper::Docstring("Ma nha cung cap can cap nhat (4 so) hoac nhap '0' de huy: ");
                             if (rawId == "0") throw 0;
 
                             oldId = Inputhelper::TuTaoMa(rawId, "NCC");
                             ncc = repoNCC.findById(oldId);
-                            if (!ncc) throw Ngoailekotimthay("Khong tim thay Nha Cung Cap nay tren he thong!");
+                            if (!ncc) throw Ngoailekotimthay("Khong tim thay Nha cung cap nay tren he thong");
                             break;
                         }
                         catch (int) { break; }
-                        catch (const Baseexception& e) { std::cout << "   -> " << e.getMessage() << "\n"; }
+                        catch (const Baseexception& e) { std::cout << "   -> " << e.getMessage() << std::endl; }
                     }
 
                     if (!ncc) continue;
 
                     std::string newId = oldId;
                     thulai([&]() {
-                        std::string rawNewId = Inputhelper::Docstring("Ma NCC moi (Enter de giu nguyen '" + oldId + "'): ", true);
+                        std::string rawNewId = Inputhelper::Docstring("Ma Nha cung cap moi (Enter de giu nguyen '" + oldId + "'): ", true);
                         if (!rawNewId.empty()) {
                             std::string candidateId = Inputhelper::TuTaoMa(rawNewId, "NCC");
                             if (candidateId != oldId && repoNCC.findById(candidateId)) {
-                                throw Ngoailerangbuoc("Loi: Ma NCC moi nay da ton tai tren he thong!");
+                                throw Ngoailerangbuoc("Loi: Ma nha cung cap moi nay da ton tai tren he thong");
                             }
                             newId = candidateId;
                         }
                         });
 
                     thulai([&]() {
-                        std::string ten = Inputhelper::Docstring("Ten NCC moi (Enter de bo qua): ", true);
+                        std::string ten = Inputhelper::Docstring("Ten Nha cung cap moi (Enter de bo qua): ", true);
                         if (!ten.empty()) ncc->setTenNCC(ten);
                         });
                     thulai([&]() {
@@ -106,7 +122,7 @@ public:
                         std::string sdt = Inputhelper::Docstring("So dien thoai moi (Enter de bo qua): ", true);
                         if (!sdt.empty()) ncc->setSoDienThoai(sdt);
                         });
-
+					// Neu nguoi dung thay doi ma NCC, can xoa ban ghi cu va them ban ghi moi voi ma moi
                     if (newId != oldId) {
                         repoNCC.remove(oldId);
                         ncc->setId(newId);
@@ -114,7 +130,7 @@ public:
                     }
 
                     repoNCC.update();
-
+					// Neu co bat ky Loai thiet bi nao dang tham chieu den nha cung cap nay, can dong bo lai ma va ten NCC sang danh muc Loai thiet bi
                     bool coDongBo = false;
                     for (auto& lt : repoLoai.getAll()) {
                         if (lt->getMaNCC() == oldId || lt->getMaNCC() == newId) {
@@ -124,15 +140,16 @@ public:
                         }
                     }
                     if (coDongBo) {
-                        repoLoai.update();
-                        std::cout << "[+] Da tu dong cap nhat ma va ten NCC sang danh muc Loai Thiet Bi!\n";
+						repoLoai.update();  // Ghi lai danh muc Loai thiet bi sau khi dong bo ma va ten NCC
+                        std::cout << "Da tu dong cap nhat ma va ten Nha cung cap sang danh muc Loai thiet bi" << std::endl;
                     }
 
-                    std::cout << "[+] Cap nhat Nha Cung Cap hoan tat!\n";
+                    std::cout << "Cap nhat Nha cung cap hoan tat" << std::endl;
                 }
+				// [Chuc nang D - DELETE]: Xoa Nha cung cap
                 else if (chon == 4) {
                     if (repoNCC.getAll().empty()) {
-                        std::cout << "[-] Chua co NCC nao de xoa!\n";
+                        std::cout << "Chua co Nha cung cap nao de xoa" << std::endl;
                         continue;
                     }
 
@@ -141,45 +158,44 @@ public:
 
                     while (true) {
                         try {
-                            std::string rawId = Inputhelper::Docstring("\nMa NCC can go bo (4 so) hoac nhap '0' de huy: ");
+                            std::string rawId = Inputhelper::Docstring("\nMa Nha cung cap can go bo (4 so) hoac nhap '0' de huy: ");
                             if (rawId == "0") throw 0;
 
                             maChuan = Inputhelper::TuTaoMa(rawId, "NCC");
                             ncc = repoNCC.findById(maChuan);
-                            if (!ncc) throw Ngoailekotimthay("Khong tim thay NCC nay tren he thong!");
+                            if (!ncc) throw Ngoailekotimthay("Khong tim thay Nha cung cap nay tren he thong");
                             break;
                         }
                         catch (int) { break; }
-                        catch (const Baseexception& e) { std::cout << "   -> " << e.getMessage() << "\n"; }
+                        catch (const Baseexception& e) { std::cout << "   -> " << e.getMessage() << std::endl; }
                     }
 
                     if (!ncc) continue;
-
-                    // THUAT TOAN CHAN XOA CUNG (Bao ve toan ven du lieu)
+					// Kiem tra rang buoc: Neu co bat ky Loai thiet bi nao dang tham chieu den nha cung cap nay, khong duoc phep xoa
                     int loiThamChieu = 0;
-                    std::string baoLoi = "TU CHOI XOA: Nha Cung Cap dang phan phoi cho cac Loai Thiet Bi sau:\n";
+                    std::string baoLoi = "TU CHOI XOA: Nha cung cap dang phan phoi cho cac Loai thiet bi sau:\n";
                     for (const auto& lt : repoLoai.getAll()) {
                         if (lt->getMaNCC() == maChuan) {
                             loiThamChieu++;
                             baoLoi += "- " + lt->getId() + "\n";
                         }
                     }
-
+					// Kich hoat Exception chan thao tac Xoa
                     if (loiThamChieu > 0) {
-                        baoLoi += "Vui long go bo hoac doi Nha Cung Cap cho cac thiet bi tren truoc!";
+                        baoLoi += "Vui long go bo hoac doi Nha cung cap cho cac thiet bi tren truoc de tranh mat ket noi du lieu";
                         throw Ngoailerangbuoc(baoLoi);
                     }
 
-                    if (Inputhelper::Docstring("Chac chan xoa? (y/n): ") == "y") {
-                        repoNCC.remove(maChuan);
-                        std::cout << "[+] Da xoa thanh cong!\n";
+                    if (Inputhelper::Docstring("Chac chan xoa? (co/khong): ") == "co") {
+                        repoNCC.remove(maChuan);    //Xoa tren memory roi tu dong update file
+                        std::cout << "Da xoa thanh cong" << std::endl;
                     }
                     else {
-                        std::cout << "[*] Da huy thao tac xoa.\n";
+                        std::cout << "Da huy thao tac xoa" << std::endl;
                     }
                 }
             }
-            catch (const Baseexception& e) { std::cout << "[-] Loi Nghiep Vu: " << e.getMessage() << "\n"; }
+            catch (const Baseexception& e) { std::cout << "[-] Loi nghiep vu: " << e.getMessage() << std::endl; }
         }
     }
 };
