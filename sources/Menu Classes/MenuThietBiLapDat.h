@@ -1,3 +1,4 @@
+//Hoang Tuan Thanh
 #pragma once 
 #include <iostream> 
 #include <string>  
@@ -6,7 +7,7 @@
 #include "ThietBiLapDat.h"
 #include "LoaiThietBi.h" 
 #include "TramBTS.h"     
-#include "InputHelper.h" 
+#include "Inputhelper.h" 
 #include "Exceptions.h"  
 
 class MenuThietBiLapDat {
@@ -19,9 +20,9 @@ private:
             catch (const std::exception&) { std::cout << "   -> [Loi]: Gia tri khong hop le (Moi nhap lai)\n"; }
         }
     }
-
 public:
-    static void run(Repository<ThietBiLapDat>& repoTB, Repository<LoaiThietBi>& repoLoai, Repository<TramBTS>& repoTram) {
+    template <class PhieuBaoTri>
+    static void run(Repository<ThietBiLapDat>& repoTB, Repository<LoaiThietBi>& repoLoai, Repository<TramBTS>& repoTram, Repository<PhieuBaoTri>& repoPBT) {
         while (true) {
             std::cout << "\n--- QUAN LY THIET BI LAP DAT TAI TRAM ---\n";
             std::cout << "1. Xem danh sach\n2. Lap dat thiet bi moi\n3. Cap nhat thong tin\n4. Go bo thiet bi\n0. Quay lai\n";
@@ -42,7 +43,7 @@ public:
                 }
                 else if (chon == 2) {
                     if (repoLoai.getAll().empty()) {
-                        std::cout << "[-] Danh muc Loai Thiet Bi dang trong. Vui long them Loai Thiet Bi truoc!\n";
+                        std::cout << "[-] Danh muc Loai Thiet Bi dang trong. Vui long them truoc!\n";
                         continue;
                     }
 
@@ -50,7 +51,10 @@ public:
                     auto tb = std::make_shared<ThietBiLapDat>();
 
                     thulai([&]() {
-                        std::string maLoai = Inputhelper::TuTaoMa(Inputhelper::Docstring("Nhap Ma Loai Thiet Bi (4 so): "), "LT");
+                        std::string rawMaLoai = Inputhelper::Docstring("Nhap Ma Loai Thiet Bi (4 so) [Enter de huy]: ", true);
+                        if (rawMaLoai.empty()) throw 0;
+
+                        std::string maLoai = Inputhelper::TuTaoMa(rawMaLoai, "LT");
                         auto loai = repoLoai.findById(maLoai);
                         if (!loai) throw Ngoailerangbuoc("Tu choi: Ma Loai nay chua ton tai!");
 
@@ -59,25 +63,40 @@ public:
                         });
 
                     thulai([&]() {
-                        std::string ten = Inputhelper::Docstring("Ten the hien: ");
+                        std::string ten = Inputhelper::Docstring("Ten the hien [Enter de huy]: ", true);
+                        if (ten.empty()) throw 0;
                         tb->setTenThietBi(ten);
                         });
 
                     thulai([&]() {
-                        std::string ma = Inputhelper::Docstring("Nhap Ma Thiet Bi (4 so): ");
+                        std::string ma = Inputhelper::Docstring("Nhap Ma Thiet Bi (4 so) [Enter de huy]: ", true);
+                        if (ma.empty()) throw 0;
+
                         tb->setId(Inputhelper::TuTaoMa(ma, "TB"));
                         if (repoTB.findById(tb->getId())) throw Ngoailerangbuoc("Loi: Ma Thiet Bi nay da ton tai!");
                         });
 
                     thulai([&]() {
-                        std::string maTram = Inputhelper::TuTaoMa(Inputhelper::Docstring("Ma Tram BTS (4 so): "), "BTS");
+                        std::string rawMaTram = Inputhelper::Docstring("Ma Tram BTS (4 so) [Enter de huy]: ", true);
+                        if (rawMaTram.empty()) throw 0;
+
+                        std::string maTram = Inputhelper::TuTaoMa(rawMaTram, "BTS");
                         if (!repoTram.findById(maTram)) throw Ngoailerangbuoc("Tu choi: Ma Tram BTS khong ton tai!");
                         tb->setMaTram(maTram);
                         });
 
-                    thulai([&]() { tb->setViTriLapDat(Inputhelper::Docstring("Vi tri lap dat (VD: Tu Rack 01): ")); });
-                    thulai([&]() { tb->setNgayLapDat(Inputhelper::Docstring("Ngay lap dat (dd/mm/yyyy): ")); });
-                    thulai([&]() { tb->setTrangThai(Inputhelper::Docstring("Trang thai (VD: Hoat dong): ")); });
+                    // DA XOA VI TRI LAP DAT O DAY
+                    thulai([&]() {
+                        std::string ngay = Inputhelper::Docstring("Ngay lap dat (dd/mm/yyyy) [Enter de huy]: ", true);
+                        if (ngay.empty()) throw 0;
+                        tb->setNgayLapDat(ngay);
+                        });
+
+                    thulai([&]() {
+                        std::string tt = Inputhelper::Docstring("Trang thai (Loi / Hoat Dong) [Enter de huy]: ", true);
+                        if (tt.empty()) throw 0;
+                        tb->setTrangThai(tt);
+                        });
 
                     repoTB.add(tb);
                     std::cout << "[+] Da ghi nhan thiet bi len he thong!\n";
@@ -88,53 +107,46 @@ public:
                         continue;
                     }
 
-                    std::cout << "\n-- Cap Nhat (Nhan Enter de bo qua truong khong sua) --\n";
-                    std::shared_ptr<ThietBiLapDat> tb = nullptr;
+                    std::cout << "\n-- Cap Nhat (Nhan Enter de giu nguyen) --\n";
+                    std::string rawId = Inputhelper::Docstring("Ma TB can cap nhat (4 so) [Enter de huy]: ", true);
+                    if (rawId.empty()) throw 0;
 
-                    while (true) {
-                        try {
-                            std::string rawId = Inputhelper::Docstring("Ma TB can cap nhat (4 so) hoac nhap '0' de huy: ");
-                            if (rawId == "0") break;
+                    std::shared_ptr<ThietBiLapDat> tb = repoTB.findById(Inputhelper::TuTaoMa(rawId, "TB"));
+                    if (!tb) throw Ngoailekotimthay("Khong tim thay Thiet bi nay tren he thong!");
 
-                            tb = repoTB.findById(Inputhelper::TuTaoMa(rawId, "TB"));
-                            if (!tb) throw Ngoailekotimthay("Khong tim thay Thiet bi nay tren he thong!");
-                            break;
-                        }
-                        catch (const Baseexception& e) { std::cout << "   -> " << e.getMessage() << "\n"; }
-                    }
-
-                    if (!tb) continue;
+                    ThietBiLapDat banSao = *tb;
 
                     thulai([&]() {
-                        std::string mLoai = Inputhelper::Docstring("Ma Loai moi: ", true);
+                        std::string mLoai = Inputhelper::Docstring("Ma Loai moi (" + banSao.getMaLoai() + "): ", true);
                         if (!mLoai.empty()) {
                             std::string maChuan = Inputhelper::TuTaoMa(mLoai, "LT");
                             auto loai = repoLoai.findById(maChuan);
                             if (!loai) throw Ngoailerangbuoc("Ma Loai moi khong ton tai!");
 
                             std::cout << "   => [Hop le] Ten loai thiet bi la: " << loai->getTenLoai() << "\n";
-                            tb->setMaLoai(maChuan);
+                            banSao.setMaLoai(maChuan);
                         }
                         });
 
                     thulai([&]() {
-                        std::string ten = Inputhelper::Docstring("Ten the hien moi: ", true);
-                        if (!ten.empty()) tb->setTenThietBi(ten);
+                        std::string ten = Inputhelper::Docstring("Ten the hien moi (" + banSao.getTenThietBi() + "): ", true);
+                        if (!ten.empty()) banSao.setTenThietBi(ten);
                         });
 
                     thulai([&]() {
-                        std::string mTram = Inputhelper::Docstring("Ma Tram moi: ", true);
+                        std::string mTram = Inputhelper::Docstring("Ma Tram moi (" + banSao.getMaTram() + "): ", true);
                         if (!mTram.empty()) {
                             std::string maChuan = Inputhelper::TuTaoMa(mTram, "BTS");
                             if (!repoTram.findById(maChuan)) throw Ngoailerangbuoc("Ma Tram moi khong ton tai!");
-                            tb->setMaTram(maChuan);
+                            banSao.setMaTram(maChuan);
                         }
                         });
 
-                    thulai([&]() { std::string vt = Inputhelper::Docstring("Vi tri lap dat moi: ", true); if (!vt.empty()) tb->setViTriLapDat(vt); });
-                    thulai([&]() { std::string ngay = Inputhelper::Docstring("Ngay lap dat moi: ", true); if (!ngay.empty()) tb->setNgayLapDat(ngay); });
-                    thulai([&]() { std::string tt = Inputhelper::Docstring("Trang thai moi: ", true); if (!tt.empty()) tb->setTrangThai(tt); });
+                    // DA XOA VI TRI LAP DAT O DAY
+                    thulai([&]() { std::string ngay = Inputhelper::Docstring("Ngay lap dat moi (" + banSao.getNgayLapDat() + "): ", true); if (!ngay.empty()) banSao.setNgayLapDat(ngay); });
+                    thulai([&]() { std::string tt = Inputhelper::Docstring("Trang thai moi (" + banSao.getTrangThai() + "): ", true); if (!tt.empty()) banSao.setTrangThai(tt); });
 
+                    *tb = banSao;
                     repoTB.update();
                     std::cout << "[+] Cap nhat hoan tat!\n";
                 }
@@ -144,29 +156,36 @@ public:
                         continue;
                     }
 
-                    std::shared_ptr<ThietBiLapDat> tb = nullptr;
-                    std::string maChuan;
+                    std::string rawId = Inputhelper::Docstring("\nMa Thiet Bi can go bo (4 so) [Enter de huy]: ", true);
+                    if (rawId.empty()) throw 0;
 
-                    while (true) {
-                        try {
-                            std::string rawId = Inputhelper::Docstring("\nMa Thiet Bi can go bo (4 so) hoac nhap '0' de huy: ");
-                            if (rawId == "0") break;
+                    std::string maChuan = Inputhelper::TuTaoMa(rawId, "TB");
+                    std::shared_ptr<ThietBiLapDat> tb = repoTB.findById(maChuan);
+                    if (!tb) throw Ngoailekotimthay("Khong tim thay Thiet bi nay tren he thong!");
 
-                            maChuan = Inputhelper::TuTaoMa(rawId, "TB");
-                            tb = repoTB.findById(maChuan);
-                            if (!tb) throw Ngoailekotimthay("Khong tim thay Thiet bi nay tren he thong!");
+                    // Thuat toan quet cheo chan xoa neu Thiet bi dang co Phieu Bao Tri
+                    int loiThamChieu = 0;
+                    for (const auto& pbt : repoPBT.getAll()) {
+                        if (pbt->getMaTB() == maChuan) {
+                            loiThamChieu++;
                             break;
                         }
-                        catch (const Baseexception& e) { std::cout << "   -> " << e.getMessage() << "\n"; }
                     }
-
-                    if (!tb) continue;
+                    if (loiThamChieu > 0) {
+                        throw Ngoailerangbuoc("TU CHOI XOA: Thiet bi nay dang co lich su bao tri. Vui long xoa Phieu Bao Tri do truoc!");
+                    }
 
                     if (Inputhelper::Docstring("Chac chan go bo? (y/n): ") == "y") {
                         repoTB.remove(maChuan);
                         std::cout << "[+] Da go bo!\n";
                     }
+                    else {
+                        std::cout << "[*] Da huy thao tac xoa.\n";
+                    }
                 }
+            }
+            catch (int) {
+                std::cout << "\n[*] DA HUY THAO TAC VA QUAY LAI MENU CHINH!\n";
             }
             catch (const Baseexception& e) { std::cout << "[-] Loi Nghiep Vu: " << e.getMessage() << "\n"; }
         }
