@@ -117,14 +117,14 @@ public:
 
                         anten->setMaTram(rawTram);
                         if (!repoTramBTS.findById(anten->getMaTram()))
-                            throw Ngoailerangbuoc("Loi: Ma Tram [" + anten->getMaTram() + "] khong ton tai tren he thong!");
+                            throw Ngoailerangbuoc("Loi: Ma Tram [" + anten->getMaTram() + "] khong ton tai tren he thong");
                         });
 
                     // Lay loai cot cua Tram vua nhap
                     auto tram = repoTramBTS.findById(anten->getMaTram());
                     std::string loaiCot = tram->getLoaiCot();
 
-                    inBangTuongThich(loaiCot); // In UI goi y
+					inBangTuongThich(loaiCot); // se in ra cac loai anten tuong thich voi loai cot cua tram vua nhap de nguoi dung tham khao
 
                     thuLai([&]() {
                         std::string loai = Inputhelper::Docstring("Nhap Loai anten [enter de huy]: ", true);
@@ -147,15 +147,15 @@ public:
                         });
 
                     repoAnten.add(anten);
-                    std::cout << "[+] Them anten moi thanh cong (Ma: " << anten->getId() << ")!\n";
+                    std::cout << "[+] Them anten moi thanh cong (Ma: " << anten->getId() << ")\n";
                 }
                 // xem
                 else if (chon == 1) {
                     const auto& ds = repoAnten.getAll();
-                    if (ds.empty()) std::cout << "[-] Danh sach anten dang trong.\n";
+                    if (ds.empty()) std::cout << "Danh sach anten dang trong.\n";
                     else inBang(ds);
                 }
-                // tim kiem theo id hoac ten 
+                // 3. TIM KIEM
                 else if (chon == 3) {
                     std::string tuKhoa = Inputhelper::Docstring("Nhap ma (vi du: 0001), ma tram hoac loai anten [enter de huy]: ", true);
                     if (tuKhoa.empty()) throw 0;
@@ -171,7 +171,7 @@ public:
                             ketQua.push_back(a);
                         }
                     }
-                    if (ketQua.empty()) std::cout << "[-] Khong tim thay anten phu hop.\n";
+                    if (ketQua.empty()) std::cout << "- Khong tim thay anten phu hop.\n";
                     else inBang(ketQua);
                 }
 				// cap nhat anten
@@ -181,10 +181,10 @@ public:
 
                     std::string id = Anten::taoMaAnten(inputSua);
                     auto at = repoAnten.findById(id);
-                    if (!at) throw Ngoailekotimthay("Loi: Khong tim thay anten [" + id + "]!");
+                    if (!at) throw Ngoailekotimthay("Loi: Khong tim thay anten [" + id + "]");
                     inBang({ at });
 
-                    std::cout << "(*) Nhap gia tri moi (enter de giu nguyen):\n";
+                    std::cout << " + Nhap gia tri moi (enter de giu nguyen):\n";
                     Anten banSao = *at;
 
                     thuLai([&]() {
@@ -192,7 +192,7 @@ public:
                         if (!s.empty()) {
                             std::string maTramChuan = Anten::taoMaTram(s);
                             if (!repoTramBTS.findById(maTramChuan))
-                                throw Ngoailerangbuoc("Loi: Ma Tram khong ton tai!");
+                                throw Ngoailerangbuoc("Loi: Ma Tram khong ton tai");
                             banSao.setMaTram(maTramChuan);
                         }
                         });
@@ -227,7 +227,7 @@ public:
 
                     *at = banSao;
                     repoAnten.update();
-                    std::cout << "[+] Cap nhat thanh cong!\n";
+                    std::cout << " Cap nhat thanh cong\n";
                 }
 				// xoa anten
                 else if (chon == 5) {
@@ -243,10 +243,10 @@ public:
                     if (xn == "y" || xn == "Y") {
                         repoAnten.remove(id);
                         repoAnten.update();
-                        std::cout << "[+] Da xoa anten thanh cong!\n";
+                        std::cout << "Da xoa anten thanh cong!\n";
                     }
                     else {
-                        std::cout << "[*] Da huy thao tac xoa.\n";
+                        std::cout << "Da huy thao tac xoa.\n";
                     }
                 }
 				// danh gia nang luc anten
@@ -259,7 +259,7 @@ public:
                     std::string id = Anten::taoMaAnten(inputDG);
                     auto at = repoAnten.findById(id);
 
-                    if (!at) throw Ngoailekotimthay("Loi: Khong tim thay anten [" + id + "]!");
+                    if (!at) throw Ngoailekotimthay("Loi: Khong tim thay anten [" + id + "]");
 
                     inBang({ at });
 
@@ -272,12 +272,12 @@ public:
                     std::cout << " -> Cu ly tam nhin thang toi da (r0): " << std::fixed << std::setprecision(2) << r0 << " km\n";
                 }
                 else {
-                    std::cout << "[-] Lua chon khong hop le!\n";
+                    std::cout << "Lua chon khong hop le!\n";
                 }
             }
 
             catch (int) {
-                std::cout << "\n - Da huy thao tac \n";
+                std::cout << "\n Da huy thao tac \n";
             }
             catch (const Baseexception& e) { std::cout << "[!] LOI NGHIEP VU: " << e.getMessage() << "\n"; }
             catch (const std::exception& e) { std::cout << "[!] LOI HE THONG: " << e.what() << "\n"; }
