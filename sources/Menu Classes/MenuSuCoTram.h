@@ -246,8 +246,8 @@ public:
 
                     if (repoSC.findById(macanxoa) == nullptr) throw Loixacthuc("Khong tim thay SC nay!");
 
-                    std::string xacNhan = Inputhelper::Docstring("Chac chan xoa? (y/n): ");
-                    if (xacNhan == "y" || xacNhan == "Y") {
+                    std::string xacnhan = Inputhelper::Docstring("Chac chan xoa? (y/n): ");
+                    if (xacnhan == "y" || xacnhan == "Y") {
                         repoSC.remove(macanxoa); // xoa su co tram khoi repoSC va luu vao file
                         std::cout << "[+] Da xoa xong!\n";
                     }
