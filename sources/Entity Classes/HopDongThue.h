@@ -40,19 +40,20 @@ public:
 
     std::string getTenChuNha() const { return tenChuNha; }
     void setTenChuNha(const std::string& ten) {
-        std::string clean = Inputhelper::catkhoangtrang(ten);
+        std::string clean = Inputhelper::catkhoangtrang(ten);//tao 1 cai ten hoan toan hop le
 
-        if (clean.empty()) throw Loixacthuc("Loi: Ten chu nha khong duoc de trong");
-        if (clean.find('|') != std::string::npos) throw Loixacthuc("Loi: Ten chu nha khong duoc chua ky tu | ");
+        if (clean.empty()) throw Loixacthuc("loi: ten chu nha khong duoc de trong");//neu trong
+        if (clean.find('|') != std::string::npos) throw Loixacthuc("loi: ten chu nha khong duoc chua ky tu | ");//neu co ky tu nay
         if (!Inputhelper::chiChuaChuCaiVaKhoangTrang(clean)) {
-            throw Loixacthuc("Loi: Ten chu nha chi duoc phep chua chu cai va khoang trang");
+            throw Loixacthuc("loi: ten chu nha chi duoc phep chua chu cai va khoang trang");//ko dc cho chu so
+
         }
 
         tenChuNha = Inputhelper::VietHoaChuDau(clean);
     }
 
-    std::string getSoDienThoai() const { return soDienThoai; }
-    void setSoDienThoai(const std::string& sdt) {
+    std::string getSoDienThoai() const { return soDienThoai; }//lay du lieu chi can tra ve du lieu ko can thay doi j(ghi du lieu ra man hinh)
+    void setSoDienThoai(const std::string& sdt) {//lam nhiem vu nhap du lieu tu ban phim va kiem tra
         std::string clean = Inputhelper::catkhoangtrang(sdt);
         Inputhelper::KiemTraSdt(clean);
         soDienThoai = clean;
@@ -60,7 +61,7 @@ public:
 
     long long getGiaThueThang() const { return giaThueThang; }
 
-    // dung khi doc file
+    // nhap gia tri thue thang
     void setGiaThueThang(long long gia) {
         if (gia <= 0) throw Loixacthuc("Loi: Gia thue moi thang phai lon hon 0 VND");
         giaThueThang = gia;
@@ -87,7 +88,7 @@ public:
     }
     void setNgayBatDau(const std::string& ngay) {
         std::string clean = Inputhelper::catkhoangtrang(ngay);
-        if (clean.empty()) throw Loixacthuc("Loi: Ngay bat dau khong duoc de trong");
+        if (clean.empty()) throw Loixacthuc("loi: ngay bat dau khong duoc de trong");
         ngayBatDau.docchuoi(clean);
     }
 
@@ -95,7 +96,7 @@ public:
 
     //nhan so khi doc thoi gianm
     void setThoiHanThang(int thoiHan) {
-        if (thoiHan <= 0) throw Loixacthuc("Loi: Thoi han thue phai lon hon 0 thang");
+        if (thoiHan <= 0) throw Loixacthuc("loi: thoi han thue phai lon hon 0 thang");
         thoiHanThang = thoiHan;
     }
 
@@ -131,37 +132,37 @@ public:
 
         long long gia;
         int thoiHan;
-        std::size_t vitricuoiGia = 0;
-        std::size_t vitricuoiThang = 0;
+        std::size_t vitricuoiGia = 0;//kiem tra co chua ki tu la khac ngoai chu so ko o gia tien
+        std::size_t vitricuoiThang = 0;// kiem tra xem co ki tu la o gia thue thang ko
 
         try {
             gia = std::stoll(data[4], &vitricuoiGia);
             thoiHan = std::stoi(data[6], &vitricuoiThang);
         }
         catch (const std::invalid_argument&) {
-            throw Loixacthuc("Loi: Gia thue hoac thoi han trong file khong phai la so");
+            throw Loixacthuc("loi: gia thue hoac thoi han trong file khong phai la so");
         }
         catch (const std::out_of_range&) {
-            throw Loixacthuc("Loi: Gia thue hoac thoi han trong file vuot qua gioi han");
+            throw Loixacthuc("loi: gia thue hoac thoi han trong file vuot qua gioi han");
         }
 
         if (vitricuoiGia != data[4].size()) {
-            throw Loixacthuc("Loi: Gia thue trong file chua ky tu khong hop le (chu cai hoac ky tu dac biet)!");
+            throw Loixacthuc("loi: gia thue trong file chua ky tu khong hop le (chu cai hoac ky tu dac biet)");
         }
         if (vitricuoiThang != data[6].size()) {
-            throw Loixacthuc("Loi: Thoi han thue trong file chua ky tu khong hop le!");
+            throw Loixacthuc("loi: thoi han thue trong file chua ky tu khong hop le");
         }
 
         HopDongThue hdTam(data[0], data[1], data[2], data[3], gia, data[5], thoiHan);
         *this = hdTam;
     }
 
-    // Override de trinh bien dich khong bao loi Entity
+    // override  de trinh bien dich khong bao loi entity
     void display() const override {
         display("N/A");
     }
 
-    // Hien thi tren console kem Ma Khu Vuc
+    // hien thi tren giao dein console
     void display(const std::string& maKV) const {
         std::cout << std::left
             << std::setw(8) << id << "| "
@@ -171,7 +172,7 @@ public:
             << std::setw(13) << soDienThoai << "| "
             << std::setw(12) << giaThueThang << "| "
             << std::setw(12) << ngayBatDau.toString() << "| "
-            << std::setw(6) << thoiHanThang << "\n";
+            << std::setw(6) << thoiHanThang << std::endl;
     }
 
     static void displayHeader() {
@@ -183,7 +184,7 @@ public:
             << std::setw(13) << "SDT" << "| "
             << std::setw(12) << "Gia(VND)" << "| "
             << std::setw(12) << "Ngay Thue" << "| "
-            << std::setw(6) << "Thang" << "\n";
-        std::cout << std::string(105, '-') << "\n";
+            << std::setw(6) << "Thang" << std::endl;
+        std::cout << std::string(105, '-') << std::endl;
     }
 };
