@@ -1,3 +1,5 @@
+// Nguyen Cong Vinh
+
 #pragma once
 #include <iostream>
 #include <memory>
@@ -111,13 +113,13 @@ public:
                         });
 
                     repoKV.add(kv);
-                    std::cout << "[+] Them khu vuc moi thanh cong (Ma: " << kv->getId() << ")!\n";
+                    std::cout << "- Them khu vuc moi thanh cong (Ma: " << kv->getId() << ")!\n";
                     
                 }
                 // xem danh sach
                 else if (chon == 1) {
                     const auto& ds = repoKV.getAll();
-                    if (ds.empty()) std::cout << "[-] Danh sach khu vuc dang trong.\n";
+                    if (ds.empty()) std::cout << "- Danh sach khu vuc dang trong.\n";
                     else inBang(ds);
                 }
                 // tim kiem
@@ -135,7 +137,7 @@ public:
                             ketQua.push_back(kv);
                         }
                     }
-                    if (ketQua.empty()) std::cout << "Khong tim thay khu vuc phu hop.\n";
+                    if (ketQua.empty()) std::cout << "-Khong tim thay khu vuc phu hop.\n";
                     else inBang(ketQua);
                 }
                 // cap nhat
@@ -148,7 +150,7 @@ public:
                     if (!kv) throw Ngoailekotimthay("Loi: Khong tim thay ma khu vuc [" + id + "]!");
                     inBang({ kv });
 
-                    std::cout << "-Nhap gia tri moi (Enter de giu nguyen):\n";
+                    std::cout << "- Nhap gia tri moi (Enter de giu nguyen):\n";
                     KhuVuc banSao = *kv;
 
                     thuLai([&]() {
@@ -157,7 +159,7 @@ public:
                             banSao.setTenKhuVuc(ten);
                             // Check xem ten moi co trung voi ten cua cac khu vuc khac hay khong
                             if (trungTen(repoKV, ten, banSao.getId()))
-                                throw Ngoailerangbuoc("Loi: Ten khu vuc nay da ton tai tren he thong!"); // neu trung thi bao loi va yeu cau nhap lai
+                                throw Ngoailerangbuoc("Loi: Ten khu vuc nay da ton tai tren he thong"); // neu trung thi bao loi va yeu cau nhap lai
                         }
                         });
 
@@ -181,11 +183,11 @@ public:
                                 std::string maTramChuan = KhuVuc::taoMaTram(rawTram);
                                 if (!repoTram.findById(maTramChuan)) { 
                                     // doi chieu xem ma tram co ton tai trong he thong hay khong neu khong thi bao loi va yeu cau nhap lai
-                                    throw Ngoailerangbuoc("Loi: Ma Tram [" + maTramChuan + "] khong ton tai tren he thong!");
+                                    throw Ngoailerangbuoc("Loi: Ma Tram [" + maTramChuan + "] khong ton tai tren he thong");
                                 }
                                 if (kiemTraTramDaCoKhuVuc(repoKV, maTramChuan, banSao.getId())) {
                                     // doi chieu xem tram da tom tai o khu vuc khac hay chua neu co thi bao loi va yeu cau nhap lai
-                                    throw Ngoailerangbuoc("Tu choi: Tram [" + maTramChuan + "] da ton tai o Khu Vuc khac!");
+                                    throw Ngoailerangbuoc("Tu choi: Tram [" + maTramChuan + "] da ton tai o Khu Vuc khac");
                                 }
                                 banSao.setMaTram(maTramChuan);
                                 // nay la neu ma tram hop le va chua ton tai o khu vuc khac thi moi cap nhat vao khu vuc hien tai
@@ -196,7 +198,7 @@ public:
                     *kv = banSao; 
                     // cap nhat doi tuong khu vuc hien tai voi ban sao moi
                     repoKV.update();
-                    std::cout << "[+] Cap nhat thanh cong!\n";
+                    std::cout << "- Cap nhat thanh cong!\n";
                 }
                 // xao 
                 else if (chon == 5) {
@@ -229,13 +231,13 @@ public:
                     if (xn == "y" || xn == "Y") {
                         repoKV.remove(id);
                         repoKV.update();
-                        std::cout << "+ Da xoa khu vuc thanh cong!\n";
+                        std::cout << "Da xoa khu vuc thanh cong\n";
                     }
                     else {
-                        std::cout << "- Da huy thao tac xoa.\n";
+                        std::cout << "-Da huy thao tac xoa\n";
                     }
                 }
-                else std::cout << "+ Lua chon khong hop le!\n";
+                else std::cout << "- Lua chon khong hop le\n";
             }
             catch (int) {
                 std::cout << "\n DA HUY THAO TAC VA QUAY LAI MENU CHINH\n";
