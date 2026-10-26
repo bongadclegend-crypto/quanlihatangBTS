@@ -137,24 +137,24 @@ public:
                     std::cout << "[+] Cap nhat thanh cong!\n";
                 }
 				else if (chon == 4) { // Xoa KTV
-                    std::string maXoa;
+                    std::string maxoa;
                     // Nhap ma KTV can xoa, kiem tra ton tai
                     while (true) {
                         try {
-                            maXoa = Inputhelper::Docstring("\nMa KTV can xoa (Enter de Huy): ", true);
-                            if (maXoa == "") break;
-                            maXoa = Inputhelper::TuTaoMa(maXoa, "KTV");
+                            maxoa = Inputhelper::Docstring("\nMa KTV can xoa (Enter de Huy): ", true);
+                            if (maxoa == "") break;
+                            maxoa = Inputhelper::TuTaoMa(maxoa, "KTV");
                             break;
                         }
                         catch (const Baseexception& e) { std::cout << "[-] " << e.getMessage() << "\n"; }
                     }
-                    if (maXoa == "") { std::cout << "[!] Da huy.\n"; continue; }
+                    if (maxoa == "") { std::cout << "[!] Da huy.\n"; continue; }
 
-                    if (!repoKTV.findById(maXoa)) throw Loixacthuc("Loi: Khong tim thay Ma KTV nay!");
+                    if (!repoKTV.findById(maxoa)) throw Loixacthuc("Loi: Khong tim thay Ma KTV nay!");
                     // Xac nhan truoc khi xoa
-                    std::string xacNhan = Inputhelper::Docstring("Chac chan xoa KTV nay? (y/n): ");
-                    if (xacNhan == "y" || xacNhan == "Y") {
-                        repoKTV.remove(maXoa); // Xoa KTV khoi repo va luu vao file
+                    std::string xacnhan = Inputhelper::Docstring("Chac chan xoa KTV nay? (y/n): ");
+                    if (xacnhan == "y" || xacnhan == "Y") {
+                        repoKTV.remove(maxoa); // Xoa KTV khoi repo va luu vao file
                         std::cout << "[+] Da xoa thanh cong!\n";
                     }
                 }
