@@ -1,11 +1,11 @@
-#Danh sach doi tuong
-LT1001|Anten Parabol 5G|Ericsson|Bang tan Sub-6GHz|150.5
-LT1002|Tu Nguon DC 48V|Huawei|Dien ap 48V-200A|1200.0
-LT1003|Thiet Bi BBU Baseband|Nokia|Xu ly tin hieu mang loi|350.0
-LT1004|Thiet Bi RRU Remote|ZTE|Khuech dai cong suat RF|250.5
-LT1005|Cap Quang Single Mode|Prysmian|Truyen dan toc do cao|5.0
-LT1006|Tu Nguon AC Chuyen Dung|Delta|Chuyen doi AC-DC|1500.0
-LT1007|Ac Quy Du Phong|Vision|Luu tru 12V-150Ah|0.0
-LT1008|May Lanh Chinh Xac|Daikin|Lam mat tram BTS 24/7|2500.0
-LT1009|Switch Core 10G|Cisco|Chuyen mach 10Gbps|450.0
-LT1010|Router Quang Dinh Tuyen|Juniper|Dinh tuyen mang IP|320.5
+LT0001|Tu Nguon Chinh|Viettel|Cap nguon tong|2000.000000|NCC0001|Tap Doan Viettel
+LT0002|Tram Phat Song 5g|Ericsson|Phu song rong|5000.000000|NCC0002|Cong Ty Ericsson
+LT0003|Anten Thu Phat|Huawei|Bang tan kep|1500.000000|NCC0003|Tap Doan Huawei
+LT0004|Module Phat 4g|Nokia|Tich hop MIMO|4500.000000|NCC0004|Cong Ty Nokia
+LT0005|Bo Dinh Tuyen|Zte|Chong nhieu|1200.000000|NCC0005|Cong Ty Zte
+LT0006|He Thong Dieu Hoa|Samsung|Lam lanh nhanh|3000.000000|NCC0006|Cong Ty Samsung
+LT0007|Router Cisco Core|Cisco|Chuyen mach 10G|1250.000000|NCC0007|Cong Ty Cisco
+LT0008|Cap Quang Phat|Vnpt|Truyen dan|500.000000|NCC0008|Tap Doan Vnpt
+LT0009|Binh Ac Quy 12v|Fpt|Du phong 24h|800.000000|NCC0009|Cong Ty Fpt
+LT0010|Cam Bien Nhiet Do|Cmc|Canh bao chay|100.000000|NCC0010|Cong Ty Cmc
+
