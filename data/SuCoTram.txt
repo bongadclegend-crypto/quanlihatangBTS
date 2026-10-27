@@ -1,10 +1,10 @@
-SC1001|BTS1001|12/10/2026|Mat dien luoi tong|1|KTV1003|Da sua
-SC1002|BTS1002|15/10/2026|Mat ket noi quang|3|KTV1002|Chua sua
-SC1003|BTS1003|16/10/2026|Hong module thu phat RF|2|KTV1001|Da sua
-SC1004|BTS1004|17/10/2026|May phat dien khong chay|1|KTV1004|Chua sua
-SC1005|BTS1005|18/10/2026|Nhieu song xuyen am|2|KTV1005|Da sua
-SC1006|BTS1006|19/10/2026|Loi phan mem dieu khien|3|KTV1006|Chua sua
-SC1007|BTS1007|20/10/2026|Chay cau chi tu nguon|1|KTV1007|Da sua
-SC1008|BTS1008|20/10/2026|Hong dieu hoa nhiet do|2|KTV1008|Chua sua
-SC1009|BTS1009|21/10/2026|Giam cong suat phat|2|KTV1009|Da sua
-SC1010|BTS1010|21/10/2026|Dut cap truyen dan|3|KTV1010|Chua sua
+SC0001|BTS1001|26/10/2026|Mat ket noi quang|1|KTV0001|Da Sua
+SC0002|BTS1002|26/10/2026|Chay tu nguon|3|KTV0005|Chua Sua
+SC0003|BTS1003|27/10/2026|Giam cong suat phat|2|KTV0009|Da Sua
+SC0004|BTS1004|27/10/2026|Loi bo ma hoa|1|KTV0010|Chua Sua
+SC0005|BTS1005|27/10/2026|Chap dien dieu hoa|3|KTV0001|Da Sua
+SC0006|BTS1006|28/10/2026|Chet binh acquy|2|KTV0005|Chua Sua
+SC0007|BTS1007|28/10/2026|Hu hong Anten 4G|1|KTV0009|Da Sua
+SC0008|BTS1008|28/10/2026|Loi phan mem router|2|Chua phan cong|Chua Sua
+SC0009|BTS1009|29/10/2026|Chuot can day cap|3|KTV0001|Da Sua
+SC0010|BTS1010|29/10/2026|Chay cau chi tong|1|KTV0010|Chua Sua
