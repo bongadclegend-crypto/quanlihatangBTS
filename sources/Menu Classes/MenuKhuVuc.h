@@ -58,7 +58,7 @@ public:
             std::cout << "\n================= QUAN LY KHU VUC =================\n";
             std::cout << "1. Xem danh sach\n";
             std::cout << "2. Them khu vuc moi \n";
-            std::cout << "3. Tim kiem \n";
+            std::cout << "3. Tim kiem theo ID\n";
             std::cout << "4. Cap nhat thong tin\n";
             std::cout << "5. Xoa khu vuc\n";
             std::cout << "0. Quay lai menu chinh\n";
@@ -78,7 +78,7 @@ public:
 
                         kv->setMa(maInput);
                         if (repoKV.findById(kv->getId()))
-                            throw Ngoailerangbuoc("Loi: Ma khu vuc [" + kv->getId() + "] da ton tai!");
+                            throw Ngoailerangbuoc("Loi: Ma khu vuc [" + kv->getId() + "] da ton tai");
                         });
 
                     thuLai([&]() {
@@ -99,10 +99,10 @@ public:
                         if (!rawTram.empty()) {
                             std::string maTramChuan = KhuVuc::taoMaTram(rawTram);
                             if (!repoTram.findById(maTramChuan)) {
-                                throw Ngoailerangbuoc("Loi: Ma Tram [" + maTramChuan + "] khong ton tai tren he thong!");
+                                throw Ngoailerangbuoc("Loi: Ma Tram [" + maTramChuan + "] khong ton tai tren he thong");
                             }
                             if (kiemTraTramDaCoKhuVuc(repoKV, maTramChuan)) {
-                                throw Ngoailerangbuoc("Tu choi: Tram [" + maTramChuan + "] dang duoc quan ly boi mot Khu Vuc khac!");
+                                throw Ngoailerangbuoc("Tu choi: Tram [" + maTramChuan + "] dang duoc quan ly boi mot Khu Vuc khac");
                             }
                             kv->setMaTram(maTramChuan);
 							// if de ktra xem tram da ton tai hay ch va ktra xem tram da thuoc ql o khu vuc khac hay chua neu co thi bao loi va yeu cau nhap lai
@@ -124,17 +124,18 @@ public:
                 }
                 // tim kiem
                 else if (chon == 3) {
-                    std::string tuKhoa = Inputhelper::Docstring("Nhap ma (vi du: 0001 / KV0001) hoac ten khu vuc can tim [enter de huy]: ", true);
+                    std::string tuKhoa = Inputhelper::Docstring("Nhap ma KV can tim (4 so, vi du: 0001) [enter de huy]: ", true);
                     if (tuKhoa.empty()) throw 0;
 
-                    std::string ma = KhuVuc::chuanHoaMa(tuKhoa);
-                    std::string ten = thuongHoa(tuKhoa);
+                    // dung luon ham taoMaKV de chuan hoa dau vao thanh chuan "KVxxxx"
+                    std::string ma = KhuVuc::taoMaKV(tuKhoa);
                     std::vector<std::shared_ptr<KhuVuc>> ketQua;
 
+                    // Tim kiem trong danh sach
                     for (const auto& kv : repoKV.getAll()) {
-                        if (kv->getId() == ma || kv->getId() == "KV" + ma ||
-                            thuongHoa(kv->getTenKhuVuc()).find(ten) != std::string::npos) {
+                        if (kv->getId() == ma) {
                             ketQua.push_back(kv);
+                            break; // vi ma la duy nhat nen tim thay la thoat vong lap luon
                         }
                     }
                     if (ketQua.empty()) std::cout << "-Khong tim thay khu vuc phu hop.\n";
@@ -242,8 +243,8 @@ public:
             catch (int) {
                 std::cout << "\n DA HUY THAO TAC VA QUAY LAI MENU CHINH\n";
             }
-            catch (const Baseexception& e) { std::cout << "[!] LOI NGHIEP VU: " << e.getMessage() << "\n"; }
-            catch (const std::exception& e) { std::cout << "[!] LOI HE THONG: " << e.what() << "\n"; }
+            catch (const Baseexception& e) { std::cout << "LOI NGHIEP VU: " << e.getMessage() << "\n"; }
+            catch (const std::exception& e) { std::cout << "LOI HE THONG: " << e.what() << "\n"; }
         }
     }
 };
