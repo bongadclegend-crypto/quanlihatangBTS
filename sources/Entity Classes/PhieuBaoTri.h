@@ -57,8 +57,9 @@ public:
         if (clean.empty()) throw Loixacthuc("Loi: Trang thai bao tri khong duoc de trong");
         std::string chuanHoa = Inputhelper::VietHoaChuDau(clean);
 
-        if (chuanHoa != "Hoan tat" && chuanHoa != "Khong hoan tat") {
-            throw Loixacthuc("Loi: Trang thai chi duoc phep nhap 'Hoan tat' hoac 'Khong hoan tat'");
+        // sua chu t va chu T de phu hop voi vo trang thai
+        if (chuanHoa != "Hoan Tat" && chuanHoa != "Khong Hoan Tat") {
+            throw Loixacthuc("Loi: Trang thai chi duoc phep nhap 'Hoan Tat' hoac 'Khong Hoan Tat'");
         }
         trangThai = chuanHoa;
     }
