@@ -87,7 +87,7 @@ public:
             std::cout << "\n============= QUAN LY ANTEN & CAU HINH PHAT =============\n";
             std::cout << "1. Xem danh sach\n";
             std::cout << "2. Them anten moi\n";
-            std::cout << "3. Tim kiem anten\n";
+            std::cout << "3. Tim kiem anten theo ID\n";
             std::cout << "4. Cap nhat thong so anten\n";
             std::cout << "5. Xoa anten\n";
             std::cout << "6. Danh gia nang luc anten\n";
@@ -155,23 +155,23 @@ public:
                     if (ds.empty()) std::cout << "Danh sach anten dang trong.\n";
                     else inBang(ds);
                 }
-                // 3. TIM KIEM
+               
+				// tim kiem anten theo ma
                 else if (chon == 3) {
-                    std::string tuKhoa = Inputhelper::Docstring("Nhap ma (vi du: 0001), ma tram hoac loai anten [enter de huy]: ", true);
+                    std::string tuKhoa = Inputhelper::Docstring("Nhap Ma Anten can tim (4 so, VD: 0001) [enter de huy]: ", true);
                     if (tuKhoa.empty()) throw 0;
 
-                    std::string ma = Anten::chuanHoaMa(tuKhoa);
-                    std::string loai = thuongHoa(tuKhoa);
+                    // dung ham taoMaAnten de bat loi neu nhap chu va tu dong them tien to AT
+                    std::string ma = Anten::taoMaAnten(tuKhoa);
                     std::vector<std::shared_ptr<Anten>> ketQua;
 
                     for (const auto& a : repoAnten.getAll()) {
-                        if (a->getId() == ma || a->getId() == "AT" + ma ||
-                            a->getMaTram() == ma || a->getMaTram() == "BTS" + ma ||
-                            thuongHoa(a->getLoaiAnten()).find(loai) != std::string::npos) {
+                        if (a->getId() == ma) {
                             ketQua.push_back(a);
+							break; // co ma la duy nhat nen tim thay la thoat vong lap luon
                         }
                     }
-                    if (ketQua.empty()) std::cout << "- Khong tim thay anten phu hop.\n";
+                    if (ketQua.empty()) std::cout << "[-] Khong tim thay anten phu hop.\n";
                     else inBang(ketQua);
                 }
 				// cap nhat anten
@@ -279,8 +279,8 @@ public:
             catch (int) {
                 std::cout << "\n Da huy thao tac \n";
             }
-            catch (const Baseexception& e) { std::cout << "[!] LOI NGHIEP VU: " << e.getMessage() << "\n"; }
-            catch (const std::exception& e) { std::cout << "[!] LOI HE THONG: " << e.what() << "\n"; }
+            catch (const Baseexception& e) { std::cout << "LOI NGHIEP VU: " << e.getMessage() << "\n"; }
+            catch (const std::exception& e) { std::cout << "LOI HE THONG: " << e.what() << "\n"; }
         }
     }
 };
